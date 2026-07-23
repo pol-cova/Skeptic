@@ -33,21 +33,6 @@ Coding agents are optimized to produce changes. Skeptic is an independent agent 
 
 Unlike a static testing skill, Skeptic can interpret ambiguous requirements, inspect an unfamiliar interface, adapt its verification plan, and gather evidence. A deterministic harness—not the model—controls browser actions and assigns passing verdicts.
 
-## Hackathon MVP
-
-- Natural-language acceptance criteria
-- Autonomous browser exploration
-- Bounded and isolated execution
-- Deterministic assertions
-- Evidence-rich HTML reports
-- Replayable Playwright tests
-- Agent-agnostic CLI and SDK
-- Amazon Bedrock model support
-
-## Status
-
-Four-day hackathon build in progress. The first public release will include the CLI, verification harness, demo application, and an end-to-end failure-to-proof demonstration.
-
 ## License
 
 Apache-2.0
