@@ -14,16 +14,22 @@
   "scripts": {
     "build": "eve build",
     "dev": "eve dev",
+    "preflight:bedrock": "node scripts/preflight/bedrock.ts",
+    "preflight:eve": "eve info",
+    "preflight:package": "pnpm pack --pack-destination .proof/preflight",
+    "preflight:playwright": "node scripts/preflight/playwright.ts",
     "start": "eve start",
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@ai-sdk/amazon-bedrock": "5.0.28",
     "@vercel/connect": "0.4.2",
     "ai": "^7.0.34",
     "eve": "0.27.1",
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "1.61.1",
     "@types/node": "24.x",
     "typescript": "7.0.2"
   }

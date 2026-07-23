@@ -47,8 +47,8 @@ pnpm exec eve info
 pnpm build
 ```
 
-This PR establishes the Eve agent foundation only. Bedrock and Playwright
-preflight work remains tracked in issue #3.
+See the [Day 0 preflight](docs/preflight.md) for Eve, Bedrock, Playwright, and
+package checks.
 
 ## Why Skeptic?
 
