@@ -1,0 +1,8 @@
+.internal/
+outputs/
+.DS_Store
+node_modules/
+.env
+.proof/
+playwright-report/
+test-results/
