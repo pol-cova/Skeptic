@@ -2,7 +2,14 @@
 outputs/
 .DS_Store
 node_modules/
-.env
+.env*
 .proof/
 playwright-report/
 test-results/
+.eve/
+.vercel/
+.next/
+.output/
+.nitro/
+dist/
+*.tsbuildinfo
