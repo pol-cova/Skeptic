@@ -36,8 +36,10 @@ pnpm install
 pnpm dev
 ```
 
-Eve guides you through configuring an AI Gateway credential when the agent
-starts. Do not commit credentials.
+Skeptic uses an existing local `codex login` by default. No AWS account is
+required for normal local development. Set `SKEPTIC_PROVIDER` to use
+OpenRouter, Cerebras, Bedrock, or an OpenAI-compatible endpoint with credentials
+from environment variables. Never commit credentials.
 
 Validate the project with:
 
@@ -49,6 +51,9 @@ pnpm build
 
 See the [Day 0 preflight](docs/preflight.md) for Eve, Bedrock, Playwright, and
 package checks.
+
+The [model-provider decision](docs/adr/0002-model-provider-strategy.md)
+documents the native subscription and BYOC contract.
 
 ## Why Skeptic?
 

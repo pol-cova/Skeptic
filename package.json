@@ -16,13 +16,18 @@
     "dev": "eve dev",
     "preflight:bedrock": "node scripts/preflight/bedrock.ts",
     "preflight:eve": "eve info",
+    "preflight:model": "node scripts/preflight/model.ts",
     "preflight:package": "pnpm pack --pack-destination .proof/preflight",
     "preflight:playwright": "node scripts/preflight/playwright.ts",
     "start": "eve start",
+    "test": "node --test agent/**/*.test.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
     "@ai-sdk/amazon-bedrock": "5.0.28",
+    "@ai-sdk/cerebras": "3.0.14",
+    "@ai-sdk/openai-compatible": "3.0.14",
+    "@openrouter/ai-sdk-provider": "3.0.0",
     "@vercel/connect": "0.4.2",
     "ai": "^7.0.34",
     "eve": "0.27.1",

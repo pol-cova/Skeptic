@@ -6,7 +6,9 @@ import { z } from "zod";
 const region =
   process.env.AWS_REGION ?? process.env.AWS_DEFAULT_REGION ?? "us-east-1";
 const modelId =
-  process.env.SKEPTIC_BEDROCK_MODEL ?? "amazon.nova-lite-v1:0";
+  process.env.SKEPTIC_MODEL ??
+  process.env.SKEPTIC_BEDROCK_MODEL ??
+  "amazon.nova-lite-v1:0";
 
 const hasApiKey = Boolean(process.env.AWS_BEARER_TOKEN_BEDROCK);
 const hasSigV4Credentials =
