@@ -47,8 +47,11 @@ pnpm exec eve info
 pnpm build
 ```
 
-This PR establishes the Eve agent foundation only. Bedrock and Playwright
+The current foundation includes the Eve agent only. Bedrock and Playwright
 preflight work remains tracked in issue #3.
+
+The canonical verdict, readiness, exit-code, naming, and scope decisions are in
+[ADR 0001](docs/adr/0001-public-contract.md).
 
 ## Why Skeptic?
 
@@ -58,4 +61,10 @@ Unlike a static testing skill, Skeptic can interpret ambiguous requirements, ins
 
 ## License
 
-Apache-2.0
+Skeptic is available under the [Apache License 2.0](LICENSE).
+
+## Community
+
+- [Contributing](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)

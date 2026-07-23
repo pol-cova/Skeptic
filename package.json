@@ -15,6 +15,7 @@
     "build": "eve build",
     "dev": "eve dev",
     "start": "eve start",
+    "test": "node --test agent/lib/contracts.test.ts",
     "typecheck": "tsc"
   },
   "dependencies": {
