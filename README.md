@@ -6,13 +6,26 @@ Skeptic is an open-source verification agent for AI-built web applications. Give
 
 ## TL;DR
 
+Give Skeptic two things:
+
+1. A URL for the running application.
+2. The acceptance criteria you want independently verified.
+
+Skeptic operates the app in a real browser, tries to disprove each claim, and produces an evidence report plus replayable Playwright tests.
+
+Skeptic returns `PROVEN`, `DISPROVEN`, `UNVERIFIABLE`, or `HARNESS_ERROR` for every criterion, backed by screenshots, traces, assertions, and generated tests.
+
+## Planned CLI
+
+The target command-line experience is:
+
 ```bash
-npx @skeptic-ai/cli verify \
+skeptic verify \
   --url https://preview.example.com \
   --criteria acceptance.md
 ```
 
-Skeptic returns `PROVEN`, `DISPROVEN`, `UNVERIFIABLE`, or `HARNESS_ERROR` for every criterion, backed by screenshots, traces, assertions, and generated tests.
+> Skeptic is currently a hackathon build. The NPM package has not been published yet, so installation instructions will be added after the package name and scope are reserved.
 
 ## Why Skeptic?
 
