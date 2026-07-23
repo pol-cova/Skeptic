@@ -13,7 +13,7 @@ Give Skeptic two things:
 
 Skeptic operates the app in a real browser, tries to disprove each claim, and produces an evidence report plus replayable Playwright tests.
 
-Skeptic returns `PROVEN`, `DISPROVEN`, `UNVERIFIABLE`, or `HARNESS_ERROR` for every criterion, backed by screenshots, traces, assertions, and generated tests.
+Skeptic returns `PASS`, `FAIL`, `UNVERIFIABLE`, or `HARNESS_ERROR` for every criterion, backed by observable evidence.
 
 ## Planned CLI
 
@@ -26,6 +26,29 @@ skeptic verify \
 ```
 
 > Skeptic is currently a hackathon build. The NPM package has not been published yet, so installation instructions will be added after the package name and scope are reserved.
+
+## Development
+
+Requires Node.js 24 and pnpm 10.7.
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Eve guides you through configuring an AI Gateway credential when the agent
+starts. Do not commit credentials.
+
+Validate the project with:
+
+```bash
+pnpm typecheck
+pnpm exec eve info
+pnpm build
+```
+
+This PR establishes the Eve agent foundation only. Bedrock and Playwright
+preflight work remains tracked in issue #3.
 
 ## Why Skeptic?
 
