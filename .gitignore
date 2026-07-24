@@ -3,7 +3,11 @@ outputs/
 .DS_Store
 node_modules/
 .env*
+!.env.example
+!**/.env.example
+!**/.env.fixed
 .proof/
+.data/
 playwright-report/
 test-results/
 .eve/

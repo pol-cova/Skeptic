@@ -1,11 +1,11 @@
-export default function HomePage() {
-  return (
-    <main>
-      <h1>Skeptic demo app</h1>
-      <p>
-        This reference application will host the invite-teammate flow used in
-        the hackathon demo.
-      </p>
-    </main>
-  );
+import { redirect } from "next/navigation";
+
+import { isAuthenticated } from "../lib/session.ts";
+
+export default async function HomePage() {
+  if (await isAuthenticated()) {
+    redirect("/team");
+  }
+
+  redirect("/login");
 }
