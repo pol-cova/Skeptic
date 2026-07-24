@@ -55,6 +55,9 @@ package checks.
 The [model-provider decision](docs/adr/0002-model-provider-strategy.md)
 documents the native subscription and BYOC contract.
 
+The canonical verdict, readiness, exit-code, naming, and scope decisions are in
+[ADR 0001](docs/adr/0001-public-contract.md).
+
 ## Why Skeptic?
 
 Coding agents are optimized to produce changes. Skeptic is an independent agent optimized to find reasons those changes should not ship.
@@ -63,4 +66,10 @@ Unlike a static testing skill, Skeptic can interpret ambiguous requirements, ins
 
 ## License
 
-Apache-2.0
+Skeptic is available under the [Apache License 2.0](LICENSE).
+
+## Community
+
+- [Contributing](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)
