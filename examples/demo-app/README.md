@@ -1,6 +1,6 @@
-# Skeptic demo app
+# Demo app
 
-Reference Next.js application for the invite-teammate hackathon demo.
+Reference Next.js app for the invite-teammate verification demo.
 
 ## Run
 
@@ -8,37 +8,28 @@ Reference Next.js application for the invite-teammate hackathon demo.
 pnpm --filter demo-app dev
 ```
 
-Open `http://127.0.0.1:3100/login` and sign in with:
-
-- Username: `demo`
-- Password: `skeptic-demo`
+Sign in at `http://127.0.0.1:3100/login` with `demo` / `skeptic-demo`.
 
 Override credentials with `PROOF_TEST_USERNAME` and `PROOF_TEST_PASSWORD`.
 
-## Seeded bug (default)
+## Modes
 
-By default the app shows a success toast for valid invitations but does not
-persist them. After a page refresh, the pending list is empty again.
+Default behavior seeds a persistence bug: a valid invite shows a success toast, but the pending list is empty after refresh.
 
-Expected Skeptic result on the broken build:
+Enable the prepared fix:
 
-```text
-Criterion 1: PASS
-Criterion 2: FAIL
-Criterion 3: UNVERIFIABLE
-Overall: NOT READY
+```bash
+pnpm --filter demo-app dev:fixed
 ```
 
-## Prepared fix
+Or copy `fix/.env.fixed` to `.env.local`.
 
-See [fix/README.md](./fix/README.md). The fix sets `DEMO_PERSIST_INVITATIONS=true`.
-
-## Reset between runs
+## Reset
 
 ```bash
 pnpm --filter demo-app reset
 ```
 
-## Acceptance criteria
+The app must be running on port 3100.
 
-The canonical criteria live in [acceptance.md](./acceptance.md).
+Acceptance criteria: [acceptance.md](./acceptance.md)

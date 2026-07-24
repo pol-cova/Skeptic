@@ -91,7 +91,6 @@ export function InvitePanel() {
     <section className="stack">
       <header className="card">
         <h1>Invite teammate</h1>
-        <p>Send a pending invitation to a teammate&apos;s email address.</p>
       </header>
 
       <form className="card" onSubmit={handleSubmit}>

@@ -13,18 +13,12 @@ export default async function TeamPage() {
   return (
     <div className="stack">
       <div className="toolbar card">
-        <div>
-          <p className="muted">Team management</p>
-          <p data-testid="demo-mode">
-            Mode: {persistenceEnabled() ? "fixed" : "seeded-bug"}
-          </p>
-        </div>
+        <p data-testid="demo-mode">
+          Mode: {persistenceEnabled() ? "fixed" : "seeded-bug"}
+        </p>
         <LogoutButton />
       </div>
       <InvitePanel />
-      <p className="muted">
-        Reset demo state with <code>pnpm --filter demo-app reset</code>.
-      </p>
     </div>
   );
 }

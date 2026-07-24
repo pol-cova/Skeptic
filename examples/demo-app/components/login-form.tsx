@@ -31,7 +31,6 @@ export function LoginForm() {
   return (
     <form className="card" onSubmit={handleSubmit}>
       <h1>Sign in</h1>
-      <p>Use the demo credentials to access the team workspace.</p>
       <label htmlFor="username">Username</label>
       <input
         id="username"

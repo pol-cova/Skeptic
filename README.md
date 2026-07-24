@@ -2,22 +2,74 @@
 
 > Your coding agent says it works. Skeptic proves it.
 
-Skeptic is an open-source verification agent for AI-built web applications. Give it a running app and natural-language acceptance criteria; it explores the product in a real browser, attempts to disprove each claim, and returns evidence-backed verdicts with replayable Playwright tests.
+Skeptic is an open-source verification agent for AI-built web applications. Give it a running app and acceptance criteria written in Markdown; it explores the product in a real browser, attempts to disprove each claim, and returns evidence-backed verdicts with replayable Playwright tests.
 
-## TL;DR
+Each criterion is classified as `PASS`, `FAIL`, `UNVERIFIABLE`, or `HARNESS_ERROR`.
 
-Give Skeptic two things:
+## Requirements
 
-1. A URL for the running application.
-2. The acceptance criteria you want independently verified.
+- Node.js 24
+- pnpm 10.7
 
-Skeptic operates the app in a real browser, tries to disprove each claim, and produces an evidence report plus replayable Playwright tests.
+## Install
 
-Skeptic returns `PASS`, `FAIL`, `UNVERIFIABLE`, or `HARNESS_ERROR` for every criterion, backed by observable evidence.
+Published npm package:
+
+```bash
+npm install @pol-cova/skeptic
+```
+
+The package name is reserved. The verification CLI is still under development in this repository.
+
+Clone and install from source:
+
+```bash
+git clone https://github.com/pol-cova/Skeptic.git
+cd Skeptic
+pnpm install
+```
+
+## Quick start
+
+Run the reference demo app:
+
+```bash
+pnpm demo:dev
+```
+
+Open `http://127.0.0.1:3100/login` and sign in with `demo` / `skeptic-demo`.
+
+Start the Eve agent:
+
+```bash
+pnpm dev
+```
+
+## Development
+
+```bash
+pnpm typecheck
+pnpm test
+pnpm lint
+pnpm build
+```
+
+Skeptic uses a local ChatGPT subscription through `codex login` by default. Set `SKEPTIC_PROVIDER` to use OpenRouter, Cerebras, Bedrock, or an OpenAI-compatible endpoint. Credentials stay in environment variables; never commit them.
+
+Repository layout:
+
+- `packages/` — core, CLI, Playwright harness, and report
+- `agent/` — Eve verification agent
+- `examples/demo-app/` — reference application
+
+Further reading:
+
+- [Day 0 preflight](docs/preflight.md)
+- [Public contract (ADR 0001)](docs/adr/0001-public-contract.md)
+- [Model providers (ADR 0002)](docs/adr/0002-model-provider-strategy.md)
+- [Demo app](examples/demo-app/README.md)
 
 ## Planned CLI
-
-The target command-line experience is:
 
 ```bash
 skeptic verify \
@@ -25,54 +77,9 @@ skeptic verify \
   --criteria acceptance.md
 ```
 
-> Skeptic is currently a hackathon build. The NPM package has not been published yet, so installation instructions will be added after the package name and scope are reserved.
-
-## Development
-
-Requires Node.js 24 and pnpm 10.7.
-
-```bash
-pnpm install
-pnpm dev
-```
-
-Skeptic uses an existing local `codex login` by default. No AWS account is
-required for normal local development. Set `SKEPTIC_PROVIDER` to use
-OpenRouter, Cerebras, Bedrock, or an OpenAI-compatible endpoint with credentials
-from environment variables. Never commit credentials.
-
-Validate the project with:
-
-```bash
-pnpm typecheck
-pnpm test
-pnpm lint
-pnpm exec eve info
-pnpm build
-pnpm demo:dev
-```
-
-The repository is a pnpm workspace with packages under `packages/`, the Eve
-agent under `agent/`, and the reference app under `examples/demo-app/`.
-
-See the [Day 0 preflight](docs/preflight.md) for Eve, Bedrock, Playwright, and
-package checks.
-
-The [model-provider decision](docs/adr/0002-model-provider-strategy.md)
-documents the native subscription and BYOC contract.
-
-The canonical verdict, readiness, exit-code, naming, and scope decisions are in
-[ADR 0001](docs/adr/0001-public-contract.md).
-
-## Why Skeptic?
-
-Coding agents are optimized to produce changes. Skeptic is an independent agent optimized to find reasons those changes should not ship.
-
-Unlike a static testing skill, Skeptic can interpret ambiguous requirements, inspect an unfamiliar interface, adapt its verification plan, and gather evidence. A deterministic harness—not the model—controls browser actions and assigns passing verdicts.
-
 ## License
 
-Skeptic is available under the [Apache License 2.0](LICENSE).
+Apache-2.0. See [LICENSE](LICENSE).
 
 ## Community
 

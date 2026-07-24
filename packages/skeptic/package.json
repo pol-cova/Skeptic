@@ -33,8 +33,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "scripts": {
-    "prepublishOnly": "node -e \"console.log('Publishing @pol-cova/skeptic')\""
   }
 }
