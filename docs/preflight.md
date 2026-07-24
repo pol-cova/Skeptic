@@ -78,17 +78,26 @@ SKEPTIC_PROVIDER=cerebras CEREBRAS_API_KEY=... pnpm preflight:model
 Bedrock remains the official hackathon demonstration provider. The generic
 preflight prints provider and model identifiers but never credential values.
 
-### Package fallback
+### Package name
 
-The unscoped npm name `skeptic` belongs to an existing package. Until a package
-scope is reserved, the supported fallback is a local installable tarball:
+The public npm package is `@pol-cova/skeptic`. The unscoped name `skeptic`
+belongs to an existing package.
+
+Publish the name reservation (requires `npm login` as `pol-cova`):
+
+```bash
+pnpm publish:skeptic
+```
+
+Until a full CLI ships, `0.0.1` is a placeholder tarball that locks the scoped
+name. The supported local fallback remains:
 
 ```bash
 pnpm preflight:package
 ```
 
 Do not document a public npm installation command until a published artifact is
-verified.
+verified beyond the name reservation.
 
 ## Current result
 
