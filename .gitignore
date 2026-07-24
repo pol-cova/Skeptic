@@ -4,6 +4,7 @@ outputs/
 node_modules/
 .env*
 .proof/
+.data/
 playwright-report/
 test-results/
 .eve/

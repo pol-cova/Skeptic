@@ -11,4 +11,9 @@ export default defineProofConfig({
     file: "examples/demo-app/acceptance.md",
     maxCriteria: 3,
   },
+  auth: {
+    loginPath: "/login",
+    usernameEnv: "PROOF_TEST_USERNAME",
+    passwordEnv: "PROOF_TEST_PASSWORD",
+  },
 });
