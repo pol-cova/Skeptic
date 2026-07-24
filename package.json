@@ -20,6 +20,7 @@
     "preflight:model": "node scripts/preflight/model.ts",
     "preflight:package": "pnpm pack --pack-destination .proof/preflight",
     "preflight:playwright": "node scripts/preflight/playwright.ts",
+    "publish:skeptic": "pnpm --filter @pol-cova/skeptic publish --access public --no-git-checks",
     "start": "eve start",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json && pnpm -r run typecheck"

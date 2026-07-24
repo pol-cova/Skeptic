@@ -1,0 +1,40 @@
+{
+  "name": "@pol-cova/skeptic",
+  "version": "0.0.1",
+  "description": "Autonomous verification agent for AI-built web applications.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pol-cova/Skeptic.git"
+  },
+  "homepage": "https://github.com/pol-cova/Skeptic#readme",
+  "bugs": {
+    "url": "https://github.com/pol-cova/Skeptic/issues"
+  },
+  "keywords": [
+    "verification",
+    "testing",
+    "playwright",
+    "ai",
+    "agent",
+    "cli"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "node -e \"console.log('Publishing @pol-cova/skeptic')\""
+  }
+}
