@@ -8,11 +8,11 @@ Accepted.
 
 Every Skeptic surface uses these criterion verdicts:
 
-| Verdict | Meaning |
-| --- | --- |
-| `PASS` | Deterministic evidence proves the criterion. |
-| `FAIL` | Deterministic evidence disproves the criterion. |
-| `UNVERIFIABLE` | A required product prerequisite is missing. This is not a product failure. |
+| Verdict         | Meaning                                                                          |
+| --------------- | -------------------------------------------------------------------------------- |
+| `PASS`          | Deterministic evidence proves the criterion.                                     |
+| `FAIL`          | Deterministic evidence disproves the criterion.                                  |
+| `UNVERIFIABLE`  | A required product prerequisite is missing. This is not a product failure.       |
 | `HARNESS_ERROR` | Skeptic could not complete reliable verification. This is not a product verdict. |
 
 Run readiness is derived from verdicts with this precedence:
@@ -22,12 +22,12 @@ Run readiness is derived from verdicts with this precedence:
 3. Otherwise, any `FAIL` produces `NOT_READY`.
 4. Otherwise, the run is `READY`.
 
-| Readiness | Exit code |
-| --- | ---: |
-| `READY` | 0 |
-| `NOT_READY` | 1 |
-| `INCOMPLETE` | 2 |
-| `ERROR` | 3 |
+| Readiness    | Exit code |
+| ------------ | --------: |
+| `READY`      |         0 |
+| `NOT_READY`  |         1 |
+| `INCOMPLETE` |         2 |
+| `ERROR`      |         3 |
 
 The TypeScript and JSON source of truth is
 [`agent/lib/contracts.ts`](../../agent/lib/contracts.ts). CLI output, reports,

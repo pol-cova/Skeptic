@@ -45,9 +45,15 @@ Validate the project with:
 
 ```bash
 pnpm typecheck
+pnpm test
+pnpm lint
 pnpm exec eve info
 pnpm build
+pnpm demo:dev
 ```
+
+The repository is a pnpm workspace with packages under `packages/`, the Eve
+agent under `agent/`, and the reference app under `examples/demo-app/`.
 
 See the [Day 0 preflight](docs/preflight.md) for Eve, Bedrock, Playwright, and
 package checks.

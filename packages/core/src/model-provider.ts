@@ -43,10 +43,7 @@ function readProvider(env: NodeJS.ProcessEnv): SkepticProviderId {
   );
 }
 
-function requireEnvironmentValue(
-  env: NodeJS.ProcessEnv,
-  name: string,
-): string {
+function requireEnvironmentValue(env: NodeJS.ProcessEnv, name: string): string {
   const value = env[name]?.trim();
   if (!value) {
     throw new Error(`Missing ${name} for the selected Skeptic provider.`);
@@ -71,9 +68,10 @@ function readCompatibleBaseUrl(env: NodeJS.ProcessEnv): string {
   return url.toString().replace(/\/$/, "");
 }
 
-function readCompatibleApiKey(
-  env: NodeJS.ProcessEnv,
-): { apiKey: string; source: string } {
+function readCompatibleApiKey(env: NodeJS.ProcessEnv): {
+  apiKey: string;
+  source: string;
+} {
   const source = env.SKEPTIC_API_KEY_ENV?.trim() || "SKEPTIC_API_KEY";
   if (!/^[A-Z][A-Z0-9_]*$/.test(source)) {
     throw new Error(
