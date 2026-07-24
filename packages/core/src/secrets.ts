@@ -35,15 +35,16 @@ export function resolveAuthSecrets(
   };
 }
 
-export function collectSecretValues(
-  secrets: readonly string[],
-): string[] {
+export function collectSecretValues(secrets: readonly string[]): string[] {
   return [...new Set(secrets.filter((value) => value.length > 0))].sort(
     (left, right) => right.length - left.length,
   );
 }
 
-export function redactString(value: string, secrets: readonly string[]): string {
+export function redactString(
+  value: string,
+  secrets: readonly string[],
+): string {
   let redacted = value;
   for (const secret of collectSecretValues(secrets)) {
     if (redacted.includes(secret)) {

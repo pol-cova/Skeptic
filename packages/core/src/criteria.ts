@@ -36,7 +36,9 @@ export function parseCriteriaMarkdown(
     const sourceText = match[2];
 
     if (!Number.isInteger(index) || index < 1) {
-      throw new Error(`Invalid criterion index "${match[1]}" in acceptance criteria.`);
+      throw new Error(
+        `Invalid criterion index "${match[1]}" in acceptance criteria.`,
+      );
     }
 
     if (sourceText.length === 0) {
@@ -44,7 +46,9 @@ export function parseCriteriaMarkdown(
     }
 
     if (criteria.some((criterion) => criterion.index === index)) {
-      throw new Error(`Duplicate criterion index ${index} in acceptance criteria.`);
+      throw new Error(
+        `Duplicate criterion index ${index} in acceptance criteria.`,
+      );
     }
 
     criteria.push(
@@ -57,7 +61,9 @@ export function parseCriteriaMarkdown(
   }
 
   if (criteria.length === 0) {
-    throw new Error("No numbered acceptance criteria were found in the Markdown file.");
+    throw new Error(
+      "No numbered acceptance criteria were found in the Markdown file.",
+    );
   }
 
   criteria.sort((left, right) => left.index - right.index);
@@ -84,7 +90,10 @@ export function loadCriteriaFromFile(
   criteriaConfig: ProofCriteriaConfig,
   options?: { baseDir?: string },
 ): ParseCriteriaResult {
-  const filePath = resolve(options?.baseDir ?? process.cwd(), criteriaConfig.file);
+  const filePath = resolve(
+    options?.baseDir ?? process.cwd(),
+    criteriaConfig.file,
+  );
   const content = readFileSync(filePath, "utf8");
   return parseCriteriaMarkdown(content, {
     maxCriteria: criteriaConfig.maxCriteria,

@@ -5,7 +5,11 @@ import {
   parseProofConfig,
   ProofConfigError,
 } from "./config.ts";
-import { loadCriteriaFromFile, parseCriteriaMarkdown, withPrerequisites } from "./criteria.ts";
+import {
+  loadCriteriaFromFile,
+  parseCriteriaMarkdown,
+  withPrerequisites,
+} from "./criteria.ts";
 import { resolve } from "node:path";
 
 const validConfig = {
@@ -47,10 +51,7 @@ describe("proof config", () => {
         ...validConfig,
         app: {
           ...validConfig.app,
-          allowedOrigins: [
-            "http://127.0.0.1:3100",
-            "http://127.0.0.1:3200",
-          ],
+          allowedOrigins: ["http://127.0.0.1:3100", "http://127.0.0.1:3200"],
         },
       }),
     ).toThrow(/exactly 1 allowed origin/u);
@@ -86,7 +87,9 @@ const demoAcceptance = `# Invite teammate
 
 describe("criteria parsing", () => {
   it("parses the demo markdown into three ordered criteria with unchanged source text", () => {
-    const { criteria } = parseCriteriaMarkdown(demoAcceptance, { maxCriteria: 3 });
+    const { criteria } = parseCriteriaMarkdown(demoAcceptance, {
+      maxCriteria: 3,
+    });
 
     expect(criteria).toHaveLength(3);
     expect(criteria.map((criterion) => criterion.sourceText)).toEqual([
@@ -112,13 +115,15 @@ describe("criteria parsing", () => {
   it("fails explicitly when too many criteria are present", () => {
     const tooMany = `${demoAcceptance}\n4. A fourth criterion should not be accepted.\n`;
 
-    expect(() =>
-      parseCriteriaMarkdown(tooMany, { maxCriteria: 3 }),
-    ).toThrow(/defines 4 criteria/u);
+    expect(() => parseCriteriaMarkdown(tooMany, { maxCriteria: 3 })).toThrow(
+      /defines 4 criteria/u,
+    );
   });
 
   it("represents explicit prerequisites without changing source text", () => {
-    const { criteria } = parseCriteriaMarkdown(demoAcceptance, { maxCriteria: 3 });
+    const { criteria } = parseCriteriaMarkdown(demoAcceptance, {
+      maxCriteria: 3,
+    });
     const withDeps = withPrerequisites(criteria, { 3: [2] });
 
     expect(withDeps[2]?.prerequisites).toEqual([2]);
