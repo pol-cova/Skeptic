@@ -14,13 +14,13 @@ The default provider is `chatgpt`, using Eve's local Codex-login integration.
 Developers can select `openrouter`, `cerebras`, `bedrock`, or
 `openai-compatible` with `SKEPTIC_PROVIDER`.
 
-| Provider | Credential source | Default model |
-| --- | --- | --- |
-| `chatgpt` | Existing `codex login` | `gpt-5.6-sol` |
-| `openrouter` | `OPENROUTER_API_KEY` | `openai/gpt-5.4-mini` |
-| `cerebras` | `CEREBRAS_API_KEY` | `gpt-oss-120b` |
-| `bedrock` | Bedrock bearer token or AWS credential chain | `amazon.nova-lite-v1:0` |
-| `openai-compatible` | Configurable environment variable | No default |
+| Provider            | Credential source                            | Default model           |
+| ------------------- | -------------------------------------------- | ----------------------- |
+| `chatgpt`           | Existing `codex login`                       | `gpt-5.6-sol`           |
+| `openrouter`        | `OPENROUTER_API_KEY`                         | `openai/gpt-5.4-mini`   |
+| `cerebras`          | `CEREBRAS_API_KEY`                           | `gpt-oss-120b`          |
+| `bedrock`           | Bedrock bearer token or AWS credential chain | `amazon.nova-lite-v1:0` |
+| `openai-compatible` | Configurable environment variable            | No default              |
 
 `SKEPTIC_MODEL` overrides a provider's default. OpenAI-compatible endpoints
 also require `SKEPTIC_BASE_URL`; remote endpoints must use HTTPS.

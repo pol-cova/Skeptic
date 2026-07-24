@@ -1,0 +1,8 @@
+.prettierignore
+.next
+.output
+.eve
+.proof
+dist
+node_modules
+pnpm-lock.yaml

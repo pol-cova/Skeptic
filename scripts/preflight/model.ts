@@ -1,7 +1,7 @@
 import { Output, streamText } from "ai";
 import { z } from "zod";
 
-import { resolveSkepticModel } from "../../agent/lib/model-provider.ts";
+import { resolveSkepticModel } from "@skeptic/core";
 
 const responseSchema = z.object({
   status: z.literal("ok"),

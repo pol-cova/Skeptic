@@ -5,17 +5,17 @@ artifacts are written under `.proof/preflight/` and are never committed.
 
 ## Runtime policy
 
-| Component | Version or policy |
-| --- | --- |
-| Node.js | `24.x` supported; `26.4.0` used for this local preflight with an engine warning |
-| pnpm | `10.7.0` |
-| Eve | `0.27.1` |
-| Amazon Bedrock provider | `@ai-sdk/amazon-bedrock@5.0.28` |
-| Cerebras provider | `@ai-sdk/cerebras@3.0.14` |
-| OpenAI-compatible provider | `@ai-sdk/openai-compatible@3.0.14` |
-| OpenRouter provider | `@openrouter/ai-sdk-provider@3.0.0` |
-| Playwright | `1.61.1` |
-| Chromium | Playwright revision 1228, Chrome `149.0.7827.55` on macOS arm64 |
+| Component                  | Version or policy                                                               |
+| -------------------------- | ------------------------------------------------------------------------------- |
+| Node.js                    | `24.x` supported; `26.4.0` used for this local preflight with an engine warning |
+| pnpm                       | `10.7.0`                                                                        |
+| Eve                        | `0.27.1`                                                                        |
+| Amazon Bedrock provider    | `@ai-sdk/amazon-bedrock@5.0.28`                                                 |
+| Cerebras provider          | `@ai-sdk/cerebras@3.0.14`                                                       |
+| OpenAI-compatible provider | `@ai-sdk/openai-compatible@3.0.14`                                              |
+| OpenRouter provider        | `@openrouter/ai-sdk-provider@3.0.0`                                             |
+| Playwright                 | `1.61.1`                                                                        |
+| Chromium                   | Playwright revision 1228, Chrome `149.0.7827.55` on macOS arm64                 |
 
 The committed `pnpm-lock.yaml` is authoritative. CI and fresh clones must use
 `pnpm install --frozen-lockfile`. macOS arm64 is the current development host;
@@ -92,15 +92,15 @@ verified.
 
 ## Current result
 
-| Check | Result |
-| --- | --- |
-| Eve discovery/build | Pass |
-| Local ChatGPT subscription structured call | Pass with existing `codex login` |
-| BYOC configuration validation | Pass for OpenRouter, Cerebras, Bedrock, and OpenAI-compatible endpoints |
-| Chromium launch, local page, screenshot | Pass |
-| Runtime and lockfile policy | Pass |
-| Installable tarball fallback | Pass |
-| Structured Bedrock call | Blocked: no AWS authentication is configured on the development host |
+| Check                                      | Result                                                                  |
+| ------------------------------------------ | ----------------------------------------------------------------------- |
+| Eve discovery/build                        | Pass                                                                    |
+| Local ChatGPT subscription structured call | Pass with existing `codex login`                                        |
+| BYOC configuration validation              | Pass for OpenRouter, Cerebras, Bedrock, and OpenAI-compatible endpoints |
+| Chromium launch, local page, screenshot    | Pass                                                                    |
+| Runtime and lockfile policy                | Pass                                                                    |
+| Installable tarball fallback               | Pass                                                                    |
+| Structured Bedrock call                    | Blocked: no AWS authentication is configured on the development host    |
 
 The live Bedrock call is the only remaining exit gate for the official
 hackathon provider path in issue #3.

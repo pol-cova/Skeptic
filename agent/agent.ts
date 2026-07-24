@@ -1,6 +1,6 @@
 import { defineAgent } from "eve";
 
-import { resolveSkepticModel } from "./lib/model-provider.ts";
+import { resolveSkepticModel } from "@skeptic/core";
 
 const resolvedModel = resolveSkepticModel();
 

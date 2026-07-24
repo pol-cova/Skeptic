@@ -16,8 +16,11 @@ Use Node.js 24 and pnpm 10.7.
 ```bash
 pnpm install
 pnpm typecheck
+pnpm test
+pnpm lint
 pnpm exec eve info
 pnpm build
+pnpm demo:dev
 ```
 
 Keep pull requests focused. Explain the behavior change, link the relevant
