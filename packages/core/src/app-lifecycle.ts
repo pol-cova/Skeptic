@@ -188,8 +188,10 @@ import { redactString } from "./secrets.ts";
  */
 export async function startAppProcess(command: string): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
+    // Track if we've already settled the promise
+    let settled = false;
+
     // Spawn process using shell for command interpretation
-    // detached: true makes process survive if parent exits
     const child = spawn(command, {
       shell: true,
       detached: false, // Keep attached so we can track it
@@ -197,29 +199,26 @@ export async function startAppProcess(command: string): Promise<ChildProcess> {
     });
 
     // Handle spawn errors (command not found, permission denied, etc.)
-    child.on("error", (error) => {
-      reject(
-        new AppStartupError(`Failed to start process: ${error.message}`, error),
-      );
+    child.once("error", (error) => {
+      if (!settled) {
+        settled = true;
+        reject(
+          new AppStartupError(
+            `Failed to start process: ${error.message}`,
+            error,
+          ),
+        );
+      }
     });
 
     // Wait for the 'spawn' event to confirm successful process start
     // This ensures we don't resolve before potential spawn errors
-    child.on("spawn", () => {
-      resolve(child);
+    child.once("spawn", () => {
+      if (!settled) {
+        settled = true;
+        resolve(child);
+      }
     });
-
-    // Handle case where spawn event doesn't fire but we have a PID
-    // This can happen on some platforms/Node versions
-    if (child.pid && !child.killed) {
-      // Give a small delay to allow error event to fire if command doesn't exist
-      setTimeout(() => {
-        // Only resolve if no error has been thrown
-        if (!child.killed) {
-          resolve(child);
-        }
-      }, 100);
-    }
   });
 }
 
