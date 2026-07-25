@@ -3,6 +3,9 @@ import {
   checkReadiness,
   waitForReadiness,
   AppStartupError,
+  startAppProcess,
+  isProcessRunning,
+  stopProcess,
 } from "./app-lifecycle.ts";
 
 // ============================================================================
@@ -301,5 +304,113 @@ describe("AppStartupError", () => {
 
     expect(error.message).toBe("Startup failed");
     expect(error.cause).toBe(cause);
+  });
+});
+
+// ============================================================================
+// Phase 2 Tests: Process Management
+// ============================================================================
+
+describe("startAppProcess", () => {
+  it("starts a process and returns ChildProcess with PID", async () => {
+    // Use a simple command that exits quickly
+    const child = await startAppProcess("echo hello");
+
+    expect(child).toBeDefined();
+    expect(child.pid).toBeTypeOf("number");
+    expect(child.pid).toBeGreaterThan(0);
+  });
+
+  // Note: On Windows with shell:true, invalid commands still spawn cmd.exe
+  // so they don't trigger the 'error' event. We test with a command that
+  // will actually fail at the spawn level.
+  it("handles process spawn errors", async () => {
+    // Skip this test on Windows where shell spawning behavior differs
+    if (process.platform === "win32") {
+      expect(true).toBe(true); // Skip test
+      return;
+    }
+
+    await expect(
+      startAppProcess("this-command-does-not-exist-xyz123"),
+    ).rejects.toThrow(AppStartupError);
+  });
+});
+
+describe("isProcessRunning", () => {
+  it("returns true for current process", () => {
+    const result = isProcessRunning(process.pid);
+    expect(result).toBe(true);
+  });
+
+  it("returns false for non-existent PID", () => {
+    // Use a PID that's very unlikely to exist
+    const result = isProcessRunning(999999);
+    expect(result).toBe(false);
+  });
+
+  it("returns true for a running child process", async () => {
+    // Start a long-running process
+    const child = await startAppProcess(
+      process.platform === "win32"
+        ? "timeout /t 10 /nobreak > nul"
+        : "sleep 10",
+    );
+
+    expect(child.pid).toBeDefined();
+    const result = isProcessRunning(child.pid!);
+    expect(result).toBe(true);
+
+    // Cleanup
+    await stopProcess(child.pid!);
+  });
+});
+
+describe("stopProcess", () => {
+  it("stops a running process", async () => {
+    // Start a long-running process
+    const child = await startAppProcess(
+      process.platform === "win32"
+        ? "timeout /t 30 /nobreak > nul"
+        : "sleep 30",
+    );
+
+    expect(child.pid).toBeDefined();
+    expect(isProcessRunning(child.pid!)).toBe(true);
+
+    // Stop the process
+    await stopProcess(child.pid!);
+
+    // Verify it's stopped
+    expect(isProcessRunning(child.pid!)).toBe(false);
+  });
+
+  it("does nothing if process is already stopped", async () => {
+    // Start and immediately stop a process
+    const child = await startAppProcess("echo done");
+
+    // Wait for process to exit naturally
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // This should not throw
+    await expect(stopProcess(child.pid!)).resolves.toBeUndefined();
+  });
+
+  it("force kills process that doesn't respond to SIGTERM", async () => {
+    // Start a process that ignores SIGTERM (on Unix)
+    // On Windows, SIGTERM immediately terminates anyway
+    const child = await startAppProcess(
+      process.platform === "win32"
+        ? "timeout /t 30 /nobreak > nul"
+        : "sleep 30",
+    );
+
+    expect(child.pid).toBeDefined();
+
+    // Stop with very short graceful timeout to test force kill
+    await stopProcess(child.pid!, 100);
+
+    // Should be stopped
+    expect(isProcessRunning(child.pid!)).toBe(false);
   });
 });

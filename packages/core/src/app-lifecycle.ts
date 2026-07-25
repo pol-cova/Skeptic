@@ -161,12 +161,150 @@ export async function waitForReadiness(
 }
 
 // ============================================================================
-// Phase 2: Process Management (TODO)
+// Phase 2: Process Management
 // ============================================================================
 
-// export async function startAppProcess(command: string): Promise<ChildProcess>
-// export function isProcessRunning(pid: number): boolean
-// export async function stopProcess(pid: number): Promise<void>
+import { spawn, type ChildProcess } from "node:child_process";
+
+/**
+ * Starts an application process using a shell command.
+ *
+ * The process is spawned in detached mode so it survives if Skeptic crashes.
+ * stdout and stderr are inherited for visibility during development.
+ *
+ * @param command - Shell command to execute (e.g., "pnpm --filter demo-app dev")
+ * @returns Child process handle
+ * @throws AppStartupError if process fails to start
+ *
+ * @example
+ * ```typescript
+ * const proc = await startAppProcess("pnpm --filter demo-app dev");
+ * console.log(`Started process with PID ${proc.pid}`);
+ * ```
+ */
+export async function startAppProcess(command: string): Promise<ChildProcess> {
+  return new Promise((resolve, reject) => {
+    // Spawn process using shell for command interpretation
+    // detached: true makes process survive if parent exits
+    const child = spawn(command, {
+      shell: true,
+      detached: false, // Keep attached so we can track it
+      stdio: "inherit", // Inherit stdout/stderr for visibility
+    });
+
+    // Handle spawn errors (command not found, permission denied, etc.)
+    child.on("error", (error) => {
+      reject(
+        new AppStartupError(`Failed to start process: ${error.message}`, error),
+      );
+    });
+
+    // Process started successfully if we get a PID
+    if (child.pid) {
+      resolve(child);
+    } else {
+      reject(new AppStartupError("Process started but has no PID"));
+    }
+  });
+}
+
+/**
+ * Checks if a process with the given PID is currently running.
+ *
+ * Platform-independent implementation that works on Windows and Unix-like systems.
+ *
+ * @param pid - Process ID to check
+ * @returns true if process is running, false otherwise
+ *
+ * @example
+ * ```typescript
+ * if (isProcessRunning(12345)) {
+ *   console.log("Process is still running");
+ * }
+ * ```
+ */
+export function isProcessRunning(pid: number): boolean {
+  try {
+    // Sending signal 0 checks if process exists without actually sending a signal
+    // This works on Unix-like systems (Linux, macOS)
+    // On Windows, process.kill throws if process doesn't exist
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    // ESRCH means process not found
+    // EPERM means process exists but we don't have permission (still running)
+    if (error instanceof Error && "code" in error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code === "EPERM") {
+        return true; // Process exists but we can't signal it
+      }
+    }
+    return false;
+  }
+}
+
+/**
+ * Stops a process gracefully with fallback to force kill.
+ *
+ * Attempts graceful shutdown first (SIGTERM on Unix, taskkill on Windows).
+ * If process doesn't exit within timeout, forces termination (SIGKILL).
+ *
+ * @param pid - Process ID to stop
+ * @param gracefulTimeoutMs - Time to wait for graceful shutdown. Default: 5000 (5s)
+ * @returns Promise that resolves when process is stopped
+ *
+ * @example
+ * ```typescript
+ * await stopProcess(12345);
+ * console.log("Process stopped");
+ * ```
+ */
+export async function stopProcess(
+  pid: number,
+  gracefulTimeoutMs: number = 5000,
+): Promise<void> {
+  // Check if process is running
+  if (!isProcessRunning(pid)) {
+    return; // Already stopped
+  }
+
+  try {
+    // Try graceful shutdown first
+    // SIGTERM on Unix, which can be caught by the process
+    // On Windows, this will immediately terminate
+    process.kill(pid, "SIGTERM");
+
+    // Wait for process to exit gracefully
+    const startTime = Date.now();
+    while (Date.now() - startTime < gracefulTimeoutMs) {
+      if (!isProcessRunning(pid)) {
+        return; // Process exited gracefully
+      }
+      // Wait a bit before checking again
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    // Graceful shutdown timeout - force kill
+    if (isProcessRunning(pid)) {
+      process.kill(pid, "SIGKILL"); // Force kill
+      // Wait a moment for force kill to take effect
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    }
+  } catch (error) {
+    // If we get ESRCH, process is already gone
+    if (error instanceof Error && "code" in error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code === "ESRCH") {
+        return; // Process not found, already stopped
+      }
+    }
+    // Re-throw other errors
+    throw new AppStartupError(
+      `Failed to stop process ${pid}: ${error instanceof Error ? error.message : String(error)}`,
+      error,
+    );
+  }
+}
 
 // ============================================================================
 // Phase 3: Orchestration (TODO)

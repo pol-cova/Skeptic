@@ -93,6 +93,9 @@ export {
 export {
   AppStartupError,
   checkReadiness,
+  isProcessRunning,
+  startAppProcess,
+  stopProcess,
   waitForReadiness,
   type AppProcess,
   type StartAppOptions,
