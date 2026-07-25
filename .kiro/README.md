@@ -33,6 +33,7 @@ Lee en este orden:
 5. **[../CONTRIBUTING.md](../CONTRIBUTING.md)** - Guía de contribución
 
 **Quick Start:**
+
 ```bash
 git clone https://github.com/pol-cova/Skeptic.git && cd Skeptic
 pnpm install && pnpm demo:dev
@@ -51,11 +52,13 @@ Lee en este orden:
 4. **[steering/product-spec.md](steering/product-spec.md)** - Contexto general del producto
 
 **Workflow obligatorio:**
+
 ```
 PICK ISSUE → PLAN → IMPLEMENT → VERIFY → PR
 ```
 
 **Nunca cambies sin ADR:**
+
 - Nombres de verdicts
 - Precedencia de readiness
 - Formas de CLI
@@ -71,11 +74,13 @@ PICK ISSUE → PLAN → IMPLEMENT → VERIFY → PR
 3. **[../examples/demo-app/README.md](../examples/demo-app/README.md)** - Detalles de la demo app
 
 **Demo con bug:**
+
 ```bash
 pnpm demo:dev
 ```
 
 **Demo arreglada:**
+
 ```bash
 pnpm --filter demo-app dev:fixed
 ```
@@ -86,23 +91,23 @@ pnpm --filter demo-app dev:fixed
 
 ### **Arquitectura y Contratos**
 
-| Documento | Descripción |
-|-----------|-------------|
-| [adr/0001-public-contract.md](adr/0001-public-contract.md) | Verdicts, readiness, CLI, MVP boundary (FROZEN) |
+| Documento                                                                  | Descripción                                       |
+| -------------------------------------------------------------------------- | ------------------------------------------------- |
+| [adr/0001-public-contract.md](adr/0001-public-contract.md)                 | Verdicts, readiness, CLI, MVP boundary (FROZEN)   |
 | [adr/0002-model-provider-strategy.md](adr/0002-model-provider-strategy.md) | Providers: Bedrock, ChatGPT, OpenRouter, Cerebras |
 
 ### **Product & Workflow**
 
-| Documento | Descripción |
-|-----------|-------------|
+| Documento                                            | Descripción                                           |
+| ---------------------------------------------------- | ----------------------------------------------------- |
 | [steering/product-spec.md](steering/product-spec.md) | Spec completa v1.1 - producto, arquitectura, delivery |
-| [steering/team-guide.md](steering/team-guide.md) | Workflow SDD, PR checklist, progreso del proyecto |
-| [steering/preflight.md](steering/preflight.md) | Checks de toolchain: Eve, Playwright, Bedrock, etc. |
+| [steering/team-guide.md](steering/team-guide.md)     | Workflow SDD, PR checklist, progreso del proyecto     |
+| [steering/preflight.md](steering/preflight.md)       | Checks de toolchain: Eve, Playwright, Bedrock, etc.   |
 
 ### **Configuración de Agentes**
 
-| Documento | Descripción |
-|-----------|-------------|
+| Documento              | Descripción                               |
+| ---------------------- | ----------------------------------------- |
 | [AGENTS.md](AGENTS.md) | Guía maestra para agentes IA (READ FIRST) |
 | [CLAUDE.md](CLAUDE.md) | Configuración específica para Claude Code |
 
@@ -113,10 +118,10 @@ pnpm --filter demo-app dev:fixed
 ### **Los 4 Verdicts (FROZEN)**
 
 ```typescript
-PASS           // Evidencia determinística prueba el criterio
-FAIL           // Evidencia determinística refuta el criterio
-UNVERIFIABLE   // Prerequisito faltante (NO es fallo del producto)
-HARNESS_ERROR  // Skeptic falló (NO es veredicto del producto)
+PASS; // Evidencia determinística prueba el criterio
+FAIL; // Evidencia determinística refuta el criterio
+UNVERIFIABLE; // Prerequisito faltante (NO es fallo del producto)
+HARNESS_ERROR; // Skeptic falló (NO es veredicto del producto)
 ```
 
 ### **Readiness Agregado (Precedencia)**

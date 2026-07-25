@@ -4,6 +4,7 @@ outputs/
 node_modules/
 .env*
 !.env.example
+!.env.google-ai.example
 !**/.env.example
 !**/.env.fixed
 .proof/

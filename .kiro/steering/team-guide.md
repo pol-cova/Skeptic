@@ -4,10 +4,10 @@ Share this with new contributors alongside [AGENTS.md](../AGENTS.md) and [produc
 
 ## Document map
 
-| Audience | Start here |
-| -------- | ---------- |
-| New teammate | This guide → product-spec → README |
-| AI agent | AGENTS.md → linked issue → ADR |
+| Audience      | Start here                         |
+| ------------- | ---------------------------------- |
+| New teammate  | This guide → product-spec → README |
+| AI agent      | AGENTS.md → linked issue → ADR     |
 | Demo reviewer | product-spec §5 → run demo locally |
 
 ## Quick start
