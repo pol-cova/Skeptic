@@ -6,6 +6,8 @@ import {
   startAppProcess,
   isProcessRunning,
   stopProcess,
+  startOrReuseApp,
+  stopApp,
 } from "./app-lifecycle.ts";
 
 // ============================================================================
@@ -412,5 +414,195 @@ describe("stopProcess", () => {
 
     // Should be stopped
     expect(isProcessRunning(child.pid!)).toBe(false);
+  });
+});
+
+// ============================================================================
+// Phase 3 Tests: Orchestration
+// ============================================================================
+
+describe("startOrReuseApp", () => {
+  it("reuses already running app when no start command provided", async () => {
+    // Mock an already running server
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () =>
+      new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+
+    const result = await startOrReuseApp({
+      baseUrl: "http://localhost:3100",
+      readyPath: "/health",
+      // No startCommand
+    });
+
+    expect(result.ready).toBe(true);
+    expect(result.process).toBeNull(); // Not owned
+
+    globalThis.fetch = originalFetch;
+  });
+
+  it("throws error when app not running and no start command", async () => {
+    // Mock server not running
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => {
+      throw new Error("Connection refused");
+    };
+
+    await expect(
+      startOrReuseApp({
+        baseUrl: "http://localhost:59999",
+        readyPath: "/health",
+      }),
+    ).rejects.toThrow(AppStartupError);
+
+    await expect(
+      startOrReuseApp({
+        baseUrl: "http://localhost:59999",
+        readyPath: "/health",
+      }),
+    ).rejects.toThrow(/not running.*no startCommand/);
+
+    globalThis.fetch = originalFetch;
+  });
+
+  it("reuses existing process when app already running", async () => {
+    // Mock server already running
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () =>
+      new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+
+    const result = await startOrReuseApp({
+      baseUrl: "http://localhost:3100",
+      readyPath: "/health",
+      startCommand: "echo would-start-but-already-running",
+    });
+
+    expect(result.ready).toBe(true);
+    expect(result.process).toBeNull(); // Reused, not owned
+
+    globalThis.fetch = originalFetch;
+  });
+
+  it("starts new process when app not running", async () => {
+    // Use a real long-running command
+    const command =
+      process.platform === "win32" ? "timeout /t 5 /nobreak > nul" : "sleep 5";
+
+    // Mock server responses: not ready at first, then ready
+    let attemptCount = 0;
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => {
+      attemptCount++;
+      if (attemptCount <= 2) {
+        throw new Error("Not ready yet");
+      }
+      return new Response(JSON.stringify({ status: "ok" }), {
+        status: 200,
+      });
+    };
+
+    const result = await startOrReuseApp({
+      baseUrl: "http://localhost:3100",
+      readyPath: "/health",
+      startCommand: command,
+      timeoutMs: 10000,
+      pollIntervalMs: 500,
+    });
+
+    expect(result.ready).toBe(true);
+    expect(result.process).toBeDefined();
+    expect(result.process!.owned).toBe(true);
+    expect(result.process!.pid).toBeGreaterThan(0);
+
+    // Cleanup
+    await stopApp(result.process);
+
+    globalThis.fetch = originalFetch;
+  }, 15000);
+
+  it("throws timeout error and cleans up process", async () => {
+    // Start process but mock server never becomes ready
+    const command =
+      process.platform === "win32"
+        ? "timeout /t 30 /nobreak > nul"
+        : "sleep 30";
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async () => {
+      throw new Error("Server never ready");
+    };
+
+    let error: Error | undefined;
+    try {
+      await startOrReuseApp({
+        baseUrl: "http://localhost:3100",
+        readyPath: "/health",
+        startCommand: command,
+        timeoutMs: 2000, // Short timeout
+        pollIntervalMs: 500,
+      });
+    } catch (e) {
+      error = e as Error;
+    }
+
+    expect(error).toBeDefined();
+    expect(error).toBeInstanceOf(AppStartupError);
+    expect(error!.message).toMatch(/timeout/);
+
+    // Process should have been cleaned up
+    // We can't easily verify this without tracking PIDs, but no process should be left
+
+    globalThis.fetch = originalFetch;
+  }, 10000);
+});
+
+describe("stopApp", () => {
+  it("stops owned process", async () => {
+    // Start a long-running process
+    const child = await startAppProcess(
+      process.platform === "win32"
+        ? "timeout /t 10 /nobreak > nul"
+        : "sleep 10",
+    );
+
+    const appProcess = {
+      pid: child.pid!,
+      owned: true,
+      startedAt: Date.now(),
+    };
+
+    expect(isProcessRunning(appProcess.pid)).toBe(true);
+
+    await stopApp(appProcess);
+
+    expect(isProcessRunning(appProcess.pid)).toBe(false);
+  });
+
+  it("does nothing for non-owned process", async () => {
+    // Start a process
+    const child = await startAppProcess(
+      process.platform === "win32" ? "timeout /t 5 /nobreak > nul" : "sleep 5",
+    );
+
+    const appProcess = {
+      pid: child.pid!,
+      owned: false, // Not owned!
+      startedAt: Date.now(),
+    };
+
+    expect(isProcessRunning(appProcess.pid)).toBe(true);
+
+    // Should not stop it
+    await stopApp(appProcess);
+
+    // Process should still be running
+    expect(isProcessRunning(appProcess.pid)).toBe(true);
+
+    // Cleanup manually
+    await stopProcess(appProcess.pid);
+  });
+
+  it("does nothing for null process", async () => {
+    // Should not throw
+    await expect(stopApp(null)).resolves.toBeUndefined();
   });
 });

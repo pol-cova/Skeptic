@@ -95,6 +95,8 @@ export {
   checkReadiness,
   isProcessRunning,
   startAppProcess,
+  startOrReuseApp,
+  stopApp,
   stopProcess,
   waitForReadiness,
   type AppProcess,
