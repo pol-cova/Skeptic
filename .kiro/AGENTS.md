@@ -17,11 +17,11 @@ commit code, or run arbitrary JavaScript in the target product.
 
 Each criterion is classified as one of four frozen verdicts:
 
-| Verdict         | Meaning                                                              |
-| --------------- | -------------------------------------------------------------------- |
-| `PASS`          | Deterministic evidence proves the criterion.                         |
-| `FAIL`          | Deterministic evidence disproves the criterion.                      |
-| `UNVERIFIABLE`  | A required product prerequisite is missing. Not a product failure.   |
+| Verdict         | Meaning                                                                  |
+| --------------- | ------------------------------------------------------------------------ |
+| `PASS`          | Deterministic evidence proves the criterion.                             |
+| `FAIL`          | Deterministic evidence disproves the criterion.                          |
+| `UNVERIFIABLE`  | A required product prerequisite is missing. Not a product failure.       |
 | `HARNESS_ERROR` | Skeptic could not complete reliable verification. Not a product verdict. |
 
 Run readiness (`READY`, `NOT_READY`, `INCOMPLETE`, `ERROR`) and CLI exit codes are derived
@@ -47,16 +47,16 @@ scripts/preflight/      Preflight scripts for Eve, Playwright, Bedrock, package
 
 ## Tech stack
 
-| Component   | Version / policy                          |
-| ----------- | ----------------------------------------- |
-| Node.js     | `24.x` (engine enforced)                  |
-| pnpm        | `10.7.0` (`pnpm-lock.yaml` is authoritative) |
-| TypeScript  | Strict mode, ESM, `.ts` imports           |
-| Eve         | Agent runtime (`eve dev`, `eve build`)    |
-| Playwright  | Chromium only for P0                      |
-| Zod         | Config and schema validation              |
-| Vitest      | Unit and integration tests                |
-| AI SDK      | Provider-native model access              |
+| Component  | Version / policy                             |
+| ---------- | -------------------------------------------- |
+| Node.js    | `24.x` (engine enforced)                     |
+| pnpm       | `10.7.0` (`pnpm-lock.yaml` is authoritative) |
+| TypeScript | Strict mode, ESM, `.ts` imports              |
+| Eve        | Agent runtime (`eve dev`, `eve build`)       |
+| Playwright | Chromium only for P0                         |
+| Zod        | Config and schema validation                 |
+| Vitest     | Unit and integration tests                   |
+| AI SDK     | Provider-native model access                 |
 
 ## Commands
 
@@ -87,14 +87,14 @@ CI runs `lint`, `typecheck`, `test`, and `build` on every pull request.
 
 Read these before touching code in the relevant area:
 
-| Topic                         | Document |
-| ----------------------------- | -------- |
-| Verdicts, readiness, MVP scope | [docs/adr/0001-public-contract.md](docs/adr/0001-public-contract.md) |
-| Model providers and BYOC      | [docs/adr/0002-model-provider-strategy.md](docs/adr/0002-model-provider-strategy.md) |
-| Toolchain preflight           | [docs/preflight.md](docs/preflight.md) |
-| Human contributor workflow    | [CONTRIBUTING.md](CONTRIBUTING.md) |
-| Eve framework                 | `node_modules/eve/docs/` or https://eve.dev/docs |
-| Epic and P0 checklist         | GitHub issue #1 |
+| Topic                          | Document                                                                             |
+| ------------------------------ | ------------------------------------------------------------------------------------ |
+| Verdicts, readiness, MVP scope | [docs/adr/0001-public-contract.md](docs/adr/0001-public-contract.md)                 |
+| Model providers and BYOC       | [docs/adr/0002-model-provider-strategy.md](docs/adr/0002-model-provider-strategy.md) |
+| Toolchain preflight            | [docs/preflight.md](docs/preflight.md)                                               |
+| Human contributor workflow     | [CONTRIBUTING.md](CONTRIBUTING.md)                                                   |
+| Eve framework                  | `node_modules/eve/docs/` or https://eve.dev/docs                                     |
+| Epic and P0 checklist          | GitHub issue #1                                                                      |
 
 The TypeScript source of truth for verdicts and readiness lives in
 `packages/core/src/contracts.ts` and `agent/lib/contracts.ts`. Keep them aligned.
@@ -119,12 +119,12 @@ linked issue and clear acceptance criteria is out of process.
 
 ### Where specs live
 
-| Artifact              | Role |
-| --------------------- | ---- |
-| Issue #1 (epic)       | Master spec: outcome, P0 checklist, exit gates |
-| P0 child issues (#2–#21)| Feature specs with acceptance criteria |
-| ADRs in `docs/adr/`   | Frozen architectural decisions |
-| PR descriptions       | Implementation notes tied to issue acceptance criteria |
+| Artifact                 | Role                                                   |
+| ------------------------ | ------------------------------------------------------ |
+| Issue #1 (epic)          | Master spec: outcome, P0 checklist, exit gates         |
+| P0 child issues (#2–#21) | Feature specs with acceptance criteria                 |
+| ADRs in `docs/adr/`      | Frozen architectural decisions                         |
+| PR descriptions          | Implementation notes tied to issue acceptance criteria |
 
 Each P0 issue follows this structure:
 

@@ -90,3 +90,11 @@ export {
   secretValuesFromAuth,
   type ResolvedAuthSecrets,
 } from "./secrets.ts";
+export {
+  AppStartupError,
+  checkReadiness,
+  waitForReadiness,
+  type AppProcess,
+  type StartAppOptions,
+  type StartAppResult,
+} from "./app-lifecycle.ts";

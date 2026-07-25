@@ -19,12 +19,12 @@ Skeptic is a **judge**, not a builder. No code fixes, no commits, no arbitrary J
 
 ### Verdicts
 
-| Verdict | Meaning |
-| ------- | ------- |
-| `PASS` | Deterministic evidence proves the criterion |
-| `FAIL` | Deterministic evidence disproves the criterion |
-| `UNVERIFIABLE` | Prerequisite missing — not a product failure |
-| `HARNESS_ERROR` | Skeptic failed — not a product verdict |
+| Verdict         | Meaning                                        |
+| --------------- | ---------------------------------------------- |
+| `PASS`          | Deterministic evidence proves the criterion    |
+| `FAIL`          | Deterministic evidence disproves the criterion |
+| `UNVERIFIABLE`  | Prerequisite missing — not a product failure   |
+| `HARNESS_ERROR` | Skeptic failed — not a product verdict         |
 
 ### Readiness (precedence)
 
@@ -66,10 +66,10 @@ Criteria (`examples/demo-app/acceptance.md`):
 2. Valid email → invite in Pending list
 3. Duplicate email → error, no second row
 
-| Phase | C1 | C2 | C3 | Readiness |
-| ----- | -- | -- | -- | --------- |
+| Phase  | C1   | C2   | C3           | Readiness  |
+| ------ | ---- | ---- | ------------ | ---------- |
 | Broken | PASS | FAIL | UNVERIFIABLE | INCOMPLETE |
-| Fixed | PASS | PASS | PASS | READY |
+| Fixed  | PASS | PASS | PASS         | READY      |
 
 Fix: `pnpm --filter demo-app dev:fixed`
 
@@ -86,12 +86,12 @@ Only deterministic assertions establish `PASS`/`FAIL`.
 
 ## 6. Models
 
-| Provider | Credential | Default |
-| -------- | ---------- | ------- |
-| `chatgpt` | `codex login` | `gpt-5.6-sol` |
-| `openrouter` | `OPENROUTER_API_KEY` | `openai/gpt-5.4-mini` |
-| `cerebras` | `CEREBRAS_API_KEY` | `gpt-oss-120b` |
-| `bedrock` | AWS | `amazon.nova-lite-v1:0` |
+| Provider     | Credential           | Default                 |
+| ------------ | -------------------- | ----------------------- |
+| `chatgpt`    | `codex login`        | `gpt-5.6-sol`           |
+| `openrouter` | `OPENROUTER_API_KEY` | `openai/gpt-5.4-mini`   |
+| `cerebras`   | `CEREBRAS_API_KEY`   | `gpt-oss-120b`          |
+| `bedrock`    | AWS                  | `amazon.nova-lite-v1:0` |
 
 Golden runs: **Bedrock**. Daily dev: **Codex login**. See [preflight.md](./preflight.md).
 
@@ -138,14 +138,14 @@ One issue per PR. Full list: [issue #1](https://github.com/pol-cova/Skeptic/issu
 
 ## 10. Changes from Codex PRD v1.0
 
-| Topic | v1.0 PRD | v1.1 |
-| ----- | -------- | ---- |
+| Topic           | v1.0 PRD                 | v1.1                     |
+| --------------- | ------------------------ | ------------------------ |
 | Readiness order | FAIL before UNVERIFIABLE | UNVERIFIABLE before FAIL |
-| Demo port | :3000 | :3100 |
-| npm | `skeptic@latest` | `@pol-cova/skeptic` |
-| License | Apache or MIT | Apache-2.0 |
-| Import | `skeptic/config` | `@skeptic/core` |
-| Living spec | single PRD file | issues + ADRs + this doc |
+| Demo port       | :3000                    | :3100                    |
+| npm             | `skeptic@latest`         | `@pol-cova/skeptic`      |
+| License         | Apache or MIT            | Apache-2.0               |
+| Import          | `skeptic/config`         | `@skeptic/core`          |
+| Living spec     | single PRD file          | issues + ADRs + this doc |
 
 ## 11. Links
 

@@ -26,33 +26,36 @@ Este documento explica cómo están organizados los archivos en `.kiro/` y su pr
 ## 📁 Propósito de Cada Carpeta
 
 ### **Raíz `.kiro/`**
+
 Archivos de entrada principales y configuración de agentes.
 
-| Archivo | Propósito | Audiencia |
-|---------|-----------|-----------|
-| `README.md` | Índice navegable con links a toda la documentación | Todos |
-| `ORGANIZATION.md` | Explicación de la estructura (este archivo) | Colaboradores |
-| `AGENTS.md` | Guía completa de spec-driven development para agentes | Agentes IA |
-| `CLAUDE.md` | Pointer a AGENTS.md para Claude Code | Claude Code |
+| Archivo           | Propósito                                             | Audiencia     |
+| ----------------- | ----------------------------------------------------- | ------------- |
+| `README.md`       | Índice navegable con links a toda la documentación    | Todos         |
+| `ORGANIZATION.md` | Explicación de la estructura (este archivo)           | Colaboradores |
+| `AGENTS.md`       | Guía completa de spec-driven development para agentes | Agentes IA    |
+| `CLAUDE.md`       | Pointer a AGENTS.md para Claude Code                  | Claude Code   |
 
 ### **`adr/` - Architecture Decision Records**
+
 Decisiones arquitectónicas **congeladas** que no pueden cambiarse sin un nuevo ADR.
 
-| Archivo | Qué congela | Estado |
-|---------|-------------|--------|
-| `0001-public-contract.md` | Verdicts, readiness, CLI, MVP boundary | ✅ Accepted |
-| `0002-model-provider-strategy.md` | Model providers, BYOC, credentials | ✅ Accepted |
+| Archivo                           | Qué congela                            | Estado      |
+| --------------------------------- | -------------------------------------- | ----------- |
+| `0001-public-contract.md`         | Verdicts, readiness, CLI, MVP boundary | ✅ Accepted |
+| `0002-model-provider-strategy.md` | Model providers, BYOC, credentials     | ✅ Accepted |
 
 **Regla:** Ningún código puede contradecir un ADR accepted. Si necesitas cambiar algo congelado, debes crear un nuevo ADR primero.
 
 ### **`steering/` - Guías de Contexto**
+
 Documentos que Kiro carga automáticamente como contexto para agentes.
 
-| Archivo | Contenido | Cuándo se usa |
-|---------|-----------|---------------|
-| `team-guide.md` | Workflow humano/agente, PR checklist, progreso | Siempre |
-| `product-spec.md` | Spec completa: producto, arquitectura, delivery | Siempre |
-| `preflight.md` | Runtime policy, preflight checks, resultados | Setup/debugging |
+| Archivo           | Contenido                                       | Cuándo se usa   |
+| ----------------- | ----------------------------------------------- | --------------- |
+| `team-guide.md`   | Workflow humano/agente, PR checklist, progreso  | Siempre         |
+| `product-spec.md` | Spec completa: producto, arquitectura, delivery | Siempre         |
+| `preflight.md`    | Runtime policy, preflight checks, resultados    | Setup/debugging |
 
 ---
 
@@ -99,7 +102,9 @@ Documentos que Kiro carga automáticamente como contexto para agentes.
 ## 🔄 ¿Por Qué Esta Estructura?
 
 ### **Problema Anterior**
+
 Los archivos estaban duplicados y dispersos:
+
 - ADRs en `docs/adr/` Y `.kiro/`
 - Guías en raíz del repo Y `.kiro/`
 - No había índice claro
@@ -118,6 +123,7 @@ Separación clara de concerns:
 ```
 
 **Beneficios:**
+
 - ✅ Un solo índice de entrada (README.md)
 - ✅ ADRs centralizados en un solo lugar
 - ✅ Steering files agrupados para Kiro
@@ -129,6 +135,7 @@ Separación clara de concerns:
 ## 📝 Convenciones de Nombrado
 
 ### **ADRs**
+
 ```
 Format: NNNN-short-title.md
 Ejemplo: 0001-public-contract.md
@@ -140,6 +147,7 @@ Reglas:
 ```
 
 ### **Steering Files**
+
 ```
 Format: descriptive-name.md
 Ejemplo: product-spec.md, team-guide.md
@@ -151,6 +159,7 @@ Reglas:
 ```
 
 ### **Config Files**
+
 ```
 Format: ALLCAPS.md
 Ejemplo: AGENTS.md, CLAUDE.md, README.md
@@ -165,21 +174,25 @@ Reglas:
 ## 🔗 Links Entre Documentos
 
 ### **Desde README.md**
+
 - Apunta a todos los archivos en `.kiro/`
 - Provee rutas de lectura por rol
 - Links a documentos externos (GitHub issues, Contributing, etc.)
 
 ### **Desde AGENTS.md**
+
 - Referencia ADRs relevantes
 - Apunta a product-spec.md para contexto
 - Links a issues de GitHub (epic #1)
 
 ### **Desde Steering Files**
+
 - Cross-reference entre ellos
 - Link a ADRs cuando mencionan decisiones congeladas
 - Link a código source cuando es relevante
 
 ### **Desde ADRs**
+
 - Link a código que implementa la decisión
 - Referencias a otros ADRs relacionados
 - Link a issues que motivaron la decisión
@@ -267,6 +280,7 @@ ls -R .kiro/
 ## 📚 Documentos Relacionados Fuera de .kiro/
 
 ### **En la Raíz del Repo**
+
 - `README.md` - README principal del proyecto
 - `CONTRIBUTING.md` - Guía de contribución
 - `CODE_OF_CONDUCT.md` - Código de conducta
@@ -274,10 +288,12 @@ ls -R .kiro/
 - `CLAUDE.md` - Link a `.kiro/CLAUDE.md`
 
 ### **En docs/**
+
 - `docs/preflight.md` - Original (puede existir como referencia)
 - `docs/adr/` - Puede contener ADRs legacy (revisar si mantener)
 
 ### **En examples/**
+
 - `examples/demo-app/README.md` - Documentación de la demo app
 - `examples/demo-app/acceptance.md` - Criterios de la demo
 
