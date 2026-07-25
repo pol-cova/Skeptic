@@ -203,11 +203,22 @@ export async function startAppProcess(command: string): Promise<ChildProcess> {
       );
     });
 
-    // Process started successfully if we get a PID
-    if (child.pid) {
+    // Wait for the 'spawn' event to confirm successful process start
+    // This ensures we don't resolve before potential spawn errors
+    child.on("spawn", () => {
       resolve(child);
-    } else {
-      reject(new AppStartupError("Process started but has no PID"));
+    });
+
+    // Handle case where spawn event doesn't fire but we have a PID
+    // This can happen on some platforms/Node versions
+    if (child.pid && !child.killed) {
+      // Give a small delay to allow error event to fire if command doesn't exist
+      setTimeout(() => {
+        // Only resolve if no error has been thrown
+        if (!child.killed) {
+          resolve(child);
+        }
+      }, 100);
     }
   });
 }
