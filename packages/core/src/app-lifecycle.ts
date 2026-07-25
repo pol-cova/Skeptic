@@ -27,6 +27,9 @@ export interface StartAppOptions {
 
   /** Interval between readiness polls in milliseconds. Default: 1000 (1s) */
   pollIntervalMs?: number;
+
+  /** Optional list of secret values to redact from logs */
+  secrets?: string[];
 }
 
 /**
@@ -165,6 +168,7 @@ export async function waitForReadiness(
 // ============================================================================
 
 import { spawn, type ChildProcess } from "node:child_process";
+import { redactString } from "./secrets.ts";
 
 /**
  * Starts an application process using a shell command.
@@ -352,6 +356,7 @@ export async function startOrReuseApp(
     readyPath,
     timeoutMs = 30000,
     pollIntervalMs = 1000,
+    secrets = [],
   } = opts;
 
   const fullUrl = `${baseUrl}${readyPath}`;
@@ -388,6 +393,10 @@ export async function startOrReuseApp(
   }
 
   // Scenario 3: Start command provided and app not running → start it
+  // Log startup with redacted secrets
+  const redactedCommand = redactString(startCommand, secrets);
+  console.log(`[Skeptic] Starting application: ${redactedCommand}`);
+
   let childProcess: ChildProcess;
 
   try {
@@ -409,6 +418,9 @@ export async function startOrReuseApp(
     startedAt: Date.now(),
   };
 
+  console.log(`[Skeptic] Process started with PID ${process.pid}`);
+  console.log(`[Skeptic] Waiting for readiness at ${fullUrl}...`);
+
   // Wait for the application to become ready
   try {
     const ready = await waitForReadiness(
@@ -419,6 +431,10 @@ export async function startOrReuseApp(
     );
 
     if (!ready) {
+      console.error(
+        `[Skeptic] Readiness timeout after ${timeoutMs}ms, cleaning up process ${process.pid}`,
+      );
+
       // Cleanup: stop the process we started
       await stopProcess(process.pid);
 
@@ -428,6 +444,8 @@ export async function startOrReuseApp(
       );
     }
 
+    console.log(`[Skeptic] Application ready at ${fullUrl}`);
+
     return {
       process,
       ready: true,
@@ -435,6 +453,9 @@ export async function startOrReuseApp(
   } catch (error) {
     // If waitForReadiness threw an error, cleanup the process
     if (isProcessRunning(process.pid)) {
+      console.error(
+        `[Skeptic] Error during startup, cleaning up process ${process.pid}`,
+      );
       await stopProcess(process.pid);
     }
     throw error;

@@ -606,3 +606,166 @@ describe("stopApp", () => {
     await expect(stopApp(null)).resolves.toBeUndefined();
   });
 });
+
+// ============================================================================
+// Phase 4 Tests: Secret Redaction
+// ============================================================================
+
+describe("secret redaction in startup logs", () => {
+  let originalFetch: typeof fetch;
+  let originalConsoleLog: typeof console.log;
+  let logCalls: string[] = [];
+
+  beforeEach(() => {
+    originalFetch = globalThis.fetch;
+    originalConsoleLog = console.log;
+
+    // Capture console.log calls
+    logCalls = [];
+    console.log = (...args: unknown[]) => {
+      logCalls.push(args.join(" "));
+    };
+  });
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+    console.log = originalConsoleLog;
+  });
+
+  it("redacts secrets from startup command logs", async () => {
+    // Mock server not ready initially, then ready
+    let attemptCount = 0;
+    globalThis.fetch = async () => {
+      attemptCount++;
+      if (attemptCount <= 1) {
+        throw new Error("Not ready");
+      }
+      return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+    };
+
+    const command =
+      process.platform === "win32" ? "timeout /t 5 /nobreak > nul" : "sleep 5";
+
+    const result = await startOrReuseApp({
+      baseUrl: "http://localhost:3100",
+      readyPath: "/health",
+      startCommand: command,
+      secrets: ["supersecret123", "password456"],
+      timeoutMs: 10000,
+      pollIntervalMs: 500,
+    });
+
+    // Check that startup log was created
+    const startupLog = logCalls.find((log) =>
+      log.includes("[Skeptic] Starting application:"),
+    );
+    expect(startupLog).toBeDefined();
+
+    // Verify command is shown but secrets are NOT in the log
+    expect(startupLog).toContain(command);
+    expect(startupLog).not.toContain("supersecret123");
+    expect(startupLog).not.toContain("password456");
+
+    // Cleanup
+    await stopApp(result.process);
+  }, 15000);
+
+  it("logs PID after process starts", async () => {
+    let attemptCount = 0;
+    globalThis.fetch = async () => {
+      attemptCount++;
+      if (attemptCount <= 1) {
+        throw new Error("Not ready");
+      }
+      return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+    };
+
+    const command =
+      process.platform === "win32" ? "timeout /t 5 /nobreak > nul" : "sleep 5";
+
+    const result = await startOrReuseApp({
+      baseUrl: "http://localhost:3100",
+      readyPath: "/health",
+      startCommand: command,
+      timeoutMs: 10000,
+      pollIntervalMs: 500,
+    });
+
+    // Check that PID log was created
+    const pidLog = logCalls.find(
+      (log) =>
+        log.includes("[Skeptic] Process started with PID") &&
+        log.includes(String(result.process!.pid)),
+    );
+    expect(pidLog).toBeDefined();
+
+    // Cleanup
+    await stopApp(result.process);
+  }, 15000);
+
+  it("logs readiness wait message", async () => {
+    let attemptCount = 0;
+    globalThis.fetch = async () => {
+      attemptCount++;
+      if (attemptCount <= 1) {
+        throw new Error("Not ready");
+      }
+      return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+    };
+
+    const command =
+      process.platform === "win32" ? "timeout /t 5 /nobreak > nul" : "sleep 5";
+
+    const result = await startOrReuseApp({
+      baseUrl: "http://localhost:3100",
+      readyPath: "/health",
+      startCommand: command,
+      timeoutMs: 10000,
+      pollIntervalMs: 500,
+    });
+
+    // Check that waiting log was created
+    const waitingLog = logCalls.find(
+      (log) =>
+        log.includes("[Skeptic] Waiting for readiness") &&
+        log.includes("http://localhost:3100/health"),
+    );
+    expect(waitingLog).toBeDefined();
+
+    // Cleanup
+    await stopApp(result.process);
+  }, 15000);
+
+  it("logs success when app becomes ready", async () => {
+    let attemptCount = 0;
+    globalThis.fetch = async () => {
+      attemptCount++;
+      if (attemptCount <= 1) {
+        throw new Error("Not ready");
+      }
+      return new Response(JSON.stringify({ status: "ok" }), { status: 200 });
+    };
+
+    const command =
+      process.platform === "win32" ? "timeout /t 5 /nobreak > nul" : "sleep 5";
+
+    const result = await startOrReuseApp({
+      baseUrl: "http://localhost:3100",
+      readyPath: "/health",
+      startCommand: command,
+      timeoutMs: 10000,
+      pollIntervalMs: 500,
+    });
+
+    // Check that success log was created
+    const successLog = logCalls.find(
+      (log) =>
+        log.includes("[Skeptic] Application ready") &&
+        log.includes("http://localhost:3100/health"),
+    );
+    expect(successLog).toBeDefined();
+
+    // Cleanup
+    await stopApp(result.process);
+  }, 15000);
+});
