@@ -137,6 +137,8 @@ importers:
         specifier: 1.0.3
         version: 1.0.3
 
+  packages/skeptic: {}
+
 packages:
 
   '@ai-sdk/amazon-bedrock@5.0.28':
