@@ -17,6 +17,7 @@
     "lint": "eslint . && prettier --check .",
     "preflight:bedrock": "node scripts/preflight/bedrock.ts",
     "preflight:eve": "eve info",
+    "preflight:google-ai": "node scripts/preflight/google-ai.ts",
     "preflight:model": "node scripts/preflight/model.ts",
     "preflight:package": "pnpm pack --pack-destination .proof/preflight",
     "preflight:playwright": "node scripts/preflight/playwright.ts",

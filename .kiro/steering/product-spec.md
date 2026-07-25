@@ -92,8 +92,9 @@ Only deterministic assertions establish `PASS`/`FAIL`.
 | `openrouter` | `OPENROUTER_API_KEY` | `openai/gpt-5.4-mini`   |
 | `cerebras`   | `CEREBRAS_API_KEY`   | `gpt-oss-120b`          |
 | `bedrock`    | AWS                  | `amazon.nova-lite-v1:0` |
+| `google-ai`  | `SKEPTIC_API_KEY`    | `gemini-3.1-flash-lite` |
 
-Golden runs: **Bedrock**. Daily dev: **Codex login**. See [preflight.md](./preflight.md).
+Golden runs: **Bedrock**. Daily dev: **Codex login** or **Google AI** (free tier). See [preflight.md](./preflight.md) and [Google AI integration](../docs/GOOGLE-AI-INTEGRATION.md).
 
 ## 7. Example config
 
