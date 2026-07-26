@@ -20,13 +20,22 @@ const OBSERVED_ROLES = [
 ] as const;
 
 const MAX_ELEMENTS = 40;
+const OBSERVATION_TIMEOUT_MS = 1_000;
+
+async function readOptional<T>(operation: Promise<T>): Promise<T | undefined> {
+  try {
+    return await operation;
+  } catch {
+    return undefined;
+  }
+}
 
 async function describeRoleElements(
   page: Page,
   role: (typeof OBSERVED_ROLES)[number],
 ): Promise<AccessibleElement[]> {
   const locator = page.getByRole(role);
-  const count = await locator.count();
+  const count = (await readOptional(locator.count())) ?? 0;
   const elements: AccessibleElement[] = [];
 
   for (
@@ -35,15 +44,41 @@ async function describeRoleElements(
     index += 1
   ) {
     const candidate = locator.nth(index);
-    const testId = await candidate.getAttribute("data-testid");
-    const value = await candidate
-      .inputValue()
-      .catch(async () => (await candidate.textContent())?.trim() ?? undefined);
-    const checked = await candidate.isChecked().catch(() => undefined);
-    const disabled = await candidate.isDisabled().catch(() => undefined);
+    const testId = await readOptional(
+      candidate.getAttribute("data-testid", {
+        timeout: OBSERVATION_TIMEOUT_MS,
+      }),
+    );
+    const value = await readOptional(
+      candidate.inputValue({ timeout: OBSERVATION_TIMEOUT_MS }),
+    ).then(async (input) => {
+      if (input !== undefined) {
+        return input;
+      }
+
+      return readOptional(
+        candidate.textContent({ timeout: OBSERVATION_TIMEOUT_MS }),
+      ).then((text) => text?.trim());
+    });
+    const checked = await readOptional(
+      candidate.isChecked({ timeout: OBSERVATION_TIMEOUT_MS }),
+    );
+    const disabled = await readOptional(
+      candidate.isDisabled({ timeout: OBSERVATION_TIMEOUT_MS }),
+    );
     const name =
-      (await candidate.getAttribute("aria-label")) ??
-      (await candidate.textContent())?.trim().slice(0, 120) ??
+      (await readOptional(
+        candidate.getAttribute("aria-label", {
+          timeout: OBSERVATION_TIMEOUT_MS,
+        }),
+      )) ??
+      (
+        await readOptional(
+          candidate.textContent({ timeout: OBSERVATION_TIMEOUT_MS }),
+        )
+      )
+        ?.trim()
+        .slice(0, 120) ??
       undefined;
 
     elements.push({

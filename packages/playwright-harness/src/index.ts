@@ -12,6 +12,16 @@ export {
   type HarnessOptions,
 } from "./harness.ts";
 
+export {
+  CRITERION_2_TEXT,
+  expectedVerdictForPersistenceMode,
+  runDay1Gate,
+  runDay1GateWithHarness,
+  type Day1GateOptions,
+  type Day1GateResult,
+  type Day1GateScreenshots,
+} from "./day1-gate.ts";
+
 export { captureObservation, collectAccessibleElements } from "./observe.ts";
 export {
   executeBrowserAction,
