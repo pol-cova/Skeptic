@@ -10,7 +10,7 @@ describe("contracts", () => {
   it("follows the frozen readiness precedence", () => {
     expect(readinessFor(["PASS"])).toBe("READY");
     expect(readinessFor(["PASS", "FAIL"])).toBe("NOT_READY");
-    expect(readinessFor(["FAIL", "UNVERIFIABLE"])).toBe("INCOMPLETE");
+    expect(readinessFor(["FAIL", "UNVERIFIABLE"])).toBe("NOT_READY");
     expect(readinessFor(["UNVERIFIABLE", "HARNESS_ERROR"])).toBe("ERROR");
   });
 

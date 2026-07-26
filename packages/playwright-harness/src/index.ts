@@ -22,6 +22,21 @@ export {
   type Day1GateScreenshots,
 } from "./day1-gate.ts";
 
+export {
+  CRITERION_1_TEXT,
+  CRITERION_3_TEXT,
+  isValidBrowserAction,
+  LoopLimitReachedError,
+  runCriterion1Loop,
+  runCriterion1WithHarness,
+  runCriterion3Loop,
+  runCriterion3WithHarness,
+  VerificationLoopRunner,
+  type CriterionPathOptions,
+  type VerificationLoopOptions,
+  type VerificationLoopResult,
+} from "./verification-loop.ts";
+
 export { captureObservation, collectAccessibleElements } from "./observe.ts";
 export {
   executeBrowserAction,

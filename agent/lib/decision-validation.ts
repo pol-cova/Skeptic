@@ -28,7 +28,7 @@ export function buildRepairPrompt(validationError: string): string {
     "Your previous structured output failed schema validation.",
     validationError,
     "Return one JSON object matching the AgentDecision schema:",
-    "{ criterionIndex, actions[], rationale?, decidedAt }.",
+    "{ criterionIndex, hypothesis, actions[], rationale?, decidedAt }.",
   ].join(" ");
 }
 

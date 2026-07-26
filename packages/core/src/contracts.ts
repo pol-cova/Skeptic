@@ -35,8 +35,8 @@ const exitCodes = {
 
 export function readinessFor(verdicts: readonly Verdict[]): Readiness {
   if (verdicts.includes("HARNESS_ERROR")) return "ERROR";
-  if (verdicts.includes("UNVERIFIABLE")) return "INCOMPLETE";
   if (verdicts.includes("FAIL")) return "NOT_READY";
+  if (verdicts.includes("UNVERIFIABLE")) return "INCOMPLETE";
   return "READY";
 }
 

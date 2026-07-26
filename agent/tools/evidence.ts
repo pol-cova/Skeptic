@@ -1,7 +1,10 @@
 import { defineTool } from "eve/tools";
 import { z } from "zod";
 
-import { ensureHarnessLaunched } from "../lib/verification-session.ts";
+import {
+  ensureHarnessLaunched,
+  recordArtifactRef,
+} from "../lib/verification-session.ts";
 
 export default defineTool({
   description:
@@ -14,6 +17,7 @@ export default defineTool({
     const harness = await ensureHarnessLaunched();
     const screenshot = await harness.page.screenshot({ fullPage: true });
     const artifactRef = `screenshots/manual-${criterionIndex}-${Date.now()}.png`;
+    recordArtifactRef(artifactRef);
 
     return {
       criterionIndex,
