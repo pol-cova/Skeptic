@@ -15,10 +15,7 @@ import {
   validateBrowserAction,
 } from "@skeptic/core";
 
-import {
-  type ActionResult,
-  PlaywrightHarness,
-} from "./harness.ts";
+import { type ActionResult, PlaywrightHarness } from "./harness.ts";
 
 export const CRITERION_1_TEXT =
   "An invalid email address shows a validation message and does not create an invitation.";
@@ -51,10 +48,7 @@ export class VerificationLoopRunner {
   private readonly artifactRefs: string[] = [];
   private limitReason?: LoopLimitReason;
 
-  constructor(
-    harness: PlaywrightHarness,
-    options: VerificationLoopOptions,
-  ) {
+  constructor(harness: PlaywrightHarness, options: VerificationLoopOptions) {
     this.harness = harness;
     this.limits = options.limits ?? DEFAULT_CRITERION_LOOP_LIMITS;
     this.loopState = createCriterionLoopState({
