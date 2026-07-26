@@ -12,9 +12,7 @@ const FIXED_BASE_URL = "http://127.0.0.1:3101";
 const DEMO_USERNAME = process.env.PROOF_TEST_USERNAME ?? "demo";
 const DEMO_PASSWORD = process.env.PROOF_TEST_PASSWORD ?? "skeptic-demo";
 
-async function readPersistenceMode(
-  baseUrl: string,
-): Promise<boolean | null> {
+async function readPersistenceMode(baseUrl: string): Promise<boolean | null> {
   try {
     const response = await fetch(`${baseUrl}/health`);
     if (!response.ok) {
