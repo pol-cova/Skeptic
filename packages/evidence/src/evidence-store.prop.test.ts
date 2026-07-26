@@ -20,19 +20,21 @@ import type { RunMetadata } from "@skeptic/core";
 // Generate safe runId strings: no path separators, null bytes, or filesystem-invalid chars
 const safeRunIdArb = fc
   .stringOf(
-    fc.char().filter(
-      (c) =>
-        c !== "/" &&
-        c !== "\\" &&
-        c !== "\0" &&
-        c !== ":" &&
-        c !== "*" &&
-        c !== "?" &&
-        c !== '"' &&
-        c !== "<" &&
-        c !== ">" &&
-        c !== "|",
-    ),
+    fc
+      .char()
+      .filter(
+        (c) =>
+          c !== "/" &&
+          c !== "\\" &&
+          c !== "\0" &&
+          c !== ":" &&
+          c !== "*" &&
+          c !== "?" &&
+          c !== '"' &&
+          c !== "<" &&
+          c !== ">" &&
+          c !== "|",
+      ),
     { minLength: 1, maxLength: 50 },
   )
   .filter((s) => s.trim().length > 0 && !s.endsWith(".") && !s.endsWith(" "));
@@ -84,7 +86,6 @@ describe("Property 1: Artifact Root Path Derivation", () => {
   });
 });
 
-
 // Feature: evidence-persistence, Property 11: Error Message Truncation
 
 /**
@@ -105,22 +106,19 @@ describe("Property 11: Error Message Truncation", () => {
   // **Validates: Requirements 6.4**
   it("truncated message length equals min(original.length, 1024)", () => {
     fc.assert(
-      fc.property(
-        fc.string({ minLength: 0, maxLength: 5000 }),
-        (message) => {
-          const truncated = truncateMessage(message);
-          const expectedLength = Math.min(message.length, 1024);
-          expect(truncated.length).toBe(expectedLength);
+      fc.property(fc.string({ minLength: 0, maxLength: 5000 }), (message) => {
+        const truncated = truncateMessage(message);
+        const expectedLength = Math.min(message.length, 1024);
+        expect(truncated.length).toBe(expectedLength);
 
-          // If original was <= 1024, result should be unchanged
-          if (message.length <= 1024) {
-            expect(truncated).toBe(message);
-          } else {
-            // If original was > 1024, result should be first 1024 chars
-            expect(truncated).toBe(message.slice(0, 1024));
-          }
-        },
-      ),
+        // If original was <= 1024, result should be unchanged
+        if (message.length <= 1024) {
+          expect(truncated).toBe(message);
+        } else {
+          // If original was > 1024, result should be first 1024 chars
+          expect(truncated).toBe(message.slice(0, 1024));
+        }
+      }),
       { numRuns: 100 },
     );
   });
@@ -147,9 +145,7 @@ const nonErrorVerdictArb = fc.constantFrom(
 
 // Generate a set of criterion indices that will experience write failures
 // We pick a subset from the total criteria
-function failedCriteriaArb(
-  totalCriteria: number,
-): fc.Arbitrary<Set<number>> {
+function failedCriteriaArb(totalCriteria: number): fc.Arbitrary<Set<number>> {
   return fc
     .subarray(
       Array.from({ length: totalCriteria }, (_, i) => i + 1),
@@ -200,7 +196,12 @@ describe("Property 10: Write Failure Escalation to HARNESS_ERROR", () => {
           if (!initResult.ok) return;
 
           // First, do a successful append to create events.jsonl
-          const { mkdir: mkdirFs, unlink, writeFile, rm: rmFs } = await import("node:fs/promises");
+          const {
+            mkdir: mkdirFs,
+            unlink,
+            writeFile,
+            rm: rmFs,
+          } = await import("node:fs/promises");
           await store.appendEvent({
             runId,
             timestamp: Date.now(),

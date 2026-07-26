@@ -19,7 +19,15 @@ import type { RunMetadata } from "@skeptic/core";
  */
 
 const networkObsArb = fc.record({
-  method: fc.constantFrom("GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"),
+  method: fc.constantFrom(
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "PATCH",
+    "HEAD",
+    "OPTIONS",
+  ),
   path: fc.string({ minLength: 1, maxLength: 100 }).map((s) => "/" + s),
   status: fc.integer({ min: 100, max: 599 }),
 });

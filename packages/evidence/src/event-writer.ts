@@ -27,9 +27,7 @@ export class EventWriter {
    * The caller provides an event without a sequence number — the writer assigns it.
    * Validates the complete event, redacts secrets, then persists as a single JSON line.
    */
-  async append(
-    event: Omit<RunEvent, "sequence">,
-  ): Promise<AppendResult> {
+  async append(event: Omit<RunEvent, "sequence">): Promise<AppendResult> {
     const sequence = this.nextSequence;
     const fullEvent: RunEvent = { ...event, sequence };
 

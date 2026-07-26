@@ -57,10 +57,7 @@ export class ArtifactWriter {
   ): Promise<void> {
     const redacted = redactForPersistence(metadata, secretSet);
     const finalPath = join(this.artifactRoot, "metadata.json");
-    const tempPath = join(
-      this.artifactRoot,
-      `.metadata.${randomUUID()}.tmp`,
-    );
+    const tempPath = join(this.artifactRoot, `.metadata.${randomUUID()}.tmp`);
 
     await writeFile(tempPath, JSON.stringify(redacted, null, 2), "utf-8");
     await rename(tempPath, finalPath);

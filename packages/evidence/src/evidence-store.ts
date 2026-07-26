@@ -94,12 +94,7 @@ export class EvidenceStore {
     metadata: RunMetadata,
     secretSet: string[],
   ): Promise<InitResult> {
-    const artifactRoot = join(
-      this.basePath,
-      ".proof",
-      "runs",
-      metadata.runId,
-    );
+    const artifactRoot = join(this.basePath, ".proof", "runs", metadata.runId);
 
     // Detect duplicate run — if directory already exists, return error
     try {
@@ -173,9 +168,7 @@ export class EvidenceStore {
    * Handles screenshot capture on failure events, network observation tracking,
    * and write failure escalation.
    */
-  async appendEvent(
-    event: Omit<RunEvent, "sequence">,
-  ): Promise<AppendResult> {
+  async appendEvent(event: Omit<RunEvent, "sequence">): Promise<AppendResult> {
     if (!this.eventWriter || !this.artifactWriter || !this.metadata) {
       throw new Error(
         "EvidenceStore has not been initialized. Call initialize() first.",
@@ -231,8 +224,10 @@ export class EvidenceStore {
         try {
           // Write screenshot via ArtifactWriter
           const filename = screenshotFilename(sequence, criterionIndex);
-          const relativePath =
-            await this.artifactWriter.writeScreenshot(filename, pngData);
+          const relativePath = await this.artifactWriter.writeScreenshot(
+            filename,
+            pngData,
+          );
 
           // Track artifact ref for this sequence
           const refs = this.artifactRefs.get(sequence) ?? [];
@@ -303,8 +298,15 @@ export class EvidenceStore {
    * Validates the bundle and derives readiness from verdicts.
    */
   async finalize(verdicts: CriterionVerdict[]): Promise<FinalizeResult> {
-    if (!this.metadata || !this.artifactWriter || !this.eventWriter || !this.artifactRoot) {
-      throw new Error("EvidenceStore has not been initialized. Call initialize() first.");
+    if (
+      !this.metadata ||
+      !this.artifactWriter ||
+      !this.eventWriter ||
+      !this.artifactRoot
+    ) {
+      throw new Error(
+        "EvidenceStore has not been initialized. Call initialize() first.",
+      );
     }
 
     // 1. Trace collection (if TraceProvider registered)
@@ -318,7 +320,8 @@ export class EvidenceStore {
         traceRef = await this.artifactWriter.writeTrace(traceData);
       } catch (err: unknown) {
         // Emit artifact.error event — skip trace ref
-        const reason = err instanceof Error ? err.message : "Unknown trace error";
+        const reason =
+          err instanceof Error ? err.message : "Unknown trace error";
         if (this.eventWriter) {
           await this.eventWriter.append({
             runId: this.metadata.runId,
@@ -332,9 +335,10 @@ export class EvidenceStore {
     }
 
     // 2. Write network observations (redacted)
-    const redactedObservations = this.secretSet.length > 0
-      ? redactForPersistence(this.networkObservations, this.secretSet)
-      : this.networkObservations;
+    const redactedObservations =
+      this.secretSet.length > 0
+        ? redactForPersistence(this.networkObservations, this.secretSet)
+        : this.networkObservations;
     await this.artifactWriter.writeNetworkObservations(redactedObservations);
 
     // 3. Build PersistedRunBundle
@@ -362,7 +366,10 @@ export class EvidenceStore {
     };
 
     // 4. Validate
-    const validation = new BundleValidator().validate(bundle, this.artifactRoot);
+    const validation = new BundleValidator().validate(
+      bundle,
+      this.artifactRoot,
+    );
 
     // 5. Derive readiness
     let readiness: Readiness;

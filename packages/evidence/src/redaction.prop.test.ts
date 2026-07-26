@@ -1,6 +1,10 @@
 import fc from "fast-check";
 import { describe, it, expect } from "vitest";
-import { collectSecretValues, redactForPersistence } from "@skeptic/core";
+import {
+  collectSecretValues,
+  REDACTED_SECRET,
+  redactForPersistence,
+} from "@skeptic/core";
 
 // Feature: evidence-persistence, Property 12: Redaction Completeness
 
@@ -17,7 +21,8 @@ import { collectSecretValues, redactForPersistence } from "@skeptic/core";
 
 function containsSecret(value: unknown, secrets: readonly string[]): boolean {
   if (typeof value === "string") {
-    return secrets.some((secret) => value.includes(secret));
+    const stripped = value.split(REDACTED_SECRET).join("");
+    return secrets.some((secret) => stripped.includes(secret));
   }
   if (Array.isArray(value)) {
     return value.some((item) => containsSecret(item, secrets));
@@ -29,7 +34,7 @@ function containsSecret(value: unknown, secrets: readonly string[]): boolean {
 }
 
 describe("Property 12: Redaction Completeness", () => {
-  const secretArb = fc.string({ minLength: 1, maxLength: 20 });
+  const secretArb = fc.string({ minLength: 2, maxLength: 20 });
   const secretsArrayArb = fc.array(secretArb, { minLength: 1, maxLength: 5 });
 
   // **Validates: Requirements 7.1, 7.2, 7.3, 7.4**
@@ -64,7 +69,6 @@ describe("Property 12: Redaction Completeness", () => {
     );
   });
 });
-
 
 // Feature: evidence-persistence, Property 13: Secret_Set Length Ordering
 

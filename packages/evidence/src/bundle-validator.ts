@@ -17,7 +17,9 @@ export class BundleValidator {
     const parseResult = persistedRunBundleSchema.safeParse(bundle);
     if (!parseResult.success) {
       for (const issue of parseResult.error.issues) {
-        errors.push(`Schema error at ${issue.path.join(".")}: ${issue.message}`);
+        errors.push(
+          `Schema error at ${issue.path.join(".")}: ${issue.message}`,
+        );
       }
     }
 

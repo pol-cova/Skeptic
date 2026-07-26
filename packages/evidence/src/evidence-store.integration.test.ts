@@ -9,10 +9,7 @@ import type { ScreenshotProvider } from "./interfaces.ts";
 /**
  * Builds a valid RunMetadata object for integration tests.
  */
-function makeRunMetadata(
-  runId: string,
-  artifactRoot = "",
-): RunMetadata {
+function makeRunMetadata(runId: string, artifactRoot = ""): RunMetadata {
   return {
     runId,
     startedAt: Date.now(),
@@ -158,7 +155,9 @@ describe("EvidenceStore integration: full lifecycle", () => {
     await expect(access(join(runDir, "screenshots"))).resolves.toBeUndefined();
     await expect(access(join(runDir, "traces"))).resolves.toBeUndefined();
     await expect(access(join(runDir, "network"))).resolves.toBeUndefined();
-    await expect(access(join(runDir, "metadata.json"))).resolves.toBeUndefined();
+    await expect(
+      access(join(runDir, "metadata.json")),
+    ).resolves.toBeUndefined();
     await expect(access(join(runDir, "events.jsonl"))).resolves.toBeUndefined();
 
     // Assert: metadata.json is parseable
@@ -264,11 +263,19 @@ describe("EvidenceStore integration: full lifecycle", () => {
     }
 
     // Verify filesystem layout
-    await expect(access(join(artifactRoot, "metadata.json"))).resolves.toBeUndefined();
-    await expect(access(join(artifactRoot, "events.jsonl"))).resolves.toBeUndefined();
-    await expect(access(join(artifactRoot, "screenshots"))).resolves.toBeUndefined();
+    await expect(
+      access(join(artifactRoot, "metadata.json")),
+    ).resolves.toBeUndefined();
+    await expect(
+      access(join(artifactRoot, "events.jsonl")),
+    ).resolves.toBeUndefined();
+    await expect(
+      access(join(artifactRoot, "screenshots")),
+    ).resolves.toBeUndefined();
     await expect(access(join(artifactRoot, "traces"))).resolves.toBeUndefined();
-    await expect(access(join(artifactRoot, "network"))).resolves.toBeUndefined();
+    await expect(
+      access(join(artifactRoot, "network")),
+    ).resolves.toBeUndefined();
 
     // No screenshots should exist (no provider registered)
     const screenshots = await readdir(join(artifactRoot, "screenshots"));

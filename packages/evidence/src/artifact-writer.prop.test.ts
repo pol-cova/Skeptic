@@ -72,7 +72,6 @@ describe("Property 9: Network Observation Persistence Bounds", () => {
   });
 });
 
-
 /**
  * **Validates: Requirements 3.2**
  *

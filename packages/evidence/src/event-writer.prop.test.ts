@@ -18,15 +18,32 @@ const runEventArb = fc.record(
     runId: fc.string({ minLength: 1, maxLength: 20 }),
     sequence: fc.nat({ max: 999999 }),
     timestamp: fc.nat(),
-    actor: fc.constantFrom("agent", "harness", "oracle", "system") as fc.Arbitrary<
-      "agent" | "harness" | "oracle" | "system"
-    >,
+    actor: fc.constantFrom(
+      "agent",
+      "harness",
+      "oracle",
+      "system",
+    ) as fc.Arbitrary<"agent" | "harness" | "oracle" | "system">,
     type: fc.string({ minLength: 1, maxLength: 30 }),
-    payload: fc.dictionary(fc.string({ minLength: 1, maxLength: 10 }), fc.jsonValue()),
+    payload: fc.dictionary(
+      fc.string({ minLength: 1, maxLength: 10 }),
+      fc.jsonValue(),
+    ),
     criterionIndex: fc.integer({ min: 1, max: 100 }),
-    artifactRefs: fc.array(fc.string({ minLength: 1, maxLength: 50 }), { maxLength: 5 }),
+    artifactRefs: fc.array(fc.string({ minLength: 1, maxLength: 50 }), {
+      maxLength: 5,
+    }),
   },
-  { requiredKeys: ["runId", "sequence", "timestamp", "actor", "type", "payload"] },
+  {
+    requiredKeys: [
+      "runId",
+      "sequence",
+      "timestamp",
+      "actor",
+      "type",
+      "payload",
+    ],
+  },
 );
 
 describe("Property 2: Event Round-Trip Persistence", () => {
@@ -63,9 +80,12 @@ import { EventWriter } from "./event-writer.ts";
 const validEventForProp3 = fc.record({
   runId: fc.string({ minLength: 1, maxLength: 20 }),
   timestamp: fc.nat(),
-  actor: fc.constantFrom("agent", "harness", "oracle", "system") as fc.Arbitrary<
-    "agent" | "harness" | "oracle" | "system"
-  >,
+  actor: fc.constantFrom(
+    "agent",
+    "harness",
+    "oracle",
+    "system",
+  ) as fc.Arbitrary<"agent" | "harness" | "oracle" | "system">,
   type: fc.string({ minLength: 1, maxLength: 30 }),
   payload: fc.constant({} as Record<string, unknown>),
 });
@@ -128,9 +148,12 @@ describe("Property 3: Monotonic Sequence Assignment", () => {
 const validEventArb = fc.record({
   runId: fc.string({ minLength: 1, maxLength: 20 }),
   timestamp: fc.nat(),
-  actor: fc.constantFrom("agent", "harness", "oracle", "system") as fc.Arbitrary<
-    "agent" | "harness" | "oracle" | "system"
-  >,
+  actor: fc.constantFrom(
+    "agent",
+    "harness",
+    "oracle",
+    "system",
+  ) as fc.Arbitrary<"agent" | "harness" | "oracle" | "system">,
   type: fc.string({ minLength: 1, maxLength: 30 }),
   payload: fc.constant({} as Record<string, unknown>),
 });
@@ -140,9 +163,12 @@ const invalidEventArb = fc.oneof(
   fc.record({
     runId: fc.constant(""),
     timestamp: fc.nat(),
-    actor: fc.constantFrom("agent", "harness", "oracle", "system") as fc.Arbitrary<
-      "agent" | "harness" | "oracle" | "system"
-    >,
+    actor: fc.constantFrom(
+      "agent",
+      "harness",
+      "oracle",
+      "system",
+    ) as fc.Arbitrary<"agent" | "harness" | "oracle" | "system">,
     type: fc.string({ minLength: 1, maxLength: 30 }),
     payload: fc.constant({} as Record<string, unknown>),
   }),
@@ -150,9 +176,12 @@ const invalidEventArb = fc.oneof(
   fc.record({
     runId: fc.string({ minLength: 1, maxLength: 20 }),
     timestamp: fc.nat(),
-    actor: fc.constantFrom("agent", "harness", "oracle", "system") as fc.Arbitrary<
-      "agent" | "harness" | "oracle" | "system"
-    >,
+    actor: fc.constantFrom(
+      "agent",
+      "harness",
+      "oracle",
+      "system",
+    ) as fc.Arbitrary<"agent" | "harness" | "oracle" | "system">,
     type: fc.constant(""),
     payload: fc.constant({} as Record<string, unknown>),
   }),
