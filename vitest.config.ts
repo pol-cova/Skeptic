@@ -5,6 +5,7 @@ export default defineConfig({
     projects: [
       "packages/core/vitest.config.ts",
       "packages/cli/vitest.config.ts",
+      "packages/evidence/vitest.config.ts",
       "packages/playwright-harness/vitest.config.ts",
       "packages/report/vitest.config.ts",
       "agent/vitest.config.ts",
