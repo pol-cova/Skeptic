@@ -14,6 +14,7 @@ artifacts are written under `.proof/preflight/` and are never committed.
 | Cerebras provider          | `@ai-sdk/cerebras@3.0.14`                                                       |
 | OpenAI-compatible provider | `@ai-sdk/openai-compatible@3.0.14`                                              |
 | OpenRouter provider        | `@openrouter/ai-sdk-provider@3.0.0`                                             |
+| Google AI native provider  | `@ai-sdk/google@4.0.24`                                                         |
 | Playwright                 | `1.61.1`                                                                        |
 | Chromium                   | Playwright revision 1228, Chrome `149.0.7827.55` on macOS arm64                 |
 
@@ -78,6 +79,34 @@ SKEPTIC_PROVIDER=cerebras CEREBRAS_API_KEY=... pnpm preflight:model
 Bedrock remains the official hackathon demonstration provider. The generic
 preflight prints provider and model identifiers but never credential values.
 
+### Google AI (Gemini)
+
+Skeptic supports Google AI through a native provider and a legacy
+OpenAI-compatible endpoint. See
+[GOOGLE-AI-INTEGRATION.md](./GOOGLE-AI-INTEGRATION.md) for setup and
+troubleshooting.
+
+**Native provider (recommended):**
+
+```bash
+export SKEPTIC_PROVIDER=google-ai
+export GOOGLE_GENERATIVE_AI_API_KEY=...
+# optional: export SKEPTIC_MODEL=gemini-2.0-flash-exp
+pnpm preflight:google-ai-native
+```
+
+**OpenAI-compatible endpoint (legacy BYOC path):**
+
+```bash
+cp .env.google-ai.example .env
+# set SKEPTIC_API_KEY and optionally SKEPTIC_MODEL
+pnpm preflight:google-ai
+node scripts/preflight/list-google-models.ts
+node scripts/preflight/test-google-manual.ts
+```
+
+Both checks request schema-valid structured output and print no credential values.
+
 ### Package
 
 The public npm package is `@pol-cova/skeptic`. The unscoped name `skeptic`
@@ -95,15 +124,16 @@ pnpm preflight:package
 
 ## Current result
 
-| Check                                      | Result                                                                  |
-| ------------------------------------------ | ----------------------------------------------------------------------- |
-| Eve discovery/build                        | Pass                                                                    |
-| Local ChatGPT subscription structured call | Pass with existing `codex login`                                        |
-| BYOC configuration validation              | Pass for OpenRouter, Cerebras, Bedrock, and OpenAI-compatible endpoints |
-| Chromium launch, local page, screenshot    | Pass                                                                    |
-| Runtime and lockfile policy                | Pass                                                                    |
-| Installable tarball fallback               | Pass                                                                    |
-| Structured Bedrock call                    | Blocked: no AWS authentication is configured on the development host    |
+| Check                                      | Result                                                                             |
+| ------------------------------------------ | ---------------------------------------------------------------------------------- |
+| Eve discovery/build                        | Pass                                                                               |
+| Local ChatGPT subscription structured call | Pass with existing `codex login`                                                   |
+| BYOC configuration validation              | Pass for OpenRouter, Cerebras, Bedrock, and OpenAI-compatible endpoints            |
+| Google AI native / openai-compatible       | Pass when `GOOGLE_GENERATIVE_AI_API_KEY` or `.env.google-ai.example` is configured |
+| Chromium launch, local page, screenshot    | Pass                                                                               |
+| Runtime and lockfile policy                | Pass                                                                               |
+| Installable tarball fallback               | Pass                                                                               |
+| Structured Bedrock call                    | Blocked: no AWS authentication is configured on the development host               |
 
 The live Bedrock call is the only remaining exit gate for the official
 hackathon provider path in issue #3.

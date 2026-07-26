@@ -18,8 +18,8 @@ Every Skeptic surface uses these criterion verdicts:
 Run readiness is derived from verdicts with this precedence:
 
 1. Any `HARNESS_ERROR` produces `ERROR`.
-2. Otherwise, any `UNVERIFIABLE` produces `INCOMPLETE`.
-3. Otherwise, any `FAIL` produces `NOT_READY`.
+2. Otherwise, any `FAIL` produces `NOT_READY`.
+3. Otherwise, any `UNVERIFIABLE` produces `INCOMPLETE`.
 4. Otherwise, the run is `READY`.
 
 | Readiness    | Exit code |
@@ -29,10 +29,10 @@ Run readiness is derived from verdicts with this precedence:
 | `INCOMPLETE` |         2 |
 | `ERROR`      |         3 |
 
-The TypeScript and JSON source of truth is
-[`agent/lib/contracts.ts`](../../agent/lib/contracts.ts). CLI output, reports,
-fixtures, and demo narration must import or reproduce these exact values without
-aliases.
+The TypeScript source of truth is
+[`packages/core/src/contracts.ts`](../../packages/core/src/contracts.ts). CLI
+output, reports, fixtures, and demo narration must import or reproduce these
+exact values without aliases.
 
 ## Frozen names
 
