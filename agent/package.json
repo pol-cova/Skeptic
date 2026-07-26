@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@skeptic/core": "workspace:*",
+    "@skeptic/playwright-harness": "workspace:*",
     "@vercel/connect": "0.4.2",
-    "eve": "0.27.1"
+    "eve": "0.27.1",
+    "zod": "4.4.3"
   }
 }
