@@ -1,5 +1,6 @@
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock";
 import { createCerebras } from "@ai-sdk/cerebras";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import type { LanguageModel } from "ai";
@@ -11,6 +12,7 @@ export const skepticProviderIds = [
   "cerebras",
   "bedrock",
   "openai-compatible",
+  "google-ai",
 ] as const;
 
 export type SkepticProviderId = (typeof skepticProviderIds)[number];
@@ -30,6 +32,7 @@ const defaultModels: Record<
   openrouter: "openai/gpt-5.4-mini",
   cerebras: "gpt-oss-120b",
   bedrock: "amazon.nova-lite-v1:0",
+  "google-ai": "gemini-2.0-flash-exp",
 };
 
 function readProvider(env: NodeJS.ProcessEnv): SkepticProviderId {
@@ -132,6 +135,18 @@ export function resolveSkepticModel(
       credentialSource:
         "AWS_BEARER_TOKEN_BEDROCK or the standard AWS credential chain",
       model: createAmazonBedrock({ region })(modelId),
+    };
+  }
+
+  if (provider === "google-ai") {
+    const modelId = env.SKEPTIC_MODEL ?? defaultModels["google-ai"];
+    return {
+      provider,
+      modelId,
+      credentialSource: "GOOGLE_GENERATIVE_AI_API_KEY",
+      model: createGoogleGenerativeAI({
+        apiKey: requireEnvironmentValue(env, "GOOGLE_GENERATIVE_AI_API_KEY"),
+      })(modelId),
     };
   }
 

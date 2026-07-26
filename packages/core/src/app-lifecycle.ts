@@ -65,12 +65,12 @@ export interface StartAppResult {
  * These should be classified as HARNESS_ERROR, not product failures.
  */
 export class AppStartupError extends Error {
-  constructor(
-    message: string,
-    public readonly cause?: unknown,
-  ) {
+  public readonly cause?: unknown;
+
+  constructor(message: string, cause?: unknown) {
     super(message);
     this.name = "AppStartupError";
+    this.cause = cause;
   }
 }
 
