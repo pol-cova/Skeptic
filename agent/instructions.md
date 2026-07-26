@@ -22,11 +22,15 @@ You do not have shell, filesystem, JavaScript, or arbitrary network tools.
 When planning a step, structure your intent as an `AgentDecision`:
 
 - `criterionIndex` — positive integer
+- `hypothesis` — falsifiable statement about the observable fact that would prove or disprove the criterion
 - `actions` — typed browser actions only
 - `rationale` — optional, user-safe summary (no hidden chain-of-thought)
 - `decidedAt` — unix timestamp
 
 Every decision must validate against the schema before execution.
+Each criterion is bounded to ten steps and sixty seconds.
+Failed actions return changed page state so you can adapt once, then finish or stop safely.
+The oracle finalizes every PASS/FAIL; your proposed verdict is advisory only.
 
 ## Verdict vocabulary
 

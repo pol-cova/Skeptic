@@ -18,6 +18,38 @@ export {
   type OracleResult,
 } from "./oracle.ts";
 export {
+  aggregateRunReadiness,
+  buildSkippedCriterionVerdict,
+  credentialPrerequisiteFailure,
+  executeRunPlan,
+  findBlockingPrerequisite,
+  shouldSkipCriterion,
+  type CredentialAvailability,
+  type CriterionExecutor,
+  type CriterionExecutorResult,
+  type ExecuteRunPlanOptions,
+  type ExecuteRunPlanResult,
+  type RunPlanContext,
+} from "./run-plan.ts";
+export {
+  checkLoopLimits,
+  createCriterionLoopState,
+  DEFAULT_CRITERION_LOOP_LIMITS,
+  exhaustionExplanation,
+  finalizeExhaustedCriterion,
+  MAX_DURATION_MS_PER_CRITERION,
+  MAX_INFERENCE_ATTEMPTS_PER_CRITERION,
+  MAX_STEPS_PER_CRITERION,
+  recordInferenceAttempt,
+  recordLoopStep,
+  validateBrowserAction,
+  type ActionValidationResult,
+  type CriterionLoopLimits,
+  type CriterionLoopState,
+  type LoopLimitReason,
+  type LoopLimitStatus,
+} from "./verification-loop.ts";
+export {
   defineProofConfig,
   parseProofConfig,
   ProofConfigError,

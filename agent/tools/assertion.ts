@@ -2,7 +2,11 @@ import { assertionSchema } from "@skeptic/core";
 import { defineTool } from "eve/tools";
 import { z } from "zod";
 
-import { ensureHarnessLaunched } from "../lib/verification-session.ts";
+import {
+  ensureHarnessLaunched,
+  recordAssertionResult,
+  recordVerificationStep,
+} from "../lib/verification-session.ts";
 
 export default defineTool({
   description:
@@ -12,12 +16,25 @@ export default defineTool({
     assertion: assertionSchema,
   }),
   async execute({ actionId, assertion }) {
+    const stepStatus = recordVerificationStep();
+    if (!stepStatus.ok) {
+      return {
+        ok: false,
+        limitReached: true,
+        limitReason: stepStatus.reason,
+      };
+    }
+
     const harness = await ensureHarnessLaunched();
     const result = await harness.execute({
       actionId,
       type: "assert",
       assertion,
     });
+
+    if (result.assertionResult) {
+      recordAssertionResult(result.assertionResult);
+    }
 
     return {
       ok: result.ok,

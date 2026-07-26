@@ -10,8 +10,8 @@ import { readinessFor, type Verdict } from "@skeptic/core";
  * For any valid and complete Run_Bundle that passes schema validation,
  * uniqueness checks, and artifact reference integrity, the overall readiness
  * SHALL equal the result of `readinessFor(verdicts.map(v => v.verdict))` —
- * i.e., ERROR if any HARNESS_ERROR, INCOMPLETE if any UNVERIFIABLE,
- * NOT_READY if any FAIL, otherwise READY.
+ * i.e., ERROR if any HARNESS_ERROR, NOT_READY if any FAIL,
+ * INCOMPLETE if any UNVERIFIABLE, otherwise READY.
  */
 describe("Property 14: Readiness Derivation from Verdicts", () => {
   const verdictArb = fc.constantFrom(
@@ -38,10 +38,10 @@ describe("Property 14: Readiness Derivation from Verdicts", () => {
         let expected: string;
         if (hasHarnessError) {
           expected = "ERROR";
-        } else if (hasUnverifiable) {
-          expected = "INCOMPLETE";
         } else if (hasFail) {
           expected = "NOT_READY";
+        } else if (hasUnverifiable) {
+          expected = "INCOMPLETE";
         } else {
           expected = "READY";
         }

@@ -6,6 +6,7 @@ import { browserActionSchema } from "./browser.ts";
 
 export const agentDecisionSchema = z.object({
   criterionIndex: z.number().int().positive(),
+  hypothesis: z.string().min(1),
   actions: z.array(browserActionSchema),
   rationale: z.string().min(1).optional(),
   decidedAt: z.number(),

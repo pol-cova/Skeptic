@@ -56,6 +56,7 @@ describe("core schemas", () => {
 
     const decision = agentDecisionSchema.parse({
       criterionIndex: 1,
+      hypothesis: "Invalid email shows validation without creating a row.",
       actions: [
         {
           actionId: "action-1",

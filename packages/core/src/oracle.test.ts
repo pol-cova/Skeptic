@@ -211,9 +211,9 @@ describe("readiness aggregation", () => {
   const combinations: Array<{ verdicts: Verdict[]; readiness: string }> = [
     { verdicts: ["PASS"], readiness: "READY" },
     { verdicts: ["PASS", "FAIL"], readiness: "NOT_READY" },
-    { verdicts: ["FAIL", "UNVERIFIABLE"], readiness: "INCOMPLETE" },
+    { verdicts: ["FAIL", "UNVERIFIABLE"], readiness: "NOT_READY" },
     { verdicts: ["UNVERIFIABLE", "HARNESS_ERROR"], readiness: "ERROR" },
-    { verdicts: ["PASS", "FAIL", "UNVERIFIABLE"], readiness: "INCOMPLETE" },
+    { verdicts: ["PASS", "FAIL", "UNVERIFIABLE"], readiness: "NOT_READY" },
     {
       verdicts: ["PASS", "FAIL", "UNVERIFIABLE", "HARNESS_ERROR"],
       readiness: "ERROR",

@@ -52,6 +52,7 @@ describe("AgentDecision validation", () => {
   it("accepts valid typed browser actions", () => {
     const validation = validateAgentDecision({
       criterionIndex: 1,
+      hypothesis: "Invalid email shows validation without creating a row.",
       actions: [
         {
           actionId: "goto-login",
@@ -63,6 +64,16 @@ describe("AgentDecision validation", () => {
     });
 
     expect(validation.ok).toBe(true);
+  });
+
+  it("rejects decisions without a hypothesis", () => {
+    const validation = validateAgentDecision({
+      criterionIndex: 1,
+      actions: [],
+      decidedAt: Date.now(),
+    });
+
+    expect(validation.ok).toBe(false);
   });
 
   it("rejects invalid structured output and builds a repair prompt", () => {
