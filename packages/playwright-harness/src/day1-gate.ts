@@ -19,6 +19,8 @@ export interface Day1GateOptions {
   headless?: boolean;
   /** Unique email for the invite under test */
   inviteEmail?: string;
+  /** Wait for a persisted row to appear after reload before asserting count */
+  requirePersistedRow?: boolean;
 }
 
 export interface Day1GateScreenshots {
@@ -102,6 +104,15 @@ export async function runDay1Gate(
   const artifactRefs: string[] = [];
 
   await login(harness, options);
+
+  const resetResponse = await harness.page.request.post(
+    `${options.baseUrl}/api/reset`,
+  );
+  if (!resetResponse.ok()) {
+    throw new Error(
+      `Failed to reset invitations: HTTP ${resetResponse.status()}`,
+    );
+  }
 
   const fillEmail = await harness.execute({
     actionId: "gate-invite-fill",
@@ -206,6 +217,21 @@ export async function runDay1Gate(
     );
   }
   observations.push(waitForList.observation);
+
+  if (options.requirePersistedRow) {
+    const waitForRow = await harness.execute({
+      actionId: "gate-invite-wait-persisted-row",
+      type: "waitFor",
+      target: { testId: "pending-invitations" },
+      timeoutMs: 10_000,
+    });
+    if (!waitForRow.ok) {
+      throw new Error(
+        `Persisted list wait failed: ${waitForRow.error?.message ?? "unknown error"}`,
+      );
+    }
+    observations.push(waitForRow.observation);
+  }
 
   const persistedCount = await harness.execute({
     actionId: "gate-invite-assert-persisted-count",

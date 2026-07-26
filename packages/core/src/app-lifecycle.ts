@@ -33,6 +33,9 @@ export interface StartAppOptions {
 
   /** Environment variables for the spawned start command */
   env?: NodeJS.ProcessEnv;
+
+  /** When false, always spawn a new process even if the app already responds on the ready path */
+  reuseExisting?: boolean;
 }
 
 /**
@@ -375,6 +378,7 @@ export async function startOrReuseApp(
     pollIntervalMs = 1000,
     secrets = [],
     env: spawnEnv = globalThis.process.env,
+    reuseExisting = true,
   } = opts;
 
   const fullUrl = `${baseUrl}${readyPath}`;
@@ -400,14 +404,16 @@ export async function startOrReuseApp(
 
   // Scenario 2: Start command provided
   // First, check if app is already running (reuse if possible)
-  const alreadyRunning = await checkReadiness(fullUrl);
+  if (reuseExisting) {
+    const alreadyRunning = await checkReadiness(fullUrl);
 
-  if (alreadyRunning) {
-    // App is already running, reuse it
-    return {
-      process: null, // Not owned by us
-      ready: true,
-    };
+    if (alreadyRunning) {
+      // App is already running, reuse it
+      return {
+        process: null, // Not owned by us
+        ready: true,
+      };
+    }
   }
 
   // Scenario 3: Start command provided and app not running → start it

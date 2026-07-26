@@ -53,6 +53,7 @@ async function startDemoApp(persistenceFixed: boolean): Promise<void> {
     timeoutMs: 90_000,
     pollIntervalMs: 1_000,
     env,
+    reuseExisting: false,
   });
 
   const persistenceEnabled = await readPersistenceMode();
@@ -95,6 +96,7 @@ describe("Day 1 gate: criterion 2 persistence proof", () => {
       username: DEMO_USERNAME,
       password: DEMO_PASSWORD,
       inviteEmail: `fixed-${Date.now()}@example.com`,
+      requirePersistedRow: true,
     });
 
     expect(result.verdict.verdict).toBe(
