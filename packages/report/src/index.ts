@@ -1,1 +1,7 @@
-export const PACKAGE_NAME = "@skeptic/report";
+export {
+  renderHtmlReport,
+  renderMarkdownReport,
+  writeRunReports,
+  type ReportPaths,
+  type WriteReportOptions,
+} from "./render.ts";
