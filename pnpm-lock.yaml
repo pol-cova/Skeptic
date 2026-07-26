@@ -60,12 +60,18 @@ importers:
       '@skeptic/core':
         specifier: workspace:*
         version: link:../packages/core
+      '@skeptic/playwright-harness':
+        specifier: workspace:*
+        version: link:../packages/playwright-harness
       '@vercel/connect':
         specifier: 0.4.2
         version: 0.4.2(ai@7.0.35(zod@4.4.3))(eve@0.27.1(ai@7.0.35(zod@4.4.3))(aws4fetch@1.0.20)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.3)))
       eve:
         specifier: 0.27.1
         version: 0.27.1(ai@7.0.35(zod@4.4.3))(aws4fetch@1.0.20)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.3))
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
 
   examples/demo-app:
     dependencies:
