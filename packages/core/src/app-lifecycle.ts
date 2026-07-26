@@ -30,6 +30,9 @@ export interface StartAppOptions {
 
   /** Optional list of secret values to redact from logs */
   secrets?: string[];
+
+  /** Environment variables for the spawned start command */
+  env?: NodeJS.ProcessEnv;
 }
 
 /**
@@ -186,7 +189,10 @@ import { redactString } from "./secrets.ts";
  * console.log(`Started process with PID ${proc.pid}`);
  * ```
  */
-export async function startAppProcess(command: string): Promise<ChildProcess> {
+export async function startAppProcess(
+  command: string,
+  env: NodeJS.ProcessEnv = globalThis.process.env,
+): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     // Track if we've already settled the promise
     let settled = false;
@@ -196,6 +202,7 @@ export async function startAppProcess(command: string): Promise<ChildProcess> {
       shell: true,
       detached: false, // Keep attached so we can track it
       stdio: "inherit", // Inherit stdout/stderr for visibility
+      env,
     });
 
     // Handle spawn errors (command not found, permission denied, etc.)
@@ -367,6 +374,7 @@ export async function startOrReuseApp(
     timeoutMs = 30000,
     pollIntervalMs = 1000,
     secrets = [],
+    env: spawnEnv = globalThis.process.env,
   } = opts;
 
   const fullUrl = `${baseUrl}${readyPath}`;
@@ -410,7 +418,7 @@ export async function startOrReuseApp(
   let childProcess: ChildProcess;
 
   try {
-    childProcess = await startAppProcess(startCommand);
+    childProcess = await startAppProcess(startCommand, spawnEnv);
   } catch (error) {
     throw new AppStartupError(
       `Failed to start application: ${error instanceof Error ? error.message : String(error)}`,

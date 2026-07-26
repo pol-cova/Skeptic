@@ -21,7 +21,7 @@
     "preflight:google-ai-native": "node scripts/preflight/google-ai-native.ts",
     "preflight:model": "node scripts/preflight/model.ts",
     "preflight:package": "pnpm pack --pack-destination .proof/preflight",
-    "preflight:playwright": "node scripts/preflight/playwright.ts",
+    "gate:day1": "node --experimental-strip-types scripts/gate/day1.ts",
     "publish:skeptic": "pnpm --filter @pol-cova/skeptic publish --access public --no-git-checks",
     "start": "eve start",
     "test": "vitest run",
@@ -30,6 +30,8 @@
   "dependencies": {
     "@ai-sdk/amazon-bedrock": "5.0.28",
     "@skeptic/core": "workspace:*",
+    "@skeptic/evidence": "workspace:*",
+    "@skeptic/playwright-harness": "workspace:*",
     "ai": "7.0.34",
     "eve": "0.27.1",
     "zod": "4.4.3"
