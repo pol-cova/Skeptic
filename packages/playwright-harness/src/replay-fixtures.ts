@@ -268,7 +268,10 @@ export function buildDemoReplayFixture(
         criterionIndex: 2,
         sourceText: CRITERION_2_TEXT,
         beforeSteps: [{ type: "api", method: "POST", path: "/api/reset" }],
-        steps: [...loginSteps, ...buildCriterion2Steps(options.baseUrl, inviteEmail)],
+        steps: [
+          ...loginSteps,
+          ...buildCriterion2Steps(options.baseUrl, inviteEmail),
+        ],
       },
       {
         criterionIndex: 3,
