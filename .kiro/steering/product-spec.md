@@ -1,6 +1,6 @@
 # Skeptic — Product Spec (v1.1)
 
-**Status:** Active — aligned with repo, July 24, 2026  
+**Status:** Active — aligned with repo, July 26, 2026  
 **Supersedes:** Codex draft PRD v1.0  
 **Contracts:** [ADR 0001](./adr/0001-public-contract.md), [ADR 0002](./adr/0002-model-provider-strategy.md)  
 **Tracker:** [Issue #1](https://github.com/pol-cova/Skeptic/issues/1)
@@ -29,11 +29,14 @@ Skeptic is a **judge**, not a builder. No code fixes, no commits, no arbitrary J
 ### Readiness (precedence)
 
 1. Any `HARNESS_ERROR` → `ERROR` (exit 3)
-2. Else any `UNVERIFIABLE` → `INCOMPLETE` (exit 2)
-3. Else any `FAIL` → `NOT_READY` (exit 1)
+2. Else any `FAIL` → `NOT_READY` (exit 1)
+3. Else any `UNVERIFIABLE` → `INCOMPLETE` (exit 2)
 4. Else → `READY` (exit 0)
 
-Source: `packages/core/src/contracts.ts`, `agent/lib/contracts.ts`.
+`INCOMPLETE` applies only when no `FAIL` or `HARNESS_ERROR` is present — blocked
+prerequisites must not mask a proven product defect.
+
+Source: `packages/core/src/contracts.ts`.
 
 ### CLI (frozen names)
 
@@ -66,10 +69,10 @@ Criteria (`examples/demo-app/acceptance.md`):
 2. Valid email → invite in Pending list
 3. Duplicate email → error, no second row
 
-| Phase  | C1   | C2   | C3           | Readiness  |
-| ------ | ---- | ---- | ------------ | ---------- |
-| Broken | PASS | FAIL | UNVERIFIABLE | INCOMPLETE |
-| Fixed  | PASS | PASS | PASS         | READY      |
+| Phase  | C1   | C2   | C3           | Readiness   |
+| ------ | ---- | ---- | ------------ | ----------- |
+| Broken | PASS | FAIL | UNVERIFIABLE | `NOT_READY` |
+| Fixed  | PASS | PASS | PASS         | `READY`     |
 
 Fix: `pnpm --filter demo-app dev:fixed`
 
@@ -131,17 +134,19 @@ export default defineProofConfig({
 
 ## 9. Delivery
 
-**Done:** #2–#6 (contract, preflight, monorepo, demo, core schemas)
+**Done:** #2–#14 (contract, preflight, monorepo, demo, core schemas, lifecycle,
+harness, oracle, Day 1 gate, Eve agent, verification loop, prerequisites)
 
-**Next:** #7 lifecycle, #8 harness, #9 evidence, #10 oracle, #11 gate, then #12–#21
+**Next:** #9 evidence wiring, #15–#17 (replay, reports, CLI), then #18–#21
+(Day 4 hardening and submission)
 
 One issue per PR. Full list: [issue #1](https://github.com/pol-cova/Skeptic/issues/1).
 
 ## 10. Changes from Codex PRD v1.0
 
-| Topic           | v1.0 PRD                 | v1.1                     |
+| Topic           | v1.0 PRD                 | v1.1 (current)           |
 | --------------- | ------------------------ | ------------------------ |
-| Readiness order | FAIL before UNVERIFIABLE | UNVERIFIABLE before FAIL |
+| Readiness order | FAIL before UNVERIFIABLE | FAIL before UNVERIFIABLE |
 | Demo port       | :3000                    | :3100                    |
 | npm             | `skeptic@latest`         | `@pol-cova/skeptic`      |
 | License         | Apache or MIT            | Apache-2.0               |
