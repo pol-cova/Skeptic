@@ -1,0 +1,22 @@
+{
+  "name": "@skeptic/evidence",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@skeptic/core": "workspace:*"
+  },
+  "devDependencies": {
+    "fast-check": "^3.22.0",
+    "vitest": "4.0.18"
+  }
+}

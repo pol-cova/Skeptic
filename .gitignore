@@ -19,3 +19,4 @@ test-results/
 dist/
 agent/dist/
 *.tsbuildinfo
+/.kiro
