@@ -11,7 +11,7 @@ verification loop, browser boundary, deterministic oracle, evidence, and replay
 must not contain provider-specific behavior.
 
 The default provider is `chatgpt`, using Eve's local Codex-login integration.
-Developers can select `openrouter`, `cerebras`, `bedrock`, `google-ai`, or
+Developers can select `openrouter`, `cerebras`, `bedrock`, or
 `openai-compatible` with `SKEPTIC_PROVIDER`.
 
 | Provider            | Credential source                            | Default model           |
@@ -20,28 +20,10 @@ Developers can select `openrouter`, `cerebras`, `bedrock`, `google-ai`, or
 | `openrouter`        | `OPENROUTER_API_KEY`                         | `openai/gpt-5.4-mini`   |
 | `cerebras`          | `CEREBRAS_API_KEY`                           | `gpt-oss-120b`          |
 | `bedrock`           | Bedrock bearer token or AWS credential chain | `amazon.nova-lite-v1:0` |
-| `google-ai`         | `GOOGLE_GENERATIVE_AI_API_KEY`               | `gemini-2.0-flash-exp`  |
 | `openai-compatible` | Configurable environment variable            | No default              |
 
 `SKEPTIC_MODEL` overrides a provider's default. OpenAI-compatible endpoints
 also require `SKEPTIC_BASE_URL`; remote endpoints must use HTTPS.
-
-### Google AI Provider
-
-The `google-ai` provider offers native integration with Google's Generative AI
-API using `@ai-sdk/google`. This is the recommended approach for accessing
-Gemini models.
-
-Configuration:
-
-```bash
-SKEPTIC_PROVIDER=google-ai
-GOOGLE_GENERATIVE_AI_API_KEY=<api-key>
-```
-
-The existing `openai-compatible` configuration path remains supported for
-backward compatibility and cases where the OpenAI-compatible endpoint is
-preferred.
 
 The official hackathon demonstration and golden acceptance run use Bedrock.
 Provider portability improves the public NPM developer experience without

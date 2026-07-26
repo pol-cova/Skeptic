@@ -54,7 +54,13 @@ pnpm lint
 pnpm build
 ```
 
-Skeptic uses a local ChatGPT subscription through `codex login` by default. Set `SKEPTIC_PROVIDER` to use OpenRouter, Cerebras, Bedrock, or an OpenAI-compatible endpoint. Credentials stay in environment variables; never commit them.
+Skeptic uses a local ChatGPT subscription through `codex login` by default. Set `SKEPTIC_PROVIDER` to use OpenRouter, Cerebras, Bedrock, Google AI (Gemini), or an OpenAI-compatible endpoint. Credentials stay in environment variables; never commit them.
+
+To use Google AI:
+
+1. Get a free API key at [Google AI Studio](https://aistudio.google.com/apikey)
+2. Copy `.env.google-ai.example` to `.env` and add your key
+3. See [Google AI integration guide](docs/GOOGLE-AI-INTEGRATION.md) for details
 
 Repository layout:
 
