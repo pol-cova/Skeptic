@@ -9,6 +9,15 @@ export {
   type Verdict,
 } from "./contracts.ts";
 export {
+  aggregateReadiness,
+  deriveVerdict,
+  finalizeCriterionVerdict,
+  validatePassConstraints,
+  type HarnessFailure,
+  type OracleInput,
+  type OracleResult,
+} from "./oracle.ts";
+export {
   defineProofConfig,
   parseProofConfig,
   ProofConfigError,
