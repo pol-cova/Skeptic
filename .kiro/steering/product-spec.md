@@ -86,14 +86,15 @@ Only deterministic assertions establish `PASS`/`FAIL`.
 
 ## 6. Models
 
-| Provider     | Credential           | Default                 |
-| ------------ | -------------------- | ----------------------- |
-| `chatgpt`    | `codex login`        | `gpt-5.6-sol`           |
-| `openrouter` | `OPENROUTER_API_KEY` | `openai/gpt-5.4-mini`   |
-| `cerebras`   | `CEREBRAS_API_KEY`   | `gpt-oss-120b`          |
-| `bedrock`    | AWS                  | `amazon.nova-lite-v1:0` |
+| Provider     | Credential                     | Default                 |
+| ------------ | ------------------------------ | ----------------------- |
+| `chatgpt`    | `codex login`                  | `gpt-5.6-sol`           |
+| `openrouter` | `OPENROUTER_API_KEY`           | `openai/gpt-5.4-mini`   |
+| `cerebras`   | `CEREBRAS_API_KEY`             | `gpt-oss-120b`          |
+| `bedrock`    | AWS                            | `amazon.nova-lite-v1:0` |
+| `google-ai`  | `GOOGLE_GENERATIVE_AI_API_KEY` | `gemini-2.0-flash-exp`  |
 
-Golden runs: **Bedrock**. Daily dev: **Codex login**. See [preflight.md](./preflight.md).
+Golden runs: **Bedrock**. Daily dev: **Codex login** or **Google AI** (free tier). See [preflight.md](./preflight.md) and [Google AI integration](../docs/GOOGLE-AI-INTEGRATION.md).
 
 ## 7. Example config
 

@@ -8,6 +8,7 @@ export default defineConfig({
       "packages/playwright-harness/vitest.config.ts",
       "packages/report/vitest.config.ts",
       "agent/vitest.config.ts",
+      "scripts/vitest.config.ts",
     ],
   },
 });
