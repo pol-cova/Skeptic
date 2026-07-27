@@ -20,9 +20,7 @@ export interface CriterionEvidenceInput {
   verdict: CriterionVerdict;
 }
 
-export function createHarnessEvidenceProviders(
-  harness: PlaywrightHarness,
-): {
+export function createHarnessEvidenceProviders(harness: PlaywrightHarness): {
   screenshotProvider: ScreenshotProvider;
   traceProvider: TraceProvider;
 } {
@@ -46,11 +44,7 @@ export class HarnessEvidenceBridge {
   readonly #runId: string;
   #networkHandler: NetworkObservationHandler | undefined;
 
-  constructor(
-    store: EvidenceStore,
-    harness: PlaywrightHarness,
-    runId: string,
-  ) {
+  constructor(store: EvidenceStore, harness: PlaywrightHarness, runId: string) {
     this.#store = store;
     this.#harness = harness;
     this.#runId = runId;
@@ -113,7 +107,10 @@ export class HarnessEvidenceBridge {
     input: CriterionEvidenceInput,
   ): Promise<CriterionVerdict> {
     for (const observation of input.observations) {
-      await this.recordPageObservation(observation, input.verdict.criterionIndex);
+      await this.recordPageObservation(
+        observation,
+        input.verdict.criterionIndex,
+      );
     }
 
     for (const assertionResult of input.assertionResults) {
