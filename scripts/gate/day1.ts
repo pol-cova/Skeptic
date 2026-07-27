@@ -15,7 +15,6 @@ import {
   PlaywrightHarness,
   runDay1Gate,
 } from "@skeptic/playwright-harness";
-import { writeRunReports } from "@skeptic/report";
 
 const BASE_URL = process.env.PROOF_BASE_URL ?? "http://127.0.0.1:3100";
 const ALLOWED_ORIGINS = [BASE_URL];
@@ -108,8 +107,6 @@ async function main(): Promise<void> {
   const finalized = await store.finalize([verdict]);
   const readiness = finalized.readiness;
   const artifactRoot = init.artifactRoot;
-
-  await writeRunReports(finalized.bundle, { artifactRoot });
 
   const reportPath = join(artifactRoot, "report.html");
   const summary = {

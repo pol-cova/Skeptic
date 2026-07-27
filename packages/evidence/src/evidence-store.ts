@@ -12,6 +12,8 @@ import {
   type RunMetadata,
 } from "@skeptic/core";
 
+import { writeRunReports } from "@skeptic/report";
+
 import { ArtifactWriter } from "./artifact-writer.ts";
 import { BundleValidator } from "./bundle-validator.ts";
 import { EventWriter } from "./event-writer.ts";
@@ -386,7 +388,10 @@ export class EvidenceStore {
     // 7. Write metadata.json (applies redaction internally)
     await this.artifactWriter.writeMetadata(bundle.metadata, this.secretSet);
 
-    // 8. Return result
+    // 8. Generate static HTML and Markdown reports
+    await writeRunReports(bundle, { artifactRoot: this.artifactRoot });
+
+    // 9. Return result
     if (validation.valid) {
       return { ok: true, bundle, readiness };
     }

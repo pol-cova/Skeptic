@@ -168,6 +168,11 @@ describe("EvidenceStore integration: full lifecycle", () => {
     expect(metadataJson.readiness).toBe("NOT_READY");
     expect(metadataJson.verdicts).toHaveLength(2);
 
+    await expect(access(join(runDir, "report.html"))).resolves.toBeUndefined();
+    await expect(access(join(runDir, "report.md"))).resolves.toBeUndefined();
+    const reportHtml = await readFile(join(runDir, "report.html"), "utf-8");
+    expect(reportHtml).toContain("Skeptic Run Report");
+
     // Assert: events.jsonl is parseable (each line is valid JSON)
     const eventsRaw = await readFile(join(runDir, "events.jsonl"), "utf-8");
     const eventLines = eventsRaw.trim().split("\n");

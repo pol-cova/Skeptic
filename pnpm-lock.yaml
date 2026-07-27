@@ -151,6 +151,9 @@ importers:
       '@skeptic/core':
         specifier: workspace:*
         version: link:../core
+      '@skeptic/report':
+        specifier: workspace:*
+        version: link:../report
     devDependencies:
       fast-check:
         specifier: ^3.22.0
