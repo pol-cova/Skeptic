@@ -6,9 +6,7 @@
       "baseUrl": "http://127.0.0.1:3100",
       "startCommand": "pnpm --filter [REDACTED]-app dev",
       "readyPath": "/health",
-      "allowedOrigins": [
-        "http://127.0.0.1:3100"
-      ]
+      "allowedOrigins": ["http://127.0.0.1:3100"]
     },
     "criteria": {
       "file": "acceptance.md",
@@ -34,9 +32,7 @@
     {
       "index": 3,
       "sourceText": "Inviting the same email twice shows a duplicate-invitation error and does not create a second row.",
-      "prerequisites": [
-        2
-      ]
+      "prerequisites": [2]
     }
   ],
   "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117794103",

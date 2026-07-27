@@ -14,13 +14,13 @@ The reference demo exposes a classic agent blind spot: a success toast with **no
 
 ## Why a specialized agent (not a skill or script)
 
-| Need | Script | Prompt skill | Skeptic agent |
-| ---- | ------ | ------------ | ------------- |
-| Interpret natural-language criteria | ❌ | ⚠️ non-deterministic | ✅ |
-| Adapt when elements move or flows block | ❌ | ⚠️ | ✅ |
-| Deterministic PASS/FAIL from evidence | ✅ | ❌ | ✅ (oracle) |
-| Replay without model | ✅ | ❌ | ✅ |
-| Explain attempts and prerequisites | ❌ | ⚠️ | ✅ |
+| Need                                    | Script | Prompt skill         | Skeptic agent |
+| --------------------------------------- | ------ | -------------------- | ------------- |
+| Interpret natural-language criteria     | ❌     | ⚠️ non-deterministic | ✅            |
+| Adapt when elements move or flows block | ❌     | ⚠️                   | ✅            |
+| Deterministic PASS/FAIL from evidence   | ✅     | ❌                   | ✅ (oracle)   |
+| Replay without model                    | ✅     | ❌                   | ✅            |
+| Explain attempts and prerequisites      | ❌     | ⚠️                   | ✅            |
 
 ## Implementation quality
 

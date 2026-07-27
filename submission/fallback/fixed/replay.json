@@ -1,9 +1,7 @@
 {
   "version": 1,
   "baseUrl": "http://127.0.0.1:3101",
-  "allowedOrigins": [
-    "http://127.0.0.1:3101"
-  ],
+  "allowedOrigins": ["http://127.0.0.1:3101"],
   "variables": {
     "INVITE_EMAIL": "verify-verify-1785117802371@example.com"
   },

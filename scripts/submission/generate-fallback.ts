@@ -48,7 +48,9 @@ async function captureReportScreenshot(
   pngPath: string,
 ): Promise<void> {
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const page = await browser.newPage({
+    viewport: { width: 1280, height: 900 },
+  });
   await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle" });
   await page.screenshot({ path: pngPath, fullPage: true });
   await browser.close();
@@ -147,7 +149,10 @@ async function runReplayOnFixedDemo(brokenRunId: string): Promise<{
   });
 
   try {
-    const replay = await runReplayCommand({ runId: brokenRunId, cwd: REPO_ROOT });
+    const replay = await runReplayCommand({
+      runId: brokenRunId,
+      cwd: REPO_ROOT,
+    });
     return {
       modelCalls: replay.modelCalls,
       readiness: replay.readiness,

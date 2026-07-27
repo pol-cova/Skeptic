@@ -53,7 +53,10 @@ async function main(): Promise<void> {
   }
 
   const evidence = JSON.parse(
-    await readFile(join(SUBMISSION_ROOT, "evidence/submission-evidence.json"), "utf8"),
+    await readFile(
+      join(SUBMISSION_ROOT, "evidence/submission-evidence.json"),
+      "utf8",
+    ),
   ) as {
     broken: { verdicts: Array<{ verdict: string }> };
     fixed: { verdicts: Array<{ verdict: string }> };

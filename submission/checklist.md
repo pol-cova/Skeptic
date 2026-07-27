@@ -9,18 +9,18 @@
 
 ## Required artifacts
 
-| Item | Location |
-| ---- | -------- |
-| Public repository | https://github.com/pol-cova/Skeptic |
-| License (Apache-2.0) | [LICENSE](../LICENSE) |
-| README | [README](../README.md) |
-| Kiro build artifacts | [.kiro/README.md](../.kiro/README.md) |
-| Architecture diagram | [assets/architecture.svg](./assets/architecture.svg) |
+| Item                     | Location                                               |
+| ------------------------ | ------------------------------------------------------ |
+| Public repository        | https://github.com/pol-cova/Skeptic                    |
+| License (Apache-2.0)     | [LICENSE](../LICENSE)                                  |
+| README                   | [README](../README.md)                                 |
+| Kiro build artifacts     | [.kiro/README.md](../.kiro/README.md)                  |
+| Architecture diagram     | [assets/architecture.svg](./assets/architecture.svg)   |
 | Broken report screenshot | [assets/report-broken.png](./assets/report-broken.png) |
-| Fixed report screenshot | [assets/report-fixed.png](./assets/report-fixed.png) |
-| Demo script | [demo-script.md](./demo-script.md) |
-| Submission narrative | [narrative.md](./narrative.md) |
-| Offline fallback bundle | [fallback/](./fallback/) |
+| Fixed report screenshot  | [assets/report-fixed.png](./assets/report-fixed.png)   |
+| Demo script              | [demo-script.md](./demo-script.md)                     |
+| Submission narrative     | [narrative.md](./narrative.md)                         |
+| Offline fallback bundle  | [fallback/](./fallback/)                               |
 
 ## Fresh-clone and three-run evidence
 

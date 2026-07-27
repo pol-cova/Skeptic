@@ -2,12 +2,12 @@
 
 **These are prerecorded verification artifacts.** Opening `report.html` displays a static snapshot from a prior run. Say so explicitly to judges.
 
-| Path | Description |
-| ---- | ----------- |
-| [broken/](./broken/) | Broken demo — C1 PASS, C2 FAIL, C3 UNVERIFIABLE |
-| [fixed/](./fixed/) | Fixed demo — three PASS, READY |
-| [replay-three-pass.json](./replay-three-pass.json) | Replay summary — `modelCalls: 0`, three PASS |
-| [manifest.json](./manifest.json) | Generation metadata and run IDs |
+| Path                                               | Description                                     |
+| -------------------------------------------------- | ----------------------------------------------- |
+| [broken/](./broken/)                               | Broken demo — C1 PASS, C2 FAIL, C3 UNVERIFIABLE |
+| [fixed/](./fixed/)                                 | Fixed demo — three PASS, READY                  |
+| [replay-three-pass.json](./replay-three-pass.json) | Replay summary — `modelCalls: 0`, three PASS    |
+| [manifest.json](./manifest.json)                   | Generation metadata and run IDs                 |
 
 ## Quick offline walkthrough
 

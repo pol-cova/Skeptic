@@ -4,20 +4,20 @@
 **Audience:** Hackathon judges (Reto 3 — specialized agent)  
 **Stable path:** localhost demo on port 3100 (documented in README)
 
-> Say aloud when switching from live to prerecorded: *"This next segment uses a prerecorded artifact bundle from submission/fallback — not a live model run."*
+> Say aloud when switching from live to prerecorded: _"This next segment uses a prerecorded artifact bundle from submission/fallback — not a live model run."_
 
 ## Beat map
 
-| Time | Beat | On screen | Narration |
-| ---- | ---- | --------- | --------- |
-| 0:00–0:20 | Problem | README tagline + broken invite UI | "Coding agents claim features work. Skeptic is an independent verification agent: it reads Markdown acceptance criteria, explores the app in Chromium, and returns evidence-backed verdicts." |
-| 0:20–0:35 | Criteria | `examples/demo-app/acceptance.md` | "Three criteria: invalid email blocked, valid email persisted in Pending, duplicate invite rejected." |
-| 0:35–1:05 | Broken run | Terminal: `pnpm skeptic verify --deterministic` | "Default demo seeds a persistence bug. Deterministic verify makes zero model calls — this is the harness oracle, not the agent planner." |
-| 1:05–1:20 | Verdicts | Terminal JSON + report table | "Criterion 1 PASS — validation works. Criterion 2 FAIL — toast succeeds but the row disappears after refresh. Criterion 3 UNVERIFIABLE — duplicate flow is blocked because criterion 2 never established a persisted invite." |
-| 1:20–1:45 | Evidence | `report.html` criterion sections + screenshots | "Every PASS or FAIL ties to deterministic assertions and PNG captures. UNVERIFIABLE means prerequisite missing, not necessarily a product bug." |
-| 1:45–2:10 | Replay | Terminal: `pnpm skeptic replay --run <id>` with fixed demo | "Replay executes the recorded Playwright steps with **zero model calls**. Same criteria, fixed persistence — three PASS." |
-| 2:10–2:35 | Fixed product | `pnpm --filter demo-app dev:fixed` + verify | "Enabling the prepared fix flips readiness to READY. Skeptic did not edit code — it proved the claim." |
-| 2:35–3:00 | Why agent + close | Architecture diagram | "Natural-language criteria change; labels move; prerequisites fail. A fixed script cannot adapt. Skeptic separates Eve (planning) from the harness (typed actions + oracle). Only deterministic evidence establishes PASS or FAIL." |
+| Time      | Beat              | On screen                                                  | Narration                                                                                                                                                                                                                           |
+| --------- | ----------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0:00–0:20 | Problem           | README tagline + broken invite UI                          | "Coding agents claim features work. Skeptic is an independent verification agent: it reads Markdown acceptance criteria, explores the app in Chromium, and returns evidence-backed verdicts."                                       |
+| 0:20–0:35 | Criteria          | `examples/demo-app/acceptance.md`                          | "Three criteria: invalid email blocked, valid email persisted in Pending, duplicate invite rejected."                                                                                                                               |
+| 0:35–1:05 | Broken run        | Terminal: `pnpm skeptic verify --deterministic`            | "Default demo seeds a persistence bug. Deterministic verify makes zero model calls — this is the harness oracle, not the agent planner."                                                                                            |
+| 1:05–1:20 | Verdicts          | Terminal JSON + report table                               | "Criterion 1 PASS — validation works. Criterion 2 FAIL — toast succeeds but the row disappears after refresh. Criterion 3 UNVERIFIABLE — duplicate flow is blocked because criterion 2 never established a persisted invite."       |
+| 1:20–1:45 | Evidence          | `report.html` criterion sections + screenshots             | "Every PASS or FAIL ties to deterministic assertions and PNG captures. UNVERIFIABLE means prerequisite missing, not necessarily a product bug."                                                                                     |
+| 1:45–2:10 | Replay            | Terminal: `pnpm skeptic replay --run <id>` with fixed demo | "Replay executes the recorded Playwright steps with **zero model calls**. Same criteria, fixed persistence — three PASS."                                                                                                           |
+| 2:10–2:35 | Fixed product     | `pnpm --filter demo-app dev:fixed` + verify                | "Enabling the prepared fix flips readiness to READY. Skeptic did not edit code — it proved the claim."                                                                                                                              |
+| 2:35–3:00 | Why agent + close | Architecture diagram                                       | "Natural-language criteria change; labels move; prerequisites fail. A fixed script cannot adapt. Skeptic separates Eve (planning) from the harness (typed actions + oracle). Only deterministic evidence establishes PASS or FAIL." |
 
 ## Commands (copy/paste)
 
@@ -61,11 +61,11 @@ Expected replay output highlights:
 
 ## Expected visible outcomes
 
-| Phase | C1 | C2 | C3 | Readiness |
-| ----- | -- | -- | -- | --------- |
-| Broken verify | PASS | FAIL | UNVERIFIABLE | NOT_READY |
-| Replay on fixed app | PASS | PASS | PASS | READY |
-| Fixed verify | PASS | PASS | PASS | READY |
+| Phase               | C1   | C2   | C3           | Readiness |
+| ------------------- | ---- | ---- | ------------ | --------- |
+| Broken verify       | PASS | FAIL | UNVERIFIABLE | NOT_READY |
+| Replay on fixed app | PASS | PASS | PASS         | READY     |
+| Fixed verify        | PASS | PASS | PASS         | READY     |
 
 ## Fallback narration (offline)
 

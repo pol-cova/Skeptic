@@ -2,14 +2,14 @@
 
 This directory packages everything required for the three-minute judge demo, offline fallback, and Reto 3 submission checklist.
 
-| Asset | Purpose |
-| ----- | ------- |
-| [demo-script.md](./demo-script.md) | Exact 3-minute narration with PRD timing beats |
-| [narrative.md](./narrative.md) | Innovation, impact, and specialized-agent justification |
-| [checklist.md](./checklist.md) | Definition-of-done checklist with evidence links |
-| [assets/](./assets/) | Architecture diagram and broken/fixed report screenshots |
-| [fallback/](./fallback/) | Prerecorded reports and replay summary for offline judging |
-| [evidence/](./evidence/) | Machine-readable fresh-clone and three-run evidence |
+| Asset                              | Purpose                                                    |
+| ---------------------------------- | ---------------------------------------------------------- |
+| [demo-script.md](./demo-script.md) | Exact 3-minute narration with PRD timing beats             |
+| [narrative.md](./narrative.md)     | Innovation, impact, and specialized-agent justification    |
+| [checklist.md](./checklist.md)     | Definition-of-done checklist with evidence links           |
+| [assets/](./assets/)               | Architecture diagram and broken/fixed report screenshots   |
+| [fallback/](./fallback/)           | Prerecorded reports and replay summary for offline judging |
+| [evidence/](./evidence/)           | Machine-readable fresh-clone and three-run evidence        |
 
 ## Live demo (preferred)
 

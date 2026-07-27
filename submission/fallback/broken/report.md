@@ -11,10 +11,10 @@
 
 ## Reference demo (broken vs fixed)
 
-| Phase | C1 | C2 | C3 | Readiness | Exit |
-| --- | --- | --- | --- | --- | --- |
-| Broken | PASS | FAIL | UNVERIFIABLE | NOT_READY | 1 |
-| Fixed | PASS | PASS | PASS | READY | 0 |
+| Phase  | C1   | C2   | C3           | Readiness | Exit |
+| ------ | ---- | ---- | ------------ | --------- | ---- |
+| Broken | PASS | FAIL | UNVERIFIABLE | NOT_READY | 1    |
+| Fixed  | PASS | PASS | PASS         | READY     | 0    |
 
 Enable the fixed demo with `pnpm --filter demo-app dev:fixed` or `DEMO_PERSIST_INVITATIONS=true`.
 
