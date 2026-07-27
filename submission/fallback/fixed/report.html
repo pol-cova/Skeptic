@@ -1,0 +1,1649 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skeptic Report — verify-1785125016363</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        line-height: 1.5;
+      }
+      a:focus-visible,
+      button:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid #06c;
+        outline-offset: 2px;
+      }
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        background: #000;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        z-index: 10;
+      }
+      .skip-link:focus {
+        left: 0;
+      }
+      main {
+        margin: 2rem;
+        max-width: 960px;
+      }
+      h1 {
+        margin-bottom: 0.25rem;
+      }
+      .meta,
+      .muted {
+        color: #555;
+      }
+      .notice {
+        background: #fff7e6;
+        border: 1px solid #f0c36d;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+      }
+      .summary {
+        display: grid;
+        gap: 0.25rem;
+        margin: 1rem 0 1.5rem;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5rem 0.75rem;
+        text-align: left;
+        vertical-align: top;
+      }
+      thead th {
+        background: #f5f5f5;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.1rem 0.45rem;
+        border-radius: 0.25rem;
+        border: 1px solid currentColor;
+        font-weight: 700;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+      }
+      .pass {
+        color: #0a7;
+      }
+      .fail {
+        color: #c00;
+      }
+      .unverifiable {
+        color: #a60;
+      }
+      .error {
+        color: #606;
+      }
+      .unknown {
+        color: #666;
+      }
+      blockquote {
+        margin: 0.75rem 0;
+        padding-left: 1rem;
+        border-left: 3px solid #ccc;
+      }
+      .criterion {
+        margin: 1.5rem 0;
+        padding-top: 0.5rem;
+        border-top: 1px solid #ddd;
+      }
+      .guidance,
+      .cause {
+        font-size: 0.95rem;
+      }
+      .assertions {
+        padding-left: 1.25rem;
+      }
+      nav ul {
+        padding-left: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content" role="main">
+      <h1>Skeptic Run Report</h1>
+      <p class="notice" role="note">
+        This report may contain screenshots, URLs, and UI text from the
+        application under test. Review artifacts before sharing. Run Skeptic
+        only on systems you are authorized to test.
+      </p>
+      <div class="summary" aria-label="Run summary">
+        <p class="meta">Run <strong>verify-1785125016363</strong></p>
+        <p class="meta">
+          Readiness <strong>READY</strong> · Exit code <strong>0</strong>
+        </p>
+        <p class="meta">
+          Started 2026-07-27T04:03:36.363Z · Finished 2026-07-27T04:03:42.357Z
+        </p>
+      </div>
+      <nav aria-label="Report sections">
+        <ul>
+          <li><a href="#demo-comparison">Reference demo comparison</a></li>
+          <li><a href="#criteria">Criteria</a></li>
+          <li><a href="#timeline">Timeline</a></li>
+          <li><a href="#artifacts">Bundle artifacts</a></li>
+        </ul>
+      </nav>
+      <h2 id="demo-comparison">Reference demo (broken vs fixed)</h2>
+      <table>
+        <caption>
+          Reference demo expectations for broken vs fixed runs
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Phase</th>
+            <th scope="col">C1</th>
+            <th scope="col">C2</th>
+            <th scope="col">C3</th>
+            <th scope="col">Readiness</th>
+            <th scope="col">Exit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Broken</th>
+            <td><span class="badge pass">PASS</span></td>
+            <td><span class="badge fail">FAIL</span></td>
+            <td><span class="badge unverifiable">UNVERIFIABLE</span></td>
+            <td>NOT_READY</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <th scope="row">Fixed</th>
+            <td><span class="badge pass">PASS</span></td>
+            <td><span class="badge pass">PASS</span></td>
+            <td><span class="badge pass">PASS</span></td>
+            <td>READY</td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="muted">
+        Enable the fixed demo with
+        <code>pnpm --filter demo-app dev:fixed</code> or
+        <code>DEMO_PERSIST_INVITATIONS=true</code>.
+      </p>
+      <h2 id="criteria">Criteria</h2>
+      <section
+        class="criterion"
+        id="criterion-1"
+        aria-labelledby="criterion-1-heading"
+      >
+        <h3 id="criterion-1-heading">
+          <span class="badge pass" aria-label="Verdict PASS">PASS</span>
+          Criterion 1
+        </h3>
+        <p class="guidance">Deterministic assertions prove this criterion.</p>
+        <blockquote>
+          An invalid email address shows a validation message and does not
+          create an invitation.
+        </blockquote>
+        <p>
+          Deterministic assertions prove the criterion (visible passed, text
+          passed, count passed, response passed).
+        </p>
+
+        <h4>Assertions</h4>
+        <ul class="assertions">
+          <li id="criterion-1-assertion-1">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            visible (passed) · expected true · observed true
+          </li>
+          <li id="criterion-1-assertion-2">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            text (passed) · expected &quot;valid email&quot; · observed
+            &quot;Enter a valid email address.&quot;
+          </li>
+          <li id="criterion-1-assertion-3">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            count (passed) · expected 0 · observed 0
+          </li>
+          <li id="criterion-1-assertion-4">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            response (passed) · expected
+            {&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/api/invitations&quot;,&quot;status&quot;:400}
+            · observed
+            {&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/api/invitations&quot;,&quot;status&quot;:400}
+          </li>
+        </ul>
+        <h4>Artifacts</h4>
+        <ul>
+          <li>
+            <a href="screenshots/000029-1.png">screenshots/000029-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000030-1.png">screenshots/000030-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000031-1.png">screenshots/000031-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000032-1.png">screenshots/000032-1.png</a>
+          </li>
+        </ul>
+      </section>
+      <section
+        class="criterion"
+        id="criterion-2"
+        aria-labelledby="criterion-2-heading"
+      >
+        <h3 id="criterion-2-heading">
+          <span class="badge pass" aria-label="Verdict PASS">PASS</span>
+          Criterion 2
+        </h3>
+        <p class="guidance">Deterministic assertions prove this criterion.</p>
+        <blockquote>
+          A valid email address creates an invitation and displays it in the
+          Pending invitations list.
+        </blockquote>
+        <p>
+          Deterministic assertions prove the criterion (visible passed, response
+          passed, count passed, count passed).
+        </p>
+
+        <h4>Assertions</h4>
+        <ul class="assertions">
+          <li id="criterion-2-assertion-1">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            visible (passed) · expected true · observed true
+          </li>
+          <li id="criterion-2-assertion-2">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            response (passed) · expected
+            {&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/api/invitations&quot;,&quot;status&quot;:200}
+            · observed
+            {&quot;method&quot;:&quot;POST&quot;,&quot;path&quot;:&quot;/api/invitations&quot;,&quot;status&quot;:200}
+          </li>
+          <li id="criterion-2-assertion-3">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            count (passed) · expected 1 · observed 1
+          </li>
+          <li id="criterion-2-assertion-4">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            count (passed) · expected 1 · observed 1
+          </li>
+        </ul>
+        <h4>Artifacts</h4>
+        <ul>
+          <li>
+            <a href="screenshots/000029-1.png">screenshots/000029-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000030-1.png">screenshots/000030-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000031-1.png">screenshots/000031-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000032-1.png">screenshots/000032-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000068-2.png">screenshots/000068-2.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000069-2.png">screenshots/000069-2.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000070-2.png">screenshots/000070-2.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000071-2.png">screenshots/000071-2.png</a>
+          </li>
+        </ul>
+      </section>
+      <section
+        class="criterion"
+        id="criterion-3"
+        aria-labelledby="criterion-3-heading"
+      >
+        <h3 id="criterion-3-heading">
+          <span class="badge pass" aria-label="Verdict PASS">PASS</span>
+          Criterion 3
+        </h3>
+        <p class="guidance">Deterministic assertions prove this criterion.</p>
+        <blockquote>
+          Inviting the same email twice shows a duplicate-invitation error and
+          does not create a second row.
+        </blockquote>
+        <p>
+          Deterministic assertions prove the criterion (visible passed, count
+          passed).
+        </p>
+
+        <h4>Assertions</h4>
+        <ul class="assertions">
+          <li id="criterion-3-assertion-1">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            visible (passed) · expected true · observed true
+          </li>
+          <li id="criterion-3-assertion-2">
+            <span class="badge pass" aria-label="Assertion passed">PASS</span>
+            count (passed) · expected 1 · observed 1
+          </li>
+        </ul>
+        <h4>Artifacts</h4>
+        <ul>
+          <li>
+            <a href="screenshots/000029-1.png">screenshots/000029-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000030-1.png">screenshots/000030-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000031-1.png">screenshots/000031-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000032-1.png">screenshots/000032-1.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000068-2.png">screenshots/000068-2.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000069-2.png">screenshots/000069-2.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000070-2.png">screenshots/000070-2.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000071-2.png">screenshots/000071-2.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000097-3.png">screenshots/000097-3.png</a>
+          </li>
+          <li>
+            <a href="screenshots/000098-3.png">screenshots/000098-3.png</a>
+          </li>
+        </ul>
+      </section>
+      <h2 id="timeline">Timeline</h2>
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Seq</th>
+            <th scope="col">Time</th>
+            <th scope="col">Actor</th>
+            <th scope="col">Type</th>
+            <th scope="col">Criterion</th>
+            <th scope="col">Artifacts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">0</th>
+            <td>
+              <time datetime="2026-07-27T04:03:36.479Z"
+                >2026-07-27T04:03:36.479Z</time
+              >
+            </td>
+            <td>system</td>
+            <td><code>run.started</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">1</th>
+            <td>
+              <time datetime="2026-07-27T04:03:36.799Z"
+                >2026-07-27T04:03:36.799Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>
+              <time datetime="2026-07-27T04:03:36.810Z"
+                >2026-07-27T04:03:36.810Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>
+              <time datetime="2026-07-27T04:03:36.821Z"
+                >2026-07-27T04:03:36.821Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">4</th>
+            <td>
+              <time datetime="2026-07-27T04:03:36.822Z"
+                >2026-07-27T04:03:36.822Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">5</th>
+            <td>
+              <time datetime="2026-07-27T04:03:36.822Z"
+                >2026-07-27T04:03:36.822Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">6</th>
+            <td>
+              <time datetime="2026-07-27T04:03:36.982Z"
+                >2026-07-27T04:03:36.982Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">7</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.567Z"
+                >2026-07-27T04:03:37.567Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">8</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.637Z"
+                >2026-07-27T04:03:37.637Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">9</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.638Z"
+                >2026-07-27T04:03:37.638Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">10</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.726Z"
+                >2026-07-27T04:03:37.726Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">11</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.809Z"
+                >2026-07-27T04:03:37.809Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">12</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.814Z"
+                >2026-07-27T04:03:37.814Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">13</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.820Z"
+                >2026-07-27T04:03:37.820Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">14</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.829Z"
+                >2026-07-27T04:03:37.829Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">15</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.836Z"
+                >2026-07-27T04:03:37.836Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">16</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.912Z"
+                >2026-07-27T04:03:37.912Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">17</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.939Z"
+                >2026-07-27T04:03:37.939Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">18</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.941Z"
+                >2026-07-27T04:03:37.941Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">19</th>
+            <td>
+              <time datetime="2026-07-27T04:03:37.942Z"
+                >2026-07-27T04:03:37.942Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">20</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.474Z"
+                >2026-07-27T04:03:38.474Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">21</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.785Z"
+                >2026-07-27T04:03:38.785Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">22</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.786Z"
+                >2026-07-27T04:03:38.786Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">23</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.786Z"
+                >2026-07-27T04:03:38.786Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">24</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.786Z"
+                >2026-07-27T04:03:38.786Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">25</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.786Z"
+                >2026-07-27T04:03:38.786Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">26</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.786Z"
+                >2026-07-27T04:03:38.786Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">27</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.786Z"
+                >2026-07-27T04:03:38.786Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">28</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.786Z"
+                >2026-07-27T04:03:38.786Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>1</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">29</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.787Z"
+                >2026-07-27T04:03:38.787Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>1</td>
+            <td>
+              <a href="screenshots/000029-1.png">screenshots/000029-1.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">30</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.815Z"
+                >2026-07-27T04:03:38.815Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>1</td>
+            <td>
+              <a href="screenshots/000030-1.png">screenshots/000030-1.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">31</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.852Z"
+                >2026-07-27T04:03:38.852Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>1</td>
+            <td>
+              <a href="screenshots/000031-1.png">screenshots/000031-1.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">32</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.885Z"
+                >2026-07-27T04:03:38.885Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>1</td>
+            <td>
+              <a href="screenshots/000032-1.png">screenshots/000032-1.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">33</th>
+            <td>
+              <time datetime="2026-07-27T04:03:38.920Z"
+                >2026-07-27T04:03:38.920Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>criterion.completed</code></td>
+            <td>1</td>
+            <td>
+              <a href="screenshots/000029-1.png">screenshots/000029-1.png</a>,
+              <a href="screenshots/000030-1.png">screenshots/000030-1.png</a>,
+              <a href="screenshots/000031-1.png">screenshots/000031-1.png</a>,
+              <a href="screenshots/000032-1.png">screenshots/000032-1.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">34</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.019Z"
+                >2026-07-27T04:03:39.019Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">35</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.028Z"
+                >2026-07-27T04:03:39.028Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">36</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.030Z"
+                >2026-07-27T04:03:39.030Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">37</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.032Z"
+                >2026-07-27T04:03:39.032Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">38</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.035Z"
+                >2026-07-27T04:03:39.035Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">39</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.162Z"
+                >2026-07-27T04:03:39.162Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">40</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.592Z"
+                >2026-07-27T04:03:39.592Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">41</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.606Z"
+                >2026-07-27T04:03:39.606Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">42</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.616Z"
+                >2026-07-27T04:03:39.616Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">43</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.623Z"
+                >2026-07-27T04:03:39.623Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">44</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.632Z"
+                >2026-07-27T04:03:39.632Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">45</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.644Z"
+                >2026-07-27T04:03:39.644Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">46</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.646Z"
+                >2026-07-27T04:03:39.646Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">47</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.814Z"
+                >2026-07-27T04:03:39.814Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">48</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.835Z"
+                >2026-07-27T04:03:39.835Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">49</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.924Z"
+                >2026-07-27T04:03:39.924Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">50</th>
+            <td>
+              <time datetime="2026-07-27T04:03:39.931Z"
+                >2026-07-27T04:03:39.931Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">51</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.256Z"
+                >2026-07-27T04:03:40.256Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">52</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.261Z"
+                >2026-07-27T04:03:40.261Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">53</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.266Z"
+                >2026-07-27T04:03:40.266Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">54</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.266Z"
+                >2026-07-27T04:03:40.266Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">55</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.270Z"
+                >2026-07-27T04:03:40.270Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">56</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.386Z"
+                >2026-07-27T04:03:40.386Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">57</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.693Z"
+                >2026-07-27T04:03:40.693Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">58</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.882Z"
+                >2026-07-27T04:03:40.882Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">59</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.883Z"
+                >2026-07-27T04:03:40.883Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">60</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.883Z"
+                >2026-07-27T04:03:40.883Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">61</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.883Z"
+                >2026-07-27T04:03:40.883Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">62</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.883Z"
+                >2026-07-27T04:03:40.883Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">63</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.883Z"
+                >2026-07-27T04:03:40.883Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">64</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.883Z"
+                >2026-07-27T04:03:40.883Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">65</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.884Z"
+                >2026-07-27T04:03:40.884Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">66</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.884Z"
+                >2026-07-27T04:03:40.884Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">67</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.884Z"
+                >2026-07-27T04:03:40.884Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>2</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">68</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.884Z"
+                >2026-07-27T04:03:40.884Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>2</td>
+            <td>
+              <a href="screenshots/000068-2.png">screenshots/000068-2.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">69</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.915Z"
+                >2026-07-27T04:03:40.915Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>2</td>
+            <td>
+              <a href="screenshots/000069-2.png">screenshots/000069-2.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">70</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.949Z"
+                >2026-07-27T04:03:40.949Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>2</td>
+            <td>
+              <a href="screenshots/000070-2.png">screenshots/000070-2.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">71</th>
+            <td>
+              <time datetime="2026-07-27T04:03:40.982Z"
+                >2026-07-27T04:03:40.982Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>2</td>
+            <td>
+              <a href="screenshots/000071-2.png">screenshots/000071-2.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">72</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.016Z"
+                >2026-07-27T04:03:41.016Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>criterion.completed</code></td>
+            <td>2</td>
+            <td>
+              <a href="screenshots/000029-1.png">screenshots/000029-1.png</a>,
+              <a href="screenshots/000030-1.png">screenshots/000030-1.png</a>,
+              <a href="screenshots/000031-1.png">screenshots/000031-1.png</a>,
+              <a href="screenshots/000032-1.png">screenshots/000032-1.png</a>,
+              <a href="screenshots/000068-2.png">screenshots/000068-2.png</a>,
+              <a href="screenshots/000069-2.png">screenshots/000069-2.png</a>,
+              <a href="screenshots/000070-2.png">screenshots/000070-2.png</a>,
+              <a href="screenshots/000071-2.png">screenshots/000071-2.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">73</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.040Z"
+                >2026-07-27T04:03:41.040Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">74</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.046Z"
+                >2026-07-27T04:03:41.046Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">75</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.048Z"
+                >2026-07-27T04:03:41.048Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">76</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.049Z"
+                >2026-07-27T04:03:41.049Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">77</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.052Z"
+                >2026-07-27T04:03:41.052Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">78</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.168Z"
+                >2026-07-27T04:03:41.168Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">79</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.594Z"
+                >2026-07-27T04:03:41.594Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">80</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.604Z"
+                >2026-07-27T04:03:41.604Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">81</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.612Z"
+                >2026-07-27T04:03:41.612Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">82</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.619Z"
+                >2026-07-27T04:03:41.619Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">83</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.628Z"
+                >2026-07-27T04:03:41.628Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">84</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.644Z"
+                >2026-07-27T04:03:41.644Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">85</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.645Z"
+                >2026-07-27T04:03:41.645Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">86</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.840Z"
+                >2026-07-27T04:03:41.840Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">87</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.848Z"
+                >2026-07-27T04:03:41.848Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">88</th>
+            <td>
+              <time datetime="2026-07-27T04:03:41.974Z"
+                >2026-07-27T04:03:41.974Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>network.observed</code></td>
+            <td>—</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">89</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.185Z"
+                >2026-07-27T04:03:42.185Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">90</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">91</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">92</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">93</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">94</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">95</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">96</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>harness</td>
+            <td><code>page.observed</code></td>
+            <td>3</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <th scope="row">97</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.186Z"
+                >2026-07-27T04:03:42.186Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>3</td>
+            <td>
+              <a href="screenshots/000097-3.png">screenshots/000097-3.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">98</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.219Z"
+                >2026-07-27T04:03:42.219Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>assertion.checked</code></td>
+            <td>3</td>
+            <td>
+              <a href="screenshots/000098-3.png">screenshots/000098-3.png</a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">99</th>
+            <td>
+              <time datetime="2026-07-27T04:03:42.253Z"
+                >2026-07-27T04:03:42.253Z</time
+              >
+            </td>
+            <td>oracle</td>
+            <td><code>criterion.completed</code></td>
+            <td>3</td>
+            <td>
+              <a href="screenshots/000029-1.png">screenshots/000029-1.png</a>,
+              <a href="screenshots/000030-1.png">screenshots/000030-1.png</a>,
+              <a href="screenshots/000031-1.png">screenshots/000031-1.png</a>,
+              <a href="screenshots/000032-1.png">screenshots/000032-1.png</a>,
+              <a href="screenshots/000068-2.png">screenshots/000068-2.png</a>,
+              <a href="screenshots/000069-2.png">screenshots/000069-2.png</a>,
+              <a href="screenshots/000070-2.png">screenshots/000070-2.png</a>,
+              <a href="screenshots/000071-2.png">screenshots/000071-2.png</a>,
+              <a href="screenshots/000097-3.png">screenshots/000097-3.png</a>,
+              <a href="screenshots/000098-3.png">screenshots/000098-3.png</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h2 id="artifacts">Bundle artifacts</h2>
+      <ul>
+        <li><a href="events.jsonl">events.jsonl</a></li>
+        <li><a href="metadata.json">metadata.json</a></li>
+        <li><a href="replay.json">replay.json</a></li>
+        <li>
+          <a href="generated/acceptance.spec.ts"
+            >generated/acceptance.spec.ts</a
+          >
+        </li>
+        <li><a href="report.md">report.md</a></li>
+      </ul>
+    </main>
+  </body>
+</html>

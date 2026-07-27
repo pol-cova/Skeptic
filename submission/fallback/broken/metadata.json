@@ -1,0 +1,191 @@
+{
+  "runId": "verify-1785125008164",
+  "startedAt": 1785125008164,
+  "config": {
+    "app": {
+      "baseUrl": "http://127.0.0.1:3100",
+      "startCommand": "pnpm --filter [REDACTED]-app dev",
+      "readyPath": "/health",
+      "allowedOrigins": ["http://127.0.0.1:3100"]
+    },
+    "criteria": {
+      "file": "acceptance.md",
+      "maxCriteria": 3
+    },
+    "auth": {
+      "loginPath": "/login",
+      "usernameEnv": "PROOF_TEST_USERNAME",
+      "passwordEnv": "PROOF_TEST_PASSWORD"
+    }
+  },
+  "criteria": [
+    {
+      "index": 1,
+      "sourceText": "An invalid email address shows a validation message and does not create an invitation.",
+      "prerequisites": []
+    },
+    {
+      "index": 2,
+      "sourceText": "A valid email address creates an invitation and displays it in the Pending invitations list.",
+      "prerequisites": []
+    },
+    {
+      "index": 3,
+      "sourceText": "Inviting the same email twice shows a duplicate-invitation error and does not create a second row.",
+      "prerequisites": [2]
+    }
+  ],
+  "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785125008164",
+  "finishedAt": 1785125013678,
+  "verdicts": [
+    {
+      "criterionIndex": 1,
+      "sourceText": "An invalid email address shows a validation message and does not create an invitation.",
+      "verdict": "PASS",
+      "explanation": "Deterministic assertions prove the criterion (visible passed, text passed, count passed, response passed).",
+      "assertionResults": [
+        {
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-validation-error"
+            }
+          },
+          "passed": true,
+          "expected": true,
+          "observed": true,
+          "timestamp": 1785125011032
+        },
+        {
+          "assertion": {
+            "type": "text",
+            "target": {
+              "testId": "invite-validation-error"
+            },
+            "expected": "valid email"
+          },
+          "passed": true,
+          "expected": "valid email",
+          "observed": "Enter a valid email address.",
+          "timestamp": 1785125011076
+        },
+        {
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 0
+          },
+          "passed": true,
+          "expected": 0,
+          "observed": 0,
+          "timestamp": 1785125011119
+        },
+        {
+          "assertion": {
+            "type": "response",
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 400
+          },
+          "passed": true,
+          "expected": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 400
+          },
+          "observed": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 400
+          },
+          "timestamp": 1785125011159
+        }
+      ],
+      "artifactRefs": [
+        "screenshots/000029-1.png",
+        "screenshots/000030-1.png",
+        "screenshots/000031-1.png",
+        "screenshots/000032-1.png"
+      ]
+    },
+    {
+      "criterionIndex": 2,
+      "sourceText": "A valid email address creates an invitation and displays it in the Pending invitations list.",
+      "verdict": "FAIL",
+      "explanation": "Observed evidence contradicts the criterion (count failed).",
+      "assertionResults": [
+        {
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-success-toast"
+            }
+          },
+          "passed": true,
+          "expected": true,
+          "observed": true,
+          "timestamp": 1785125012548
+        },
+        {
+          "assertion": {
+            "type": "response",
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 200
+          },
+          "passed": true,
+          "expected": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 200
+          },
+          "observed": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 200
+          },
+          "timestamp": 1785125012600
+        },
+        {
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          },
+          "passed": true,
+          "expected": 1,
+          "observed": 1,
+          "timestamp": 1785125012644
+        },
+        {
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          },
+          "passed": false,
+          "expected": 1,
+          "observed": 0,
+          "timestamp": 1785125013361
+        }
+      ],
+      "artifactRefs": [
+        "screenshots/000029-1.png",
+        "screenshots/000030-1.png",
+        "screenshots/000031-1.png",
+        "screenshots/000032-1.png",
+        "screenshots/000068-2.png",
+        "screenshots/000069-2.png",
+        "screenshots/000070-2.png",
+        "screenshots/000071-2.png"
+      ]
+    }
+  ],
+  "readiness": "NOT_READY"
+}
