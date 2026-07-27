@@ -21,6 +21,10 @@ export interface Day1GateOptions {
   inviteEmail?: string;
   /** Wait for a persisted row to appear after reload before asserting count */
   requirePersistedRow?: boolean;
+  /** Optional EvidenceStore for automatic evidence persistence */
+  evidenceStore?: import("@skeptic/evidence").EvidenceStore;
+  /** Run ID for evidence streaming (required if evidenceStore is provided) */
+  runId?: string;
 }
 
 export interface Day1GateScreenshots {
@@ -282,7 +286,13 @@ export async function runDay1GateWithHarness(
   const harness = new PlaywrightHarness({
     allowedOrigins: [...options.allowedOrigins],
     headless: options.headless ?? true,
+    evidenceStore: options.evidenceStore,
   });
+
+  // Set runId if evidenceStore is provided
+  if (options.evidenceStore && options.runId) {
+    harness.setRunId(options.runId);
+  }
 
   await harness.launch();
 

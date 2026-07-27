@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import {
@@ -67,69 +67,16 @@ async function main(): Promise<void> {
     throw new Error(`Evidence init failed: ${init.message}`);
   }
 
-  await store.appendEvent({
-    runId,
-    timestamp: Date.now(),
-    actor: "harness",
-    type: "run.started",
-    payload: {
-      configPath: "scripts/gate/day1.ts",
-      criteriaCount: 1,
-    },
-  });
-
   const gate = await runDay1GateWithHarness({
     baseUrl: BASE_URL,
     allowedOrigins: ALLOWED_ORIGINS,
     username: auth.username,
     password: auth.password,
+    evidenceStore: store,
+    runId,
   });
-
-  for (const observation of gate.observations) {
-    await store.appendEvent({
-      runId,
-      timestamp: Date.now(),
-      actor: "harness",
-      type: "page.observed",
-      payload: observation,
-      criterionIndex: 2,
-    });
-  }
-
-  for (const assertionResult of gate.assertionResults) {
-    await store.appendEvent({
-      runId,
-      timestamp: Date.now(),
-      actor: "oracle",
-      type: "assertion.checked",
-      payload: assertionResult,
-      criterionIndex: 2,
-    });
-  }
 
   const artifactRoot = init.artifactRoot;
-  await mkdir(join(artifactRoot, "screenshots"), { recursive: true });
-  await writeFile(
-    join(artifactRoot, "screenshots", "000001-2.png"),
-    gate.screenshots.afterSubmit,
-  );
-  await writeFile(
-    join(artifactRoot, "screenshots", "000002-2.png"),
-    gate.screenshots.afterReload,
-  );
-
-  await store.appendEvent({
-    runId,
-    timestamp: Date.now(),
-    actor: "oracle",
-    type: "criterion.completed",
-    payload: {
-      verdict: gate.verdict.verdict,
-      explanation: gate.verdict.explanation,
-    },
-    criterionIndex: 2,
-    artifactRefs: gate.artifactRefs,
-  });
 
   const finalized = await store.finalize([gate.verdict]);
   const readiness = finalized.readiness;
