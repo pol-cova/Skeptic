@@ -2,12 +2,12 @@
 
 > This report may contain screenshots, URLs, and UI text from the application under test. Review artifacts before sharing. Run Skeptic only on systems you are authorized to test.
 
-- **Run ID:** `verify-1785117794103`
-- **Readiness:** ERROR
-- **Exit code:** 3
-- **Started:** 2026-07-27T02:03:14.103Z
-- **Finished:** 2026-07-27T02:03:19.545Z
-- **Artifact root:** `/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117794103`
+- **Run ID:** `verify-1785125008164`
+- **Readiness:** NOT_READY
+- **Exit code:** 1
+- **Started:** 2026-07-27T04:03:28.164Z
+- **Finished:** 2026-07-27T04:03:33.678Z
+- **Artifact root:** `/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785125008164`
 
 ## Reference demo (broken vs fixed)
 
@@ -37,10 +37,10 @@ Deterministic assertions prove the criterion (visible passed, text passed, count
 
 **Artifacts**
 
-- [screenshots/000025-1.png](screenshots/000025-1.png)
-- [screenshots/000026-1.png](screenshots/000026-1.png)
-- [screenshots/000027-1.png](screenshots/000027-1.png)
-- [screenshots/000028-1.png](screenshots/000028-1.png)
+- [screenshots/000029-1.png](screenshots/000029-1.png)
+- [screenshots/000030-1.png](screenshots/000030-1.png)
+- [screenshots/000031-1.png](screenshots/000031-1.png)
+- [screenshots/000032-1.png](screenshots/000032-1.png)
 
 ### [2] FAIL
 
@@ -59,90 +59,90 @@ Observed evidence contradicts the criterion (count failed).
 
 **Artifacts**
 
-- [screenshots/000025-1.png](screenshots/000025-1.png)
-- [screenshots/000026-1.png](screenshots/000026-1.png)
-- [screenshots/000027-1.png](screenshots/000027-1.png)
-- [screenshots/000028-1.png](screenshots/000028-1.png)
-- [screenshots/000062-2.png](screenshots/000062-2.png)
-- [screenshots/000063-2.png](screenshots/000063-2.png)
-- [screenshots/000064-2.png](screenshots/000064-2.png)
-- [screenshots/000065-2.png](screenshots/000065-2.png)
+- [screenshots/000029-1.png](screenshots/000029-1.png)
+- [screenshots/000030-1.png](screenshots/000030-1.png)
+- [screenshots/000031-1.png](screenshots/000031-1.png)
+- [screenshots/000032-1.png](screenshots/000032-1.png)
+- [screenshots/000068-2.png](screenshots/000068-2.png)
+- [screenshots/000069-2.png](screenshots/000069-2.png)
+- [screenshots/000070-2.png](screenshots/000070-2.png)
+- [screenshots/000071-2.png](screenshots/000071-2.png)
 
 ## Timeline
 
-- `0` 2026-07-27T02:03:14.583Z · **system** · `run.started`
-- `1` 2026-07-27T02:03:14.967Z · **harness** · `network.observed`
-- `2` 2026-07-27T02:03:14.981Z · **harness** · `network.observed`
-- `3` 2026-07-27T02:03:15.000Z · **harness** · `network.observed`
-- `3` 2026-07-27T02:03:15.000Z · **harness** · `network.observed`
-- `3` 2026-07-27T02:03:15.000Z · **harness** · `network.observed`
-- `4` 2026-07-27T02:03:15.109Z · **harness** · `network.observed`
-- `5` 2026-07-27T02:03:15.753Z · **harness** · `network.observed`
-- `6` 2026-07-27T02:03:15.821Z · **harness** · `network.observed`
-- `6` 2026-07-27T02:03:15.822Z · **harness** · `network.observed`
-- `7` 2026-07-27T02:03:15.905Z · **harness** · `network.observed`
-- `8` 2026-07-27T02:03:15.990Z · **harness** · `network.observed`
-- `9` 2026-07-27T02:03:15.996Z · **harness** · `network.observed`
-- `10` 2026-07-27T02:03:16.002Z · **harness** · `network.observed`
-- `11` 2026-07-27T02:03:16.012Z · **harness** · `network.observed`
-- `12` 2026-07-27T02:03:16.020Z · **harness** · `network.observed`
-- `13` 2026-07-27T02:03:16.099Z · **harness** · `network.observed`
-- `14` 2026-07-27T02:03:16.122Z · **harness** · `network.observed`
-- `15` 2026-07-27T02:03:16.132Z · **harness** · `network.observed`
-- `15` 2026-07-27T02:03:16.132Z · **harness** · `network.observed`
-- `16` 2026-07-27T02:03:16.677Z · **harness** · `network.observed`
-- `17` 2026-07-27T02:03:16.986Z · **harness** · `page.observed` · criterion 1
-- `18` 2026-07-27T02:03:16.987Z · **harness** · `page.observed` · criterion 1
-- `19` 2026-07-27T02:03:16.987Z · **harness** · `page.observed` · criterion 1
-- `20` 2026-07-27T02:03:16.987Z · **harness** · `page.observed` · criterion 1
-- `21` 2026-07-27T02:03:16.987Z · **harness** · `page.observed` · criterion 1
-- `22` 2026-07-27T02:03:16.987Z · **harness** · `page.observed` · criterion 1
-- `23` 2026-07-27T02:03:16.987Z · **harness** · `page.observed` · criterion 1
-- `24` 2026-07-27T02:03:16.987Z · **harness** · `page.observed` · criterion 1
-- `25` 2026-07-27T02:03:16.988Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000025-1.png](screenshots/000025-1.png)
-- `26` 2026-07-27T02:03:17.018Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000026-1.png](screenshots/000026-1.png)
-- `27` 2026-07-27T02:03:17.055Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000027-1.png](screenshots/000027-1.png)
-- `28` 2026-07-27T02:03:17.089Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000028-1.png](screenshots/000028-1.png)
-- `29` 2026-07-27T02:03:17.135Z · **oracle** · `criterion.completed` · criterion 1 · [screenshots/000025-1.png](screenshots/000025-1.png), [screenshots/000026-1.png](screenshots/000026-1.png), [screenshots/000027-1.png](screenshots/000027-1.png), [screenshots/000028-1.png](screenshots/000028-1.png)
-- `30` 2026-07-27T02:03:17.224Z · **harness** · `network.observed`
-- `31` 2026-07-27T02:03:17.232Z · **harness** · `network.observed`
-- `32` 2026-07-27T02:03:17.234Z · **harness** · `network.observed`
-- `33` 2026-07-27T02:03:17.236Z · **harness** · `network.observed`
-- `34` 2026-07-27T02:03:17.238Z · **harness** · `network.observed`
-- `35` 2026-07-27T02:03:17.373Z · **harness** · `network.observed`
-- `36` 2026-07-27T02:03:17.795Z · **harness** · `network.observed`
-- `37` 2026-07-27T02:03:17.810Z · **harness** · `network.observed`
-- `38` 2026-07-27T02:03:17.818Z · **harness** · `network.observed`
-- `39` 2026-07-27T02:03:17.830Z · **harness** · `network.observed`
-- `40` 2026-07-27T02:03:17.838Z · **harness** · `network.observed`
-- `41` 2026-07-27T02:03:17.849Z · **harness** · `network.observed`
-- `42` 2026-07-27T02:03:17.853Z · **harness** · `network.observed`
-- `43` 2026-07-27T02:03:18.016Z · **harness** · `network.observed`
-- `44` 2026-07-27T02:03:18.040Z · **harness** · `network.observed`
-- `45` 2026-07-27T02:03:18.142Z · **harness** · `network.observed`
-- `46` 2026-07-27T02:03:18.150Z · **harness** · `network.observed`
-- `47` 2026-07-27T02:03:18.507Z · **harness** · `network.observed`
-- `48` 2026-07-27T02:03:18.513Z · **harness** · `network.observed`
-- `49` 2026-07-27T02:03:18.518Z · **harness** · `network.observed`
-- `49` 2026-07-27T02:03:18.518Z · **harness** · `network.observed`
-- `49` 2026-07-27T02:03:18.521Z · **harness** · `network.observed`
-- `50` 2026-07-27T02:03:18.637Z · **harness** · `network.observed`
-- `51` 2026-07-27T02:03:18.989Z · **harness** · `network.observed`
-- `52` 2026-07-27T02:03:19.285Z · **harness** · `page.observed` · criterion 2
-- `53` 2026-07-27T02:03:19.285Z · **harness** · `page.observed` · criterion 2
-- `54` 2026-07-27T02:03:19.285Z · **harness** · `page.observed` · criterion 2
-- `55` 2026-07-27T02:03:19.285Z · **harness** · `page.observed` · criterion 2
-- `56` 2026-07-27T02:03:19.285Z · **harness** · `page.observed` · criterion 2
-- `57` 2026-07-27T02:03:19.286Z · **harness** · `page.observed` · criterion 2
-- `58` 2026-07-27T02:03:19.286Z · **harness** · `page.observed` · criterion 2
-- `59` 2026-07-27T02:03:19.286Z · **harness** · `page.observed` · criterion 2
-- `60` 2026-07-27T02:03:19.286Z · **harness** · `page.observed` · criterion 2
-- `61` 2026-07-27T02:03:19.286Z · **harness** · `page.observed` · criterion 2
-- `62` 2026-07-27T02:03:19.286Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000062-2.png](screenshots/000062-2.png)
-- `63` 2026-07-27T02:03:19.317Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000063-2.png](screenshots/000063-2.png)
-- `64` 2026-07-27T02:03:19.352Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000064-2.png](screenshots/000064-2.png)
-- `65` 2026-07-27T02:03:19.385Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000065-2.png](screenshots/000065-2.png)
-- `66` 2026-07-27T02:03:19.419Z · **oracle** · `criterion.completed` · criterion 2 · [screenshots/000066-2.png](screenshots/000066-2.png)
+- `0` 2026-07-27T04:03:28.840Z · **system** · `run.started`
+- `1` 2026-07-27T04:03:29.204Z · **harness** · `network.observed`
+- `2` 2026-07-27T04:03:29.220Z · **harness** · `network.observed`
+- `3` 2026-07-27T04:03:29.249Z · **harness** · `network.observed`
+- `4` 2026-07-27T04:03:29.252Z · **harness** · `network.observed`
+- `5` 2026-07-27T04:03:29.252Z · **harness** · `network.observed`
+- `6` 2026-07-27T04:03:29.352Z · **harness** · `network.observed`
+- `7` 2026-07-27T04:03:30.012Z · **harness** · `network.observed`
+- `8` 2026-07-27T04:03:30.082Z · **harness** · `network.observed`
+- `9` 2026-07-27T04:03:30.083Z · **harness** · `network.observed`
+- `10` 2026-07-27T04:03:30.166Z · **harness** · `network.observed`
+- `11` 2026-07-27T04:03:30.248Z · **harness** · `network.observed`
+- `12` 2026-07-27T04:03:30.253Z · **harness** · `network.observed`
+- `13` 2026-07-27T04:03:30.260Z · **harness** · `network.observed`
+- `14` 2026-07-27T04:03:30.267Z · **harness** · `network.observed`
+- `15` 2026-07-27T04:03:30.277Z · **harness** · `network.observed`
+- `16` 2026-07-27T04:03:30.357Z · **harness** · `network.observed`
+- `17` 2026-07-27T04:03:30.382Z · **harness** · `network.observed`
+- `18` 2026-07-27T04:03:30.383Z · **harness** · `network.observed`
+- `19` 2026-07-27T04:03:30.384Z · **harness** · `network.observed`
+- `20` 2026-07-27T04:03:30.940Z · **harness** · `network.observed`
+- `21` 2026-07-27T04:03:31.252Z · **harness** · `page.observed` · criterion 1
+- `22` 2026-07-27T04:03:31.253Z · **harness** · `page.observed` · criterion 1
+- `23` 2026-07-27T04:03:31.253Z · **harness** · `page.observed` · criterion 1
+- `24` 2026-07-27T04:03:31.253Z · **harness** · `page.observed` · criterion 1
+- `25` 2026-07-27T04:03:31.253Z · **harness** · `page.observed` · criterion 1
+- `26` 2026-07-27T04:03:31.253Z · **harness** · `page.observed` · criterion 1
+- `27` 2026-07-27T04:03:31.253Z · **harness** · `page.observed` · criterion 1
+- `28` 2026-07-27T04:03:31.253Z · **harness** · `page.observed` · criterion 1
+- `29` 2026-07-27T04:03:31.254Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000029-1.png](screenshots/000029-1.png)
+- `30` 2026-07-27T04:03:31.286Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000030-1.png](screenshots/000030-1.png)
+- `31` 2026-07-27T04:03:31.319Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000031-1.png](screenshots/000031-1.png)
+- `32` 2026-07-27T04:03:31.354Z · **oracle** · `assertion.checked` · criterion 1 · [screenshots/000032-1.png](screenshots/000032-1.png)
+- `33` 2026-07-27T04:03:31.387Z · **oracle** · `criterion.completed` · criterion 1 · [screenshots/000029-1.png](screenshots/000029-1.png), [screenshots/000030-1.png](screenshots/000030-1.png), [screenshots/000031-1.png](screenshots/000031-1.png), [screenshots/000032-1.png](screenshots/000032-1.png)
+- `34` 2026-07-27T04:03:31.478Z · **harness** · `network.observed`
+- `35` 2026-07-27T04:03:31.485Z · **harness** · `network.observed`
+- `36` 2026-07-27T04:03:31.487Z · **harness** · `network.observed`
+- `37` 2026-07-27T04:03:31.490Z · **harness** · `network.observed`
+- `38` 2026-07-27T04:03:31.493Z · **harness** · `network.observed`
+- `39` 2026-07-27T04:03:31.631Z · **harness** · `network.observed`
+- `40` 2026-07-27T04:03:32.060Z · **harness** · `network.observed`
+- `41` 2026-07-27T04:03:32.076Z · **harness** · `network.observed`
+- `42` 2026-07-27T04:03:32.084Z · **harness** · `network.observed`
+- `43` 2026-07-27T04:03:32.094Z · **harness** · `network.observed`
+- `44` 2026-07-27T04:03:32.102Z · **harness** · `network.observed`
+- `45` 2026-07-27T04:03:32.113Z · **harness** · `network.observed`
+- `46` 2026-07-27T04:03:32.117Z · **harness** · `network.observed`
+- `47` 2026-07-27T04:03:32.327Z · **harness** · `network.observed`
+- `48` 2026-07-27T04:03:32.353Z · **harness** · `network.observed`
+- `49` 2026-07-27T04:03:32.457Z · **harness** · `network.observed`
+- `50` 2026-07-27T04:03:32.464Z · **harness** · `network.observed`
+- `51` 2026-07-27T04:03:32.809Z · **harness** · `network.observed`
+- `52` 2026-07-27T04:03:32.814Z · **harness** · `network.observed`
+- `53` 2026-07-27T04:03:32.819Z · **harness** · `network.observed`
+- `54` 2026-07-27T04:03:32.820Z · **harness** · `network.observed`
+- `55` 2026-07-27T04:03:32.823Z · **harness** · `network.observed`
+- `56` 2026-07-27T04:03:32.939Z · **harness** · `network.observed`
+- `57` 2026-07-27T04:03:33.244Z · **harness** · `network.observed`
+- `58` 2026-07-27T04:03:33.415Z · **harness** · `page.observed` · criterion 2
+- `59` 2026-07-27T04:03:33.416Z · **harness** · `page.observed` · criterion 2
+- `60` 2026-07-27T04:03:33.416Z · **harness** · `page.observed` · criterion 2
+- `61` 2026-07-27T04:03:33.416Z · **harness** · `page.observed` · criterion 2
+- `62` 2026-07-27T04:03:33.416Z · **harness** · `page.observed` · criterion 2
+- `63` 2026-07-27T04:03:33.416Z · **harness** · `page.observed` · criterion 2
+- `64` 2026-07-27T04:03:33.417Z · **harness** · `page.observed` · criterion 2
+- `65` 2026-07-27T04:03:33.417Z · **harness** · `page.observed` · criterion 2
+- `66` 2026-07-27T04:03:33.417Z · **harness** · `page.observed` · criterion 2
+- `67` 2026-07-27T04:03:33.417Z · **harness** · `page.observed` · criterion 2
+- `68` 2026-07-27T04:03:33.417Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000068-2.png](screenshots/000068-2.png)
+- `69` 2026-07-27T04:03:33.449Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000069-2.png](screenshots/000069-2.png)
+- `70` 2026-07-27T04:03:33.482Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000070-2.png](screenshots/000070-2.png)
+- `71` 2026-07-27T04:03:33.515Z · **oracle** · `assertion.checked` · criterion 2 · [screenshots/000071-2.png](screenshots/000071-2.png)
+- `72` 2026-07-27T04:03:33.551Z · **oracle** · `criterion.completed` · criterion 2 · [screenshots/000072-2.png](screenshots/000072-2.png)
 
 ## Bundle artifacts
 

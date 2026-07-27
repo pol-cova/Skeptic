@@ -7,7 +7,7 @@ This directory packages everything required for the three-minute judge demo, off
 | [demo-script.md](./demo-script.md) | Exact 3-minute narration with PRD timing beats             |
 | [narrative.md](./narrative.md)     | Innovation, impact, and specialized-agent justification    |
 | [checklist.md](./checklist.md)     | Definition-of-done checklist with evidence links           |
-| [assets/](./assets/)               | Architecture diagram and broken/fixed report screenshots   |
+| [assets/](./assets/)               | Architecture diagram, report screenshots, optional B-roll  |
 | [fallback/](./fallback/)           | Prerecorded reports and replay summary for offline judging |
 | [evidence/](./evidence/)           | Machine-readable fresh-clone and three-run evidence        |
 
@@ -39,7 +39,10 @@ cat submission/fallback/replay-three-pass.json
 ```bash
 pnpm submission:generate
 pnpm submission:validate
+pnpm submission:capture-broll   # optional silent report walkthrough (P1)
 ```
+
+`submission:capture-broll` writes `assets/demo-broll.webm` for editing into the final judge video. It does not replace the narrated terminal segments in [demo-script.md](./demo-script.md).
 
 ## Public links
 

@@ -26,17 +26,26 @@ interface RunSummary {
 }
 
 async function killPort(port: string): Promise<void> {
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const execFileAsync = promisify(execFile);
+
+  if (process.platform !== "win32") {
+    try {
+      await execFileAsync("fuser", ["-k", `${port}/tcp`]);
+    } catch {
+      // Port already free or fuser unavailable.
+    }
+  }
+
   try {
-    const { execFile } = await import("node:child_process");
-    const { promisify } = await import("node:util");
-    const execFileAsync = promisify(execFile);
     const { stdout } = await execFileAsync("lsof", ["-ti", `:${port}`]);
-    const pids = stdout
-      .trim()
-      .split("\n")
-      .filter((value) => value.length > 0);
-    for (const pid of pids) {
-      process.kill(Number(pid), "SIGKILL");
+    for (const pid of stdout.trim().split("\n").filter(Boolean)) {
+      try {
+        process.kill(Number(pid), "SIGKILL");
+      } catch {
+        // Process already exited.
+      }
     }
   } catch {
     // Port already free.
@@ -168,11 +177,13 @@ async function runReplayOnFixedDemo(brokenRunId: string): Promise<{
 }
 
 async function runThreeConsecutive(): Promise<RunSummary[]> {
-  const runs: RunSummary[] = [];
+  const consecutive: RunSummary[] = [];
+  await killPort("3100");
+  await killPort("3101");
   for (let index = 0; index < 3; index += 1) {
-    runs.push(await runBrokenVerify());
+    consecutive.push(await runBrokenVerify());
   }
-  return runs;
+  return consecutive;
 }
 
 async function main(): Promise<void> {
@@ -185,9 +196,12 @@ async function main(): Promise<void> {
 
   const broken = await runBrokenVerify();
   await copyRunBundle(broken.artifactRoot, join(FALLBACK_ROOT, "broken"));
+  await killPort("3100");
 
   const fixed = await runFixedVerify();
   await copyRunBundle(fixed.artifactRoot, join(FALLBACK_ROOT, "fixed"));
+  await killPort("3100");
+  await killPort("3101");
 
   const replay = await runReplayOnFixedDemo(broken.runId);
   await writeFile(
