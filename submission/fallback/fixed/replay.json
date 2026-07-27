@@ -1,0 +1,370 @@
+{
+  "version": 1,
+  "baseUrl": "http://127.0.0.1:3101",
+  "allowedOrigins": [
+    "http://127.0.0.1:3101"
+  ],
+  "variables": {
+    "INVITE_EMAIL": "verify-verify-1785118809874@example.com"
+  },
+  "generatedAt": 1785118815694,
+  "criteria": [
+    {
+      "criterionIndex": 1,
+      "sourceText": "An invalid email address shows a validation message and does not create an invitation.",
+      "beforeSteps": [
+        {
+          "type": "api",
+          "method": "POST",
+          "path": "/api/reset"
+        }
+      ],
+      "steps": [
+        {
+          "actionId": "replay-login-goto",
+          "type": "goto",
+          "url": "http://127.0.0.1:3101/login"
+        },
+        {
+          "actionId": "replay-login-fill-username",
+          "type": "fill",
+          "target": {
+            "testId": "login-username"
+          },
+          "value": "demo"
+        },
+        {
+          "actionId": "replay-login-fill-password",
+          "type": "fill",
+          "target": {
+            "testId": "login-password"
+          },
+          "value": "skeptic-demo"
+        },
+        {
+          "actionId": "replay-login-submit",
+          "type": "click",
+          "target": {
+            "testId": "login-submit"
+          }
+        },
+        {
+          "actionId": "replay-login-wait-team",
+          "type": "waitFor",
+          "target": {
+            "testId": "invite-email"
+          },
+          "timeoutMs": 10000
+        },
+        {
+          "actionId": "c1-fill-invalid-email",
+          "type": "fill",
+          "target": {
+            "testId": "invite-email"
+          },
+          "value": "user@invalid"
+        },
+        {
+          "actionId": "c1-submit-invite",
+          "type": "click",
+          "target": {
+            "testId": "invite-submit"
+          }
+        },
+        {
+          "actionId": "c1-wait-validation-primary",
+          "type": "waitFor",
+          "target": {
+            "testId": "invite-validation-error"
+          },
+          "timeoutMs": 5000
+        },
+        {
+          "actionId": "c1-wait-validation-fallback",
+          "type": "waitFor",
+          "target": {
+            "role": "alert"
+          },
+          "timeoutMs": 5000
+        },
+        {
+          "actionId": "c1-assert-visible",
+          "type": "assert",
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-validation-error"
+            }
+          }
+        },
+        {
+          "actionId": "c1-assert-text",
+          "type": "assert",
+          "assertion": {
+            "type": "text",
+            "target": {
+              "testId": "invite-validation-error"
+            },
+            "expected": "valid email"
+          }
+        },
+        {
+          "actionId": "c1-assert-count",
+          "type": "assert",
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 0
+          }
+        },
+        {
+          "actionId": "c1-assert-response",
+          "type": "assert",
+          "assertion": {
+            "type": "response",
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 400
+          }
+        }
+      ]
+    },
+    {
+      "criterionIndex": 2,
+      "sourceText": "A valid email address creates an invitation and displays it in the Pending invitations list.",
+      "beforeSteps": [
+        {
+          "type": "api",
+          "method": "POST",
+          "path": "/api/reset"
+        }
+      ],
+      "steps": [
+        {
+          "actionId": "replay-login-goto",
+          "type": "goto",
+          "url": "http://127.0.0.1:3101/login"
+        },
+        {
+          "actionId": "replay-login-fill-username",
+          "type": "fill",
+          "target": {
+            "testId": "login-username"
+          },
+          "value": "demo"
+        },
+        {
+          "actionId": "replay-login-fill-password",
+          "type": "fill",
+          "target": {
+            "testId": "login-password"
+          },
+          "value": "skeptic-demo"
+        },
+        {
+          "actionId": "replay-login-submit",
+          "type": "click",
+          "target": {
+            "testId": "login-submit"
+          }
+        },
+        {
+          "actionId": "replay-login-wait-team",
+          "type": "waitFor",
+          "target": {
+            "testId": "invite-email"
+          },
+          "timeoutMs": 10000
+        },
+        {
+          "actionId": "c2-fill-email",
+          "type": "fill",
+          "target": {
+            "testId": "invite-email"
+          },
+          "value": "verify-verify-1785118809874@example.com"
+        },
+        {
+          "actionId": "c2-submit-invite",
+          "type": "click",
+          "target": {
+            "testId": "invite-submit"
+          }
+        },
+        {
+          "actionId": "c2-wait-toast",
+          "type": "waitFor",
+          "target": {
+            "testId": "invite-success-toast"
+          },
+          "timeoutMs": 5000
+        },
+        {
+          "actionId": "c2-assert-toast",
+          "type": "assert",
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-success-toast"
+            }
+          }
+        },
+        {
+          "actionId": "c2-assert-response",
+          "type": "assert",
+          "assertion": {
+            "type": "response",
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 200
+          }
+        },
+        {
+          "actionId": "c2-assert-optimistic-count",
+          "type": "assert",
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          }
+        },
+        {
+          "actionId": "c2-reload",
+          "type": "goto",
+          "url": "http://127.0.0.1:3101/team"
+        },
+        {
+          "actionId": "c2-wait-list",
+          "type": "waitFor",
+          "target": {
+            "testId": "pending-invitations"
+          },
+          "timeoutMs": 5000
+        },
+        {
+          "actionId": "c2-assert-persisted-count",
+          "type": "assert",
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          }
+        }
+      ]
+    },
+    {
+      "criterionIndex": 3,
+      "sourceText": "Inviting the same email twice shows a duplicate-invitation error and does not create a second row.",
+      "beforeSteps": [
+        {
+          "type": "api",
+          "method": "POST",
+          "path": "/api/reset"
+        }
+      ],
+      "steps": [
+        {
+          "actionId": "replay-login-goto",
+          "type": "goto",
+          "url": "http://127.0.0.1:3101/login"
+        },
+        {
+          "actionId": "replay-login-fill-username",
+          "type": "fill",
+          "target": {
+            "testId": "login-username"
+          },
+          "value": "demo"
+        },
+        {
+          "actionId": "replay-login-fill-password",
+          "type": "fill",
+          "target": {
+            "testId": "login-password"
+          },
+          "value": "skeptic-demo"
+        },
+        {
+          "actionId": "replay-login-submit",
+          "type": "click",
+          "target": {
+            "testId": "login-submit"
+          }
+        },
+        {
+          "actionId": "replay-login-wait-team",
+          "type": "waitFor",
+          "target": {
+            "testId": "invite-email"
+          },
+          "timeoutMs": 10000
+        },
+        {
+          "actionId": "c3-fill-first",
+          "type": "fill",
+          "target": {
+            "testId": "invite-email"
+          },
+          "value": "verify-verify-1785118809874@example.com"
+        },
+        {
+          "actionId": "c3-submit-first",
+          "type": "click",
+          "target": {
+            "testId": "invite-submit"
+          }
+        },
+        {
+          "actionId": "c3-fill-second",
+          "type": "fill",
+          "target": {
+            "testId": "invite-email"
+          },
+          "value": "verify-verify-1785118809874@example.com"
+        },
+        {
+          "actionId": "c3-submit-second",
+          "type": "click",
+          "target": {
+            "testId": "invite-submit"
+          }
+        },
+        {
+          "actionId": "c3-wait-duplicate",
+          "type": "waitFor",
+          "target": {
+            "testId": "invite-duplicate-error"
+          },
+          "timeoutMs": 5000
+        },
+        {
+          "actionId": "c3-assert-duplicate-visible",
+          "type": "assert",
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-duplicate-error"
+            }
+          }
+        },
+        {
+          "actionId": "c3-assert-count",
+          "type": "assert",
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          }
+        }
+      ]
+    }
+  ]
+}

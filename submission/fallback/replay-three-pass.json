@@ -1,0 +1,21 @@
+{
+  "disclaimer": "Replay output from skeptic replay using the broken-run replay.json against the fixed demo app. Zero model calls.",
+  "sourceRunId": "verify-1785118802588",
+  "modelCalls": 0,
+  "readiness": "READY",
+  "exitCode": 0,
+  "verdicts": [
+    {
+      "criterionIndex": 1,
+      "verdict": "PASS"
+    },
+    {
+      "criterionIndex": 2,
+      "verdict": "PASS"
+    },
+    {
+      "criterionIndex": 3,
+      "verdict": "PASS"
+    }
+  ]
+}

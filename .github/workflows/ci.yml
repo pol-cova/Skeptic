@@ -35,5 +35,11 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Day 4 golden gate
+        env:
+          PROOF_TEST_USERNAME: demo
+          PROOF_TEST_PASSWORD: skeptic-demo
+        run: pnpm gate:day4
+
       - name: Build
         run: pnpm build
