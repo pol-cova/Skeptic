@@ -4,16 +4,22 @@
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
+  "bin": {
+    "skeptic": "./src/bin.ts"
+  },
   "exports": {
     ".": "./src/index.ts"
   },
   "scripts": {
     "build": "tsc --noEmit -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "vitest run --passWithNoTests --config vitest.config.ts"
+    "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "@skeptic/core": "workspace:*",
+    "@skeptic/evidence": "workspace:*",
+    "@skeptic/playwright-harness": "workspace:*",
+    "@skeptic/report": "workspace:*",
     "commander": "14.0.3"
   }
 }

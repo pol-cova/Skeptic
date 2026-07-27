@@ -45,3 +45,27 @@ export {
 } from "./actions.ts";
 export { runAssertion } from "./assertions.ts";
 export { NetworkLog } from "./network-log.ts";
+
+export {
+  buildCriterion1Steps,
+  buildCriterion2Steps,
+  buildCriterion3Steps,
+  buildDemoReplayFixture,
+  buildLoginSteps,
+  REPLAY_INVITE_EMAIL_VAR,
+  type DemoReplayFixtureOptions,
+} from "./replay-fixtures.ts";
+
+export {
+  replayCriterionSteps,
+  replayFixture,
+  replayFixtureFromFile,
+  type ReplayCriterionResult,
+  type ReplayRunOptions,
+  type ReplayRunResult,
+} from "./replay-runner.ts";
+
+export {
+  generatePlaywrightSpec,
+  generatePlaywrightSpecFromFixture,
+} from "./playwright-codegen.ts";

@@ -55,3 +55,15 @@ export {
   type CriterionVerdict,
   type PrerequisiteFailure,
 } from "./verdict.ts";
+export {
+  REPLAY_FIXTURE_VERSION,
+  ReplayGenerationError,
+  assertReplayableActions,
+  parseReplayFixture,
+  replayApiStepSchema,
+  replayCriterionSchema,
+  replayFixtureSchema,
+  type ReplayApiStep,
+  type ReplayCriterion,
+  type ReplayFixture,
+} from "./replay.ts";

@@ -45,6 +45,44 @@ Start the Eve agent:
 pnpm dev
 ```
 
+## CLI
+
+Deterministic verification (no model calls, no AWS credentials):
+
+```bash
+export PROOF_TEST_USERNAME=demo
+export PROOF_TEST_PASSWORD=skeptic-demo
+pnpm demo:dev
+
+# In another terminal:
+node --experimental-strip-types packages/cli/src/bin.ts verify \
+  --config examples/demo-app/proof.config.ts \
+  --deterministic
+```
+
+Replay a prior run from its artifact bundle:
+
+```bash
+node --experimental-strip-types packages/cli/src/bin.ts replay --run <run-id>
+```
+
+Regenerate or open the HTML report:
+
+```bash
+node --experimental-strip-types packages/cli/src/bin.ts report --run <run-id> --open
+```
+
+Exit codes follow the [public contract](docs/adr/0001-public-contract.md): `0` when all criteria pass, `1` on product `FAIL`, `2` on `UNVERIFIABLE`-only runs, `3` on config or harness errors.
+
+Broken vs fixed demo:
+
+| Phase  | C1   | C2   | C3           | Exit |
+| ------ | ---- | ---- | ------------ | ---- |
+| Broken | PASS | FAIL | UNVERIFIABLE | 1    |
+| Fixed  | PASS | PASS | PASS         | 0    |
+
+Enable persistence fix: `pnpm --filter demo-app dev:fixed` (port 3101) or `DEMO_PERSIST_INVITATIONS=true`.
+
 ## Development
 
 ```bash
@@ -70,18 +108,20 @@ Repository layout:
 
 Further reading:
 
+- [Responsible use](docs/responsible-use.md)
 - [Day 0 preflight](docs/preflight.md)
 - [Public contract (ADR 0001)](docs/adr/0001-public-contract.md)
 - [Model providers (ADR 0002)](docs/adr/0002-model-provider-strategy.md)
 - [Demo app](examples/demo-app/README.md)
 
-## Planned CLI
+## Planned npm install
 
 ```bash
-skeptic verify \
-  --url https://preview.example.com \
-  --criteria acceptance.md
+npm install @pol-cova/skeptic
+skeptic verify --config proof.config.ts --deterministic
 ```
+
+The published package ships the CLI entry point; local development uses `packages/cli` directly (see CLI section above).
 
 ## License
 

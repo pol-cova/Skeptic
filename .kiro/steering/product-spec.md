@@ -134,13 +134,15 @@ export default defineProofConfig({
 
 ## 9. Delivery
 
-**Done:** #2–#14 (contract, preflight, monorepo, demo, core schemas, lifecycle,
-harness, oracle, Day 1 gate, Eve agent, verification loop, prerequisites)
+**Done:** #2–#14, #15 replay/codegen, #17 CLI (deterministic verify), minimal #16 report renderer, partial #19 docs
 
-**Next:** #9 evidence wiring, #15–#17 (replay, reports, CLI), then #18–#21
-(Day 4 hardening and submission)
+**In progress:** #9 evidence auto-persist wiring (harness/agent still manual; CLI verify writes replay + reports)
 
-One issue per PR. Full list: [issue #1](https://github.com/pol-cova/Skeptic/issues/1).
+**Next:** #18–#21 (Day 4 hardening and submission)
+
+One issue per PR when practical. Full list: [issue #1](https://github.com/pol-cova/Skeptic/issues/1).
+
+See [responsible-use.md](../../docs/responsible-use.md) for data exposure and limitations.
 
 ## 10. Changes from Codex PRD v1.0
 

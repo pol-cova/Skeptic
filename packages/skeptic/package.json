@@ -5,11 +5,15 @@
   "license": "Apache-2.0",
   "type": "module",
   "main": "./index.js",
+  "bin": {
+    "skeptic": "./bin.js"
+  },
   "exports": {
     ".": "./index.js"
   },
   "files": [
     "index.js",
+    "bin.js",
     "README.md"
   ],
   "engines": {
