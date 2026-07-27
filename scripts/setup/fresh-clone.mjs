@@ -29,7 +29,11 @@ console.log("Building the publishable Skeptic package...");
 run("pnpm", ["--filter", "@pol-cova/skeptic", "run", "build"]);
 
 console.log("Validating CLI help...");
-run("node", ["--experimental-strip-types", "packages/cli/src/bin.ts", "--help"]);
+run("node", [
+  "--experimental-strip-types",
+  "packages/cli/src/bin.ts",
+  "--help",
+]);
 
 console.log(
   [

@@ -20,7 +20,12 @@ describe("publishable package contents", () => {
 
   it("does not include demo credentials or secret placeholders in the bundle", () => {
     const bundled = readFileSync(join(distRoot, "skeptic.mjs"), "utf8");
-    const forbidden = [/skeptic-demo/, /\.kiro\//, /sk-[A-Za-z0-9]{10,}/, /BEGIN PRIVATE KEY/];
+    const forbidden = [
+      /skeptic-demo/,
+      /\.kiro\//,
+      /sk-[A-Za-z0-9]{10,}/,
+      /BEGIN PRIVATE KEY/,
+    ];
 
     for (const pattern of forbidden) {
       expect(bundled).not.toMatch(pattern);
@@ -40,7 +45,9 @@ describe("publishable package contents", () => {
       stdio: "pipe",
     });
 
-    const tarball = readdirSync(packDestination).find((name) => name.endsWith(".tgz"));
+    const tarball = readdirSync(packDestination).find((name) =>
+      name.endsWith(".tgz"),
+    );
     expect(tarball).toBeDefined();
 
     const listing = execSync(`tar -tzf "${join(packDestination, tarball!)}"`, {

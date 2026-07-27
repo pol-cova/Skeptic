@@ -28,15 +28,15 @@ export async function runCli(argv: string[]): Promise<number> {
     .description(
       "Select a model provider and validate required credentials without storing secrets",
     )
-    .option(
-      "--provider <id>",
-      `Provider id (${skepticProviderIds.join(", ")})`,
-    )
+    .option("--provider <id>", `Provider id (${skepticProviderIds.join(", ")})`)
     .action((options: { provider?: string }) => {
       try {
         const result = runInitCommand(
           options.provider
-            ? { provider: options.provider as (typeof skepticProviderIds)[number] }
+            ? {
+                provider:
+                  options.provider as (typeof skepticProviderIds)[number],
+              }
             : {},
         );
 

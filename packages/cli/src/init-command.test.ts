@@ -34,8 +34,8 @@ describe("init command", () => {
       "openai-compatible",
       "google-ai",
     ]);
-    expect(providers.find((entry) => entry.id === "google-ai")?.credentialSource).toBe(
-      "GOOGLE_GENERATIVE_AI_API_KEY",
-    );
+    expect(
+      providers.find((entry) => entry.id === "google-ai")?.credentialSource,
+    ).toBe("GOOGLE_GENERATIVE_AI_API_KEY");
   });
 });
