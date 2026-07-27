@@ -37,7 +37,7 @@ test("[2] A valid email address creates an invitation and displays it in the Pen
   await page.getByTestId("invite-email").waitFor({ timeout: 10000 });
   await page
     .getByTestId("invite-email")
-    .fill("verify-verify-1785117802371@example.com");
+    .fill("verify-verify-1785125016363@example.com");
   await page.getByTestId("invite-submit").click();
   await page.getByTestId("invite-success-toast").waitFor({ timeout: 5000 });
   await expect(page.getByTestId("invite-success-toast")).toBeVisible();
@@ -60,11 +60,11 @@ test("[3] Inviting the same email twice shows a duplicate-invitation error and d
   await page.getByTestId("invite-email").waitFor({ timeout: 10000 });
   await page
     .getByTestId("invite-email")
-    .fill("verify-verify-1785117802371@example.com");
+    .fill("verify-verify-1785125016363@example.com");
   await page.getByTestId("invite-submit").click();
   await page
     .getByTestId("invite-email")
-    .fill("verify-verify-1785117802371@example.com");
+    .fill("verify-verify-1785125016363@example.com");
   await page.getByTestId("invite-submit").click();
   await page.getByTestId("invite-duplicate-error").waitFor({ timeout: 5000 });
   await expect(page.getByTestId("invite-duplicate-error")).toBeVisible();

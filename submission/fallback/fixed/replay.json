@@ -3,9 +3,9 @@
   "baseUrl": "http://127.0.0.1:3101",
   "allowedOrigins": ["http://127.0.0.1:3101"],
   "variables": {
-    "INVITE_EMAIL": "verify-verify-1785117802371@example.com"
+    "INVITE_EMAIL": "verify-verify-1785125016363@example.com"
   },
-  "generatedAt": 1785117809239,
+  "generatedAt": 1785125022253,
   "criteria": [
     {
       "criterionIndex": 1,
@@ -182,7 +182,7 @@
           "target": {
             "testId": "invite-email"
           },
-          "value": "verify-verify-1785117802371@example.com"
+          "value": "verify-verify-1785125016363@example.com"
         },
         {
           "actionId": "c2-submit-invite",
@@ -309,7 +309,7 @@
           "target": {
             "testId": "invite-email"
           },
-          "value": "verify-verify-1785117802371@example.com"
+          "value": "verify-verify-1785125016363@example.com"
         },
         {
           "actionId": "c3-submit-first",
@@ -324,7 +324,7 @@
           "target": {
             "testId": "invite-email"
           },
-          "value": "verify-verify-1785117802371@example.com"
+          "value": "verify-verify-1785125016363@example.com"
         },
         {
           "actionId": "c3-submit-second",
