@@ -46,9 +46,9 @@ Verdict names, readiness precedence, CLI shapes, MVP scope, model provider contr
 
 ## Progress
 
-**Done:** #2 contract, #3 preflight, #4 monorepo, #5 demo, #6 core schemas
+**Done:** #2–#17 core platform, CLI, replay, evidence, reports (#16), public docs (#19)
 
-**Next:** #7 lifecycle → #8 harness → #9 evidence → #10 oracle → #11 gate
+**Next:** Day 4 hardening (#18, #20, #21) and submission
 
 ## PR checklist
 

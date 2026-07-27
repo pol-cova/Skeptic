@@ -127,18 +127,19 @@ export default defineProofConfig({
 
 ```text
 .proof/runs/<run-id>/
-├── run.json, criteria.json, events.jsonl, verdicts.json, replay.json
+├── metadata.json, events.jsonl, replay.json, verdicts.json
 ├── generated/acceptance.spec.ts
-├── screenshots/, trace.zip, report.html, summary.md
+├── screenshots/, traces/, network/observations.json
+├── report.html, report.md
 ```
+
+Static reports include criterion text, verdict guidance, assertions, artifact links, ordered timeline, and a broken/fixed reference comparison. Reports are generated automatically when the evidence bundle is finalized.
 
 ## 9. Delivery
 
-**Done:** #2–#14, #15 replay/codegen, #17 CLI (deterministic verify), minimal #16 report renderer, partial #19 docs
+**Done:** #2–#15, #17 CLI (deterministic verify + replay + report), #16 static HTML/Markdown reports wired on evidence finalize, #19 public docs and responsible-use guidance
 
-**In progress:** #9 evidence auto-persist wiring (harness/agent still manual; CLI verify writes replay + reports)
-
-**Next:** #18–#21 (Day 4 hardening and submission)
+**Next:** remaining Day 4 hardening (#18, #20, #21) and submission polish
 
 One issue per PR when practical. Full list: [issue #1](https://github.com/pol-cova/Skeptic/issues/1).
 
