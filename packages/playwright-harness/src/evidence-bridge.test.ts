@@ -70,7 +70,9 @@ describe("HarnessEvidenceBridge", () => {
       ...createHarnessEvidenceProviders(harness),
     });
 
-    const init = await store.initialize(makeMetadata(runId), ["secret-password"]);
+    const init = await store.initialize(makeMetadata(runId), [
+      "secret-password",
+    ]);
     expect(init.ok).toBe(true);
     if (!init.ok) {
       return;
