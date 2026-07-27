@@ -23,7 +23,11 @@ Skeptic separates concerns deliberately:
 
 ## Install
 
-The npm package name `@pol-cova/skeptic` is reserved. **There is no published CLI yet.** Use the source install below until the package is published and smoke-tested.
+```bash
+npm install -g @pol-cova/skeptic
+```
+
+Or from source for development:
 
 ```bash
 git clone https://github.com/pol-cova/Skeptic.git
@@ -190,16 +194,14 @@ Further reading:
 - [Model providers (ADR 0002)](docs/adr/0002-model-provider-strategy.md)
 - [Demo app](examples/demo-app/README.md)
 
-## Planned npm install
-
-When `@pol-cova/skeptic` is published and smoke-tested:
+## npm install
 
 ```bash
-npm install @pol-cova/skeptic
+npm install -g @pol-cova/skeptic
 skeptic verify --config proof.config.ts --deterministic
 ```
 
-Until then, use the source install and `packages/cli` entry point shown above.
+For monorepo development, use the source install and `pnpm skeptic` entry point shown above.
 
 ## License
 
