@@ -26,7 +26,6 @@ import {
   runCriterion3Loop,
   runDay1Gate,
 } from "@skeptic/playwright-harness";
-import { writeRunReports } from "@skeptic/report";
 
 export interface VerifyOptions {
   configPath: string;
@@ -267,9 +266,6 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
   bridge.detach();
   const finalized = await store.finalize(recordedVerdicts);
   const readiness = finalized.readiness;
-  const bundle = finalized.bundle;
-
-  await writeRunReports(bundle, { artifactRoot });
   await harness.close();
   await stopApp(appProcess);
 
