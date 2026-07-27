@@ -18,10 +18,13 @@ import {
 import { EvidenceStore } from "@skeptic/evidence";
 import {
   buildDemoReplayFixture,
+  createHarnessEvidenceProviders,
   generatePlaywrightSpec,
-  runCriterion1WithHarness,
-  runCriterion3WithHarness,
-  runDay1GateWithHarness,
+  HarnessEvidenceBridge,
+  PlaywrightHarness,
+  runCriterion1Loop,
+  runCriterion3Loop,
+  runDay1Gate,
 } from "@skeptic/playwright-harness";
 import { writeRunReports } from "@skeptic/report";
 
@@ -129,11 +132,16 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
     artifactRoot: "",
   };
 
+  const harness = new PlaywrightHarness({
+    allowedOrigins: [...config.app.allowedOrigins],
+    headless: options.headless ?? true,
+  });
+
+  await harness.launch();
+
   const store = new EvidenceStore({
     basePath: cwd,
-    screenshotProvider: {
-      capture: async () => new Uint8Array(),
-    },
+    ...createHarnessEvidenceProviders(harness),
   });
 
   const init = await store.initialize(
@@ -142,11 +150,14 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
   );
 
   if (!init.ok) {
+    await harness.close();
     await stopApp(appProcess);
     throw new VerifyError("harness", init.message);
   }
 
   const artifactRoot = init.artifactRoot;
+  const bridge = new HarnessEvidenceBridge(store, harness, runId);
+  bridge.attach();
 
   await store.appendEvent({
     runId,
@@ -161,6 +172,8 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
   });
 
   let planResult;
+  const recordedVerdicts: CriterionVerdict[] = [];
+
   try {
     planResult = await executeRunPlan({
       criteria: criteriaWithPrereqs,
@@ -172,16 +185,22 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
       },
       async executeCriterion(criterion) {
         if (criterion.index === 1) {
-          const result = await runCriterion1WithHarness({
+          const result = await runCriterion1Loop(harness, {
             baseUrl: config.app.baseUrl,
             username: auth.username,
             password: auth.password,
           });
-          return { verdict: result.verdict };
+          const verdict = await bridge.recordCriterionResult({
+            observations: result.observations,
+            assertionResults: result.assertionResults,
+            verdict: result.verdict,
+          });
+          recordedVerdicts.push(verdict);
+          return { verdict };
         }
 
         if (criterion.index === 2) {
-          const result = await runDay1GateWithHarness({
+          const result = await runDay1Gate(harness, {
             baseUrl: config.app.baseUrl,
             allowedOrigins: config.app.allowedOrigins,
             username: auth.username,
@@ -190,39 +209,38 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
             headless: options.headless,
             requirePersistedRow: true,
           });
-          return { verdict: result.verdict };
+          const verdict = await bridge.recordCriterionResult({
+            observations: result.observations,
+            assertionResults: result.assertionResults,
+            verdict: result.verdict,
+          });
+          recordedVerdicts.push(verdict);
+          return { verdict };
         }
 
-        const result = await runCriterion3WithHarness({
+        const result = await runCriterion3Loop(harness, {
           baseUrl: config.app.baseUrl,
           username: auth.username,
           password: auth.password,
           inviteEmail,
         });
-        return { verdict: result.verdict };
+        const verdict = await bridge.recordCriterionResult({
+          observations: result.observations,
+          assertionResults: result.assertionResults,
+          verdict: result.verdict,
+        });
+        recordedVerdicts.push(verdict);
+        return { verdict };
       },
     });
   } catch (error) {
+    bridge.detach();
+    await harness.close();
     await stopApp(appProcess);
     throw new VerifyError(
       "harness",
       error instanceof Error ? error.message : String(error),
     );
-  }
-
-  for (const verdict of planResult.verdicts) {
-    await store.appendEvent({
-      runId,
-      timestamp: Date.now(),
-      actor: "oracle",
-      type: "criterion.completed",
-      payload: {
-        verdict: verdict.verdict,
-        explanation: verdict.explanation,
-      },
-      criterionIndex: verdict.criterionIndex,
-      artifactRefs: verdict.artifactRefs,
-    });
   }
 
   const replayFixture = buildDemoReplayFixture({
@@ -246,12 +264,13 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
     "utf8",
   );
 
-  const finalized = await store.finalize(planResult.verdicts);
+  bridge.detach();
+  const finalized = await store.finalize(recordedVerdicts);
   const readiness = finalized.readiness;
   const bundle = finalized.bundle;
 
   await writeRunReports(bundle, { artifactRoot });
-
+  await harness.close();
   await stopApp(appProcess);
 
   return {
