@@ -33,6 +33,7 @@
     "@skeptic/core": "workspace:*",
     "@skeptic/evidence": "workspace:*",
     "@skeptic/playwright-harness": "workspace:*",
+    "@skeptic/report": "workspace:*",
     "ai": "7.0.34",
     "eve": "0.27.1",
     "zod": "4.4.3"

@@ -1,3 +1,7 @@
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
 import {
   browserActionSchema,
   type AssertionResult,
@@ -36,6 +40,8 @@ export class PlaywrightHarness {
   #page: Page | null = null;
   readonly #networkLog = new NetworkLog();
   readonly #consoleErrors: string[] = [];
+  #tracingStarted = false;
+  #traceExported = false;
 
   constructor(options: HarnessOptions) {
     if (options.allowedOrigins.length === 0) {
@@ -55,6 +61,10 @@ export class PlaywrightHarness {
     return this.#page;
   }
 
+  get networkLog(): NetworkLog {
+    return this.#networkLog;
+  }
+
   async launch(): Promise<void> {
     if (this.#browser) {
       throw new Error("Harness is already launched.");
@@ -64,12 +74,42 @@ export class PlaywrightHarness {
       headless: this.#options.headless ?? true,
     });
     this.#context = await this.#browser.newContext();
+    await this.#context.tracing.start({ screenshots: true, snapshots: true });
+    this.#tracingStarted = true;
     await this.#installRouteGuard(this.#context);
     this.#page = await this.#context.newPage();
     this.#attachListeners(this.#page);
   }
 
+  async captureScreenshot(): Promise<Uint8Array> {
+    const buffer = await this.page.screenshot({ fullPage: true });
+    return new Uint8Array(buffer);
+  }
+
+  async exportTrace(): Promise<Uint8Array> {
+    if (!this.#context || !this.#tracingStarted || this.#traceExported) {
+      return new Uint8Array();
+    }
+
+    const traceDir = await mkdtemp(join(tmpdir(), "skeptic-trace-"));
+    const tracePath = join(traceDir, "trace.zip");
+
+    try {
+      await this.#context.tracing.stop({ path: tracePath });
+      this.#traceExported = true;
+      const data = await readFile(tracePath);
+      return new Uint8Array(data);
+    } finally {
+      await rm(traceDir, { recursive: true, force: true });
+    }
+  }
+
   async close(): Promise<void> {
+    if (this.#context && this.#tracingStarted && !this.#traceExported) {
+      await this.#context.tracing.stop().catch(() => undefined);
+      this.#traceExported = true;
+    }
+
     await this.#context?.close();
     await this.#browser?.close();
     this.#page = null;

@@ -1,4 +1,3 @@
-import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import {
@@ -11,8 +10,12 @@ import {
 import { EvidenceStore } from "@skeptic/evidence";
 import {
   CRITERION_2_TEXT,
-  runDay1GateWithHarness,
+  createHarnessEvidenceProviders,
+  HarnessEvidenceBridge,
+  PlaywrightHarness,
+  runDay1Gate,
 } from "@skeptic/playwright-harness";
+import { writeRunReports } from "@skeptic/report";
 
 const BASE_URL = process.env.PROOF_BASE_URL ?? "http://127.0.0.1:3100";
 const ALLOWED_ORIGINS = [BASE_URL];
@@ -53,10 +56,15 @@ async function main(): Promise<void> {
     artifactRoot: "",
   };
 
+  const harness = new PlaywrightHarness({
+    allowedOrigins: ALLOWED_ORIGINS,
+    headless: true,
+  });
+
+  await harness.launch();
+
   const store = new EvidenceStore({
-    screenshotProvider: {
-      capture: async () => new Uint8Array(),
-    },
+    ...createHarnessEvidenceProviders(harness),
   });
 
   const init = await store.initialize(
@@ -64,8 +72,12 @@ async function main(): Promise<void> {
     secretValuesFromAuth(authConfig),
   );
   if (!init.ok) {
+    await harness.close();
     throw new Error(`Evidence init failed: ${init.message}`);
   }
+
+  const bridge = new HarnessEvidenceBridge(store, harness, runId);
+  bridge.attach();
 
   await store.appendEvent({
     runId,
@@ -78,115 +90,48 @@ async function main(): Promise<void> {
     },
   });
 
-  const gate = await runDay1GateWithHarness({
+  const gate = await runDay1Gate(harness, {
     baseUrl: BASE_URL,
     allowedOrigins: ALLOWED_ORIGINS,
     username: auth.username,
     password: auth.password,
   });
 
-  for (const observation of gate.observations) {
-    await store.appendEvent({
-      runId,
-      timestamp: Date.now(),
-      actor: "harness",
-      type: "page.observed",
-      payload: observation,
-      criterionIndex: 2,
-    });
-  }
-
-  for (const assertionResult of gate.assertionResults) {
-    await store.appendEvent({
-      runId,
-      timestamp: Date.now(),
-      actor: "oracle",
-      type: "assertion.checked",
-      payload: assertionResult,
-      criterionIndex: 2,
-    });
-  }
-
-  const artifactRoot = init.artifactRoot;
-  await mkdir(join(artifactRoot, "screenshots"), { recursive: true });
-  await writeFile(
-    join(artifactRoot, "screenshots", "000001-2.png"),
-    gate.screenshots.afterSubmit,
-  );
-  await writeFile(
-    join(artifactRoot, "screenshots", "000002-2.png"),
-    gate.screenshots.afterReload,
-  );
-
-  await store.appendEvent({
-    runId,
-    timestamp: Date.now(),
-    actor: "oracle",
-    type: "criterion.completed",
-    payload: {
-      verdict: gate.verdict.verdict,
-      explanation: gate.verdict.explanation,
-    },
-    criterionIndex: 2,
-    artifactRefs: gate.artifactRefs,
+  const verdict = await bridge.recordCriterionResult({
+    observations: gate.observations,
+    assertionResults: gate.assertionResults,
+    verdict: gate.verdict,
   });
 
-  const finalized = await store.finalize([gate.verdict]);
-  const readiness = finalized.readiness;
-  const reportPath = join(artifactRoot, "report.html");
-  await writeFile(
-    reportPath,
-    renderHtmlReport(gate.verdict.verdict, gate.verdict.explanation, runId),
-    "utf8",
-  );
+  bridge.detach();
 
+  const finalized = await store.finalize([verdict]);
+  const readiness = finalized.readiness;
+  const artifactRoot = init.artifactRoot;
+
+  await writeRunReports(finalized.bundle, { artifactRoot });
+
+  const reportPath = join(artifactRoot, "report.html");
   const summary = {
     runId,
     readiness,
     exitCode: exitCodeFor(readiness),
     expectedVerdict: PERSISTENCE_FIXED ? "PASS" : "FAIL",
-    verdict: gate.verdict.verdict,
+    verdict: verdict.verdict,
     artifactRoot,
     reportPath,
+    tracePath: join(artifactRoot, "traces", "trace.zip"),
   };
 
   console.log(JSON.stringify(summary, null, 2));
 
-  if (gate.verdict.verdict !== summary.expectedVerdict) {
+  if (verdict.verdict !== summary.expectedVerdict) {
     process.exitCode = exitCodeFor(readiness);
   } else {
-    process.exitCode = exitCodeFor(readinessFor([gate.verdict.verdict]));
+    process.exitCode = exitCodeFor(readinessFor([verdict.verdict]));
   }
-}
 
-function renderHtmlReport(
-  verdict: string,
-  explanation: string,
-  runId: string,
-): string {
-  return `<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Skeptic Day 1 Gate</title>
-    <style>
-      body { font-family: system-ui, sans-serif; margin: 2rem; }
-      .verdict { font-size: 1.5rem; font-weight: 700; }
-    </style>
-  </head>
-  <body>
-    <h1>Day 1 Gate</h1>
-    <p class="verdict">${verdict}</p>
-    <p>${explanation}</p>
-    <p>Run: ${runId}</p>
-    <ul>
-      <li><a href="screenshots/000001-2.png">Screenshot after submit</a></li>
-      <li><a href="screenshots/000002-2.png">Screenshot after reload</a></li>
-      <li><a href="events.jsonl">Events</a></li>
-      <li><a href="metadata.json">Metadata</a></li>
-    </ul>
-  </body>
-</html>`;
+  await harness.close();
 }
 
 await main();

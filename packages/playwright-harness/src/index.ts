@@ -44,7 +44,13 @@ export {
   type ActionExecutionResult,
 } from "./actions.ts";
 export { runAssertion } from "./assertions.ts";
-export { NetworkLog } from "./network-log.ts";
+export { NetworkLog, type NetworkObservationHandler } from "./network-log.ts";
+
+export {
+  createHarnessEvidenceProviders,
+  HarnessEvidenceBridge,
+  type CriterionEvidenceInput,
+} from "./evidence-bridge.ts";
 
 export {
   buildCriterion1Steps,

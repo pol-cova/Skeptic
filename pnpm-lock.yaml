@@ -20,6 +20,9 @@ importers:
       '@skeptic/playwright-harness':
         specifier: workspace:*
         version: link:packages/playwright-harness
+      '@skeptic/report':
+        specifier: workspace:*
+        version: link:packages/report
       ai:
         specifier: 7.0.34
         version: 7.0.34(zod@4.4.3)
@@ -161,6 +164,9 @@ importers:
       '@skeptic/core':
         specifier: workspace:*
         version: link:../core
+      '@skeptic/evidence':
+        specifier: workspace:*
+        version: link:../evidence
       playwright:
         specifier: 1.61.1
         version: 1.61.1
