@@ -112,14 +112,19 @@ Both checks request schema-valid structured output and print no credential value
 The public npm package is `@pol-cova/skeptic`. The unscoped name `skeptic`
 belongs to an existing package.
 
+Build and publish:
+
 ```bash
+pnpm --filter @pol-cova/skeptic run build
 pnpm publish:skeptic
 ```
 
-Local installable tarball:
+Local installable tarball (verified outside the workspace):
 
 ```bash
-pnpm preflight:package
+pnpm --filter @pol-cova/skeptic pack --pack-destination /tmp
+npm install /tmp/pol-cova-skeptic-0.1.0.tgz
+skeptic --help
 ```
 
 ## Current result

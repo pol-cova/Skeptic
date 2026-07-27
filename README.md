@@ -183,6 +183,7 @@ Repository layout:
 
 Further reading:
 
+- [Hackathon submission assets](submission/README.md)
 - [Responsible use](docs/responsible-use.md)
 - [Day 0 preflight](docs/preflight.md)
 - [Public contract (ADR 0001)](docs/adr/0001-public-contract.md)

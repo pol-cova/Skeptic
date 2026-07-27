@@ -42,6 +42,9 @@ importers:
       '@types/node':
         specifier: 24.x
         version: 24.13.3
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.1
       eslint:
         specifier: 9.39.3
         version: 9.39.3
@@ -187,7 +190,45 @@ importers:
         specifier: 1.0.4
         version: 1.0.4
 
-  packages/skeptic: {}
+  packages/skeptic:
+    dependencies:
+      '@ai-sdk/amazon-bedrock':
+        specifier: 5.0.28
+        version: 5.0.28(zod@4.4.3)
+      '@ai-sdk/cerebras':
+        specifier: 3.0.14
+        version: 3.0.14(zod@4.4.3)
+      '@ai-sdk/google':
+        specifier: 4.0.24
+        version: 4.0.24(zod@4.4.3)
+      '@ai-sdk/openai-compatible':
+        specifier: 3.0.14
+        version: 3.0.14(zod@4.4.3)
+      '@openrouter/ai-sdk-provider':
+        specifier: 3.0.0
+        version: 3.0.0(ai@7.0.34(zod@4.4.3))(zod@4.4.3)
+      ai:
+        specifier: 7.0.34
+        version: 7.0.34(zod@4.4.3)
+      commander:
+        specifier: 14.0.3
+        version: 14.0.3
+      escape-html:
+        specifier: 1.0.3
+        version: 1.0.3
+      eve:
+        specifier: 0.27.1
+        version: 0.27.1(ai@7.0.34(zod@4.4.3))(aws4fetch@1.0.20)(rollup@4.62.2)(vite@7.3.6(@types/node@24.13.3))
+      playwright:
+        specifier: 1.61.1
+        version: 1.61.1
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
+    devDependencies:
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.1
 
 packages:
 

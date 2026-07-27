@@ -1,5 +1,11 @@
 export { runCli } from "./bin.ts";
 export {
+  listInitProviders,
+  runInitCommand,
+  type InitCommandOptions,
+  type InitCommandResult,
+} from "./init-command.ts";
+export {
   runVerify,
   VerifyError,
   type VerifyOptions,
