@@ -35,17 +35,31 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: Stop leftover demo servers
-        run: |
-          pkill -f "next dev --port 3100" || true
-          pkill -f "next dev --port 3101" || true
-          sleep 3
+      - name: Build
+        run: pnpm build
+
+  day4-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.7.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium --with-deps
 
       - name: Day 4 golden gate
         env:
           PROOF_TEST_USERNAME: demo
           PROOF_TEST_PASSWORD: skeptic-demo
         run: pnpm gate:day4
-
-      - name: Build
-        run: pnpm build
