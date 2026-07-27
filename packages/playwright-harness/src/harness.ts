@@ -70,6 +70,21 @@ export class PlaywrightHarness {
       throw new Error("Harness is already launched.");
     }
 
+    let lastError: Error | undefined;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        await this.#launchBrowser();
+        return;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        await this.#resetLaunchState();
+      }
+    }
+
+    throw lastError ?? new Error("Browser launch failed after retry.");
+  }
+
+  async #launchBrowser(): Promise<void> {
     this.#browser = await chromium.launch({
       headless: this.#options.headless ?? true,
     });
@@ -79,6 +94,22 @@ export class PlaywrightHarness {
     await this.#installRouteGuard(this.#context);
     this.#page = await this.#context.newPage();
     this.#attachListeners(this.#page);
+  }
+
+  async #resetLaunchState(): Promise<void> {
+    if (this.#context && this.#tracingStarted && !this.#traceExported) {
+      await this.#context.tracing.stop().catch(() => undefined);
+    }
+
+    await this.#context?.close().catch(() => undefined);
+    await this.#browser?.close().catch(() => undefined);
+    this.#page = null;
+    this.#context = null;
+    this.#browser = null;
+    this.#tracingStarted = false;
+    this.#traceExported = false;
+    this.#consoleErrors.length = 0;
+    this.#networkLog.clear();
   }
 
   async captureScreenshot(): Promise<Uint8Array> {

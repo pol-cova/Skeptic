@@ -2,10 +2,10 @@ import { defineProofConfig } from "@skeptic/core";
 
 export default defineProofConfig({
   app: {
-    baseUrl: "http://127.0.0.1:3100",
-    startCommand: "pnpm --filter demo-app dev",
+    baseUrl: "http://127.0.0.1:3101",
+    startCommand: "pnpm --filter demo-app exec next dev --port 3101",
     readyPath: "/health",
-    allowedOrigins: ["http://127.0.0.1:3100"],
+    allowedOrigins: ["http://127.0.0.1:3101"],
   },
   criteria: {
     file: "acceptance.md",

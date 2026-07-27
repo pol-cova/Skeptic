@@ -200,10 +200,10 @@ export async function startAppProcess(
     // Track if we've already settled the promise
     let settled = false;
 
-    // Spawn process using shell for command interpretation
+    // Spawn in a new process group so stopProcess can terminate child servers too.
     const child = spawn(command, {
       shell: true,
-      detached: false, // Keep attached so we can track it
+      detached: process.platform !== "win32",
       stdio: "inherit", // Inherit stdout/stderr for visibility
       env,
     });
@@ -292,11 +292,13 @@ export async function stopProcess(
     return; // Already stopped
   }
 
+  const signalTarget = process.platform !== "win32" ? -pid : pid;
+
   try {
     // Try graceful shutdown first
     // SIGTERM on Unix, which can be caught by the process
     // On Windows, this will immediately terminate
-    process.kill(pid, "SIGTERM");
+    process.kill(signalTarget, "SIGTERM");
 
     // Wait for process to exit gracefully
     const startTime = Date.now();
@@ -310,7 +312,7 @@ export async function stopProcess(
 
     // Graceful shutdown timeout - force kill
     if (isProcessRunning(pid)) {
-      process.kill(pid, "SIGKILL"); // Force kill
+      process.kill(signalTarget, "SIGKILL"); // Force kill
       // Wait a moment for force kill to take effect
       await new Promise((resolve) => setTimeout(resolve, 500));
     }

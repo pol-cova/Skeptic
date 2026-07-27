@@ -465,4 +465,44 @@ describe("EvidenceStore integration: full lifecycle", () => {
     expect(failResult.observed).toBeDefined();
     expect(failResult.observed!.length).toBeLessThanOrEqual(10);
   });
+
+  it("assigns unique sequences under concurrent network event appends", async () => {
+    const store = new EvidenceStore({ basePath: tempDir });
+    const metadata = makeRunMetadata("concurrent-seq-run");
+    const init = await store.initialize(metadata, []);
+    expect(init.ok).toBe(true);
+
+    await Promise.all(
+      Array.from({ length: 20 }, (_, index) =>
+        store.appendEvent({
+          runId: metadata.runId,
+          timestamp: Date.now() + index,
+          actor: "harness",
+          type: "network.observed",
+          payload: {
+            method: "GET",
+            path: `/api/resource-${index}`,
+            status: 200,
+          },
+        }),
+      ),
+    );
+
+    const verdicts: CriterionVerdict[] = [
+      {
+        criterionIndex: 1,
+        sourceText: "User can log in",
+        verdict: "PASS",
+        explanation: "Login works",
+      },
+    ];
+
+    const finalResult = await store.finalize(verdicts);
+    expect(finalResult.ok).toBe(true);
+    expect(finalResult.readiness).toBe("READY");
+
+    const sequences = finalResult.bundle.events.map((event) => event.sequence);
+    const unique = new Set(sequences);
+    expect(unique.size).toBe(sequences.length);
+  });
 });
