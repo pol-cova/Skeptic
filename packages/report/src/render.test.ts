@@ -119,7 +119,9 @@ describe("report renderer", () => {
   it("links PASS and FAIL criteria to assertions and artifacts", () => {
     const markdown = renderMarkdownReport(sampleBundle);
     expect(markdown).toContain("Assertion 1: count (passed)");
-    expect(markdown).toContain("[screenshots/000001-1.png](screenshots/000001-1.png)");
+    expect(markdown).toContain(
+      "[screenshots/000001-1.png](screenshots/000001-1.png)",
+    );
     expect(markdown).toContain("Assertion 1: count (failed)");
   });
 

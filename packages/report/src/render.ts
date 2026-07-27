@@ -220,8 +220,7 @@ function renderHtmlArtifactLinks(refs: readonly string[]): string {
 
   return `<ul>${refs
     .map(
-      (ref) =>
-        `<li><a href="${escapeHtml(ref)}">${escapeHtml(ref)}</a></li>`,
+      (ref) => `<li><a href="${escapeHtml(ref)}">${escapeHtml(ref)}</a></li>`,
     )
     .join("")}</ul>`;
 }
@@ -242,8 +241,7 @@ function renderHtmlAssertions(entry: CriterionVerdict): string {
         refs.length > 0
           ? ` · ${refs
               .map(
-                (ref) =>
-                  `<a href="${escapeHtml(ref)}">${escapeHtml(ref)}</a>`,
+                (ref) => `<a href="${escapeHtml(ref)}">${escapeHtml(ref)}</a>`,
               )
               .join(", ")}`
           : "";
@@ -292,8 +290,7 @@ function renderHtmlTimeline(events: readonly RunEvent[]): string {
         refs.length > 0
           ? refs
               .map(
-                (ref) =>
-                  `<a href="${escapeHtml(ref)}">${escapeHtml(ref)}</a>`,
+                (ref) => `<a href="${escapeHtml(ref)}">${escapeHtml(ref)}</a>`,
               )
               .join(", ")
           : "—";

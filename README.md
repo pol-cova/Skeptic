@@ -141,13 +141,13 @@ Enable persistence fix: `pnpm --filter demo-app dev:fixed` (port 3101) or `DEMO_
 
 ### Provider selection
 
-| Provider    | Credential env / login        | Typical use              |
-| ----------- | ----------------------------- | ------------------------ |
-| `chatgpt`   | `codex login` (local store)   | Daily development        |
-| `google-ai` | `GOOGLE_GENERATIVE_AI_API_KEY`| Free-tier development  |
-| `openrouter`| `OPENROUTER_API_KEY`          | BYOC                     |
-| `cerebras`  | `CEREBRAS_API_KEY`            | BYOC                     |
-| `bedrock`   | AWS profile / env             | Official demo golden runs|
+| Provider     | Credential env / login         | Typical use               |
+| ------------ | ------------------------------ | ------------------------- |
+| `chatgpt`    | `codex login` (local store)    | Daily development         |
+| `google-ai`  | `GOOGLE_GENERATIVE_AI_API_KEY` | Free-tier development     |
+| `openrouter` | `OPENROUTER_API_KEY`           | BYOC                      |
+| `cerebras`   | `CEREBRAS_API_KEY`             | BYOC                      |
+| `bedrock`    | AWS profile / env              | Official demo golden runs |
 
 Credentials stay in environment variables or the provider's local login store — never commit them. Skeptic does not host a shared inference proxy. Kiro artifacts under `.kiro/` document the build process; **no runtime package imports them**.
 
