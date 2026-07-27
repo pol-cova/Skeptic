@@ -35,6 +35,12 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Stop leftover demo servers
+        run: |
+          pkill -f "next dev --port 3100" || true
+          pkill -f "next dev --port 3101" || true
+          sleep 3
+
       - name: Day 4 golden gate
         env:
           PROOF_TEST_USERNAME: demo
