@@ -1,0 +1,236 @@
+{
+  "runId": "verify-1785117802371",
+  "startedAt": 1785117802371,
+  "config": {
+    "app": {
+      "baseUrl": "http://127.0.0.1:3101",
+      "startCommand": "pnpm --filter [REDACTED]-app exec next dev --port 3101",
+      "readyPath": "/health",
+      "allowedOrigins": ["http://127.0.0.1:3101"]
+    },
+    "criteria": {
+      "file": "acceptance.md",
+      "maxCriteria": 3
+    },
+    "auth": {
+      "loginPath": "/login",
+      "usernameEnv": "PROOF_TEST_USERNAME",
+      "passwordEnv": "PROOF_TEST_PASSWORD"
+    }
+  },
+  "criteria": [
+    {
+      "index": 1,
+      "sourceText": "An invalid email address shows a validation message and does not create an invitation.",
+      "prerequisites": []
+    },
+    {
+      "index": 2,
+      "sourceText": "A valid email address creates an invitation and displays it in the Pending invitations list.",
+      "prerequisites": []
+    },
+    {
+      "index": 3,
+      "sourceText": "Inviting the same email twice shows a duplicate-invitation error and does not create a second row.",
+      "prerequisites": [2]
+    }
+  ],
+  "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117802371",
+  "finishedAt": 1785117809385,
+  "verdicts": [
+    {
+      "criterionIndex": 1,
+      "sourceText": "An invalid email address shows a validation message and does not create an invitation.",
+      "verdict": "PASS",
+      "explanation": "Deterministic assertions prove the criterion (visible passed, text passed, count passed, response passed).",
+      "assertionResults": [
+        {
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-validation-error"
+            }
+          },
+          "passed": true,
+          "expected": true,
+          "observed": true,
+          "timestamp": 1785117804618
+        },
+        {
+          "assertion": {
+            "type": "text",
+            "target": {
+              "testId": "invite-validation-error"
+            },
+            "expected": "valid email"
+          },
+          "passed": true,
+          "expected": "valid email",
+          "observed": "Enter a valid email address.",
+          "timestamp": 1785117804679
+        },
+        {
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 0
+          },
+          "passed": true,
+          "expected": 0,
+          "observed": 0,
+          "timestamp": 1785117804749
+        },
+        {
+          "assertion": {
+            "type": "response",
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 400
+          },
+          "passed": true,
+          "expected": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 400
+          },
+          "observed": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 400
+          },
+          "timestamp": 1785117804811
+        }
+      ],
+      "artifactRefs": [
+        "screenshots/000026-1.png",
+        "screenshots/000027-1.png",
+        "screenshots/000028-1.png",
+        "screenshots/000029-1.png"
+      ]
+    },
+    {
+      "criterionIndex": 2,
+      "sourceText": "A valid email address creates an invitation and displays it in the Pending invitations list.",
+      "verdict": "PASS",
+      "explanation": "Deterministic assertions prove the criterion (visible passed, response passed, count passed, count passed).",
+      "assertionResults": [
+        {
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-success-toast"
+            }
+          },
+          "passed": true,
+          "expected": true,
+          "observed": true,
+          "timestamp": 1785117806476
+        },
+        {
+          "assertion": {
+            "type": "response",
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 200
+          },
+          "passed": true,
+          "expected": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 200
+          },
+          "observed": {
+            "method": "POST",
+            "path": "/api/invitations",
+            "status": 200
+          },
+          "timestamp": 1785117806556
+        },
+        {
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          },
+          "passed": true,
+          "expected": 1,
+          "observed": 1,
+          "timestamp": 1785117806612
+        },
+        {
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          },
+          "passed": true,
+          "expected": 1,
+          "observed": 1,
+          "timestamp": 1785117807554
+        }
+      ],
+      "artifactRefs": [
+        "screenshots/000026-1.png",
+        "screenshots/000027-1.png",
+        "screenshots/000028-1.png",
+        "screenshots/000029-1.png",
+        "screenshots/000064-2.png",
+        "screenshots/000065-2.png",
+        "screenshots/000066-2.png",
+        "screenshots/000067-2.png"
+      ]
+    },
+    {
+      "criterionIndex": 3,
+      "sourceText": "Inviting the same email twice shows a duplicate-invitation error and does not create a second row.",
+      "verdict": "PASS",
+      "explanation": "Deterministic assertions prove the criterion (visible passed, count passed).",
+      "assertionResults": [
+        {
+          "assertion": {
+            "type": "visible",
+            "target": {
+              "testId": "invite-duplicate-error"
+            }
+          },
+          "passed": true,
+          "expected": true,
+          "observed": true,
+          "timestamp": 1785117809029
+        },
+        {
+          "assertion": {
+            "type": "count",
+            "target": {
+              "testId": "pending-invitation-row"
+            },
+            "expected": 1
+          },
+          "passed": true,
+          "expected": 1,
+          "observed": 1,
+          "timestamp": 1785117809085
+        }
+      ],
+      "artifactRefs": [
+        "screenshots/000026-1.png",
+        "screenshots/000027-1.png",
+        "screenshots/000028-1.png",
+        "screenshots/000029-1.png",
+        "screenshots/000064-2.png",
+        "screenshots/000065-2.png",
+        "screenshots/000066-2.png",
+        "screenshots/000067-2.png",
+        "screenshots/000093-3.png",
+        "screenshots/000094-3.png"
+      ]
+    }
+  ],
+  "readiness": "ERROR"
+}

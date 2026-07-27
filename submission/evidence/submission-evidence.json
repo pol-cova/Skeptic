@@ -1,0 +1,138 @@
+{
+  "generatedAt": "2026-07-27T02:04:08.678Z",
+  "broken": {
+    "runId": "verify-1785117794103",
+    "readiness": "ERROR",
+    "exitCode": 3,
+    "verdicts": [
+      {
+        "criterionIndex": 1,
+        "verdict": "PASS"
+      },
+      {
+        "criterionIndex": 2,
+        "verdict": "FAIL"
+      },
+      {
+        "criterionIndex": 3,
+        "verdict": "UNVERIFIABLE"
+      }
+    ],
+    "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117794103",
+    "durationMs": 8360
+  },
+  "fixed": {
+    "runId": "verify-1785117802371",
+    "readiness": "ERROR",
+    "exitCode": 3,
+    "verdicts": [
+      {
+        "criterionIndex": 1,
+        "verdict": "PASS"
+      },
+      {
+        "criterionIndex": 2,
+        "verdict": "PASS"
+      },
+      {
+        "criterionIndex": 3,
+        "verdict": "PASS"
+      }
+    ],
+    "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117802371",
+    "durationMs": 9812
+  },
+  "replay": {
+    "modelCalls": 0,
+    "readiness": "READY",
+    "exitCode": 0,
+    "verdicts": [
+      {
+        "criterionIndex": 1,
+        "verdict": "PASS"
+      },
+      {
+        "criterionIndex": 2,
+        "verdict": "PASS"
+      },
+      {
+        "criterionIndex": 3,
+        "verdict": "PASS"
+      }
+    ]
+  },
+  "consecutiveRuns": [
+    {
+      "runId": "verify-1785117825355",
+      "readiness": "ERROR",
+      "exitCode": 3,
+      "verdicts": [
+        {
+          "criterionIndex": 1,
+          "verdict": "PASS"
+        },
+        {
+          "criterionIndex": 2,
+          "verdict": "FAIL"
+        },
+        {
+          "criterionIndex": 3,
+          "verdict": "UNVERIFIABLE"
+        }
+      ],
+      "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117825355",
+      "durationMs": 8251
+    },
+    {
+      "runId": "verify-1785117833263",
+      "readiness": "ERROR",
+      "exitCode": 3,
+      "verdicts": [
+        {
+          "criterionIndex": 1,
+          "verdict": "PASS"
+        },
+        {
+          "criterionIndex": 2,
+          "verdict": "FAIL"
+        },
+        {
+          "criterionIndex": 3,
+          "verdict": "UNVERIFIABLE"
+        }
+      ],
+      "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117833263",
+      "durationMs": 7849
+    },
+    {
+      "runId": "verify-1785117841038",
+      "readiness": "ERROR",
+      "exitCode": 3,
+      "verdicts": [
+        {
+          "criterionIndex": 1,
+          "verdict": "PASS"
+        },
+        {
+          "criterionIndex": 2,
+          "verdict": "FAIL"
+        },
+        {
+          "criterionIndex": 3,
+          "verdict": "UNVERIFIABLE"
+        }
+      ],
+      "artifactRoot": "/Users/paulcontreras/Documents/Skeptic/skeptic/.proof/runs/verify-1785117841038",
+      "durationMs": 8381
+    }
+  ],
+  "freshClone": {
+    "commands": [
+      "git clone https://github.com/pol-cova/Skeptic.git && cd Skeptic",
+      "pnpm install",
+      "pnpm demo:dev"
+    ],
+    "verifyCommand": "PROOF_TEST_USERNAME=demo PROOF_TEST_PASSWORD=skeptic-demo pnpm skeptic verify --config examples/demo-app/proof.config.ts --deterministic",
+    "documentedPlatform": "macOS / Linux with Node.js 24 and pnpm 10.7"
+  }
+}
