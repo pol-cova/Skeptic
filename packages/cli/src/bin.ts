@@ -3,9 +3,11 @@ import { pathToFileURL } from "node:url";
 
 import { Command } from "commander";
 
+import { listInitProviders, runInitCommand } from "./init-command.ts";
 import { runReplayCommand } from "./replay-command.ts";
 import { runReportCommand } from "./report-command.ts";
 import { runVerify, VerifyError } from "./verify-runner.ts";
+import { skepticProviderIds } from "@skeptic/core";
 
 function printError(prefix: string, message: string): void {
   console.error(`${prefix}: ${message}`);
@@ -19,7 +21,49 @@ export async function runCli(argv: string[]): Promise<number> {
   program
     .name("skeptic")
     .description("Skeptic verification CLI")
-    .version("0.0.0");
+    .version("0.1.0");
+
+  program
+    .command("init")
+    .description(
+      "Select a model provider and validate required credentials without storing secrets",
+    )
+    .option(
+      "--provider <id>",
+      `Provider id (${skepticProviderIds.join(", ")})`,
+    )
+    .action((options: { provider?: string }) => {
+      try {
+        const result = runInitCommand(
+          options.provider
+            ? { provider: options.provider as (typeof skepticProviderIds)[number] }
+            : {},
+        );
+
+        console.log(
+          JSON.stringify(
+            {
+              provider: result.provider,
+              modelId: result.modelId,
+              credentialSource: result.credentialSource,
+              setup: result.setup,
+              validated: result.validated,
+              providers: listInitProviders(),
+            },
+            null,
+            2,
+          ),
+        );
+
+        exitCode = result.validated ? 0 : 2;
+      } catch (error) {
+        printError(
+          "Init error",
+          error instanceof Error ? error.message : String(error),
+        );
+        exitCode = 3;
+      }
+    });
 
   program
     .command("verify")
