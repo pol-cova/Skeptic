@@ -30,14 +30,21 @@ describe("agent eval: invalid email", () => {
         "An invalid email address shows a validation message and does not create an invitation.",
       assertionResults: [
         {
-          assertion: { type: "visible", target: { testId: "invite-validation-error" } },
+          assertion: {
+            type: "visible",
+            target: { testId: "invite-validation-error" },
+          },
           passed: true,
           expected: true,
           observed: true,
           timestamp: Date.now(),
         },
         {
-          assertion: { type: "count", target: { testId: "pending-invitation-row" }, expected: 0 },
+          assertion: {
+            type: "count",
+            target: { testId: "pending-invitation-row" },
+            expected: 0,
+          },
           passed: true,
           expected: 0,
           observed: 0,
@@ -59,7 +66,11 @@ describe("agent eval: misleading success", () => {
         sourceText: "A valid email creates an invitation.",
         assertionResults: [
           {
-            assertion: { type: "count", target: { testId: "pending-invitation-row" }, expected: 1 },
+            assertion: {
+              type: "count",
+              target: { testId: "pending-invitation-row" },
+              expected: 1,
+            },
             passed: false,
             expected: 1,
             observed: 0,

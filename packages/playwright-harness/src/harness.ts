@@ -76,8 +76,7 @@ export class PlaywrightHarness {
         await this.#launchBrowser();
         return;
       } catch (error) {
-        lastError =
-          error instanceof Error ? error : new Error(String(error));
+        lastError = error instanceof Error ? error : new Error(String(error));
         await this.#resetLaunchState();
       }
     }

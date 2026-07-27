@@ -213,12 +213,17 @@ async function main(): Promise<void> {
     });
 
     if (replay.modelCalls !== 0) {
-      fail("replay-model-calls", `Expected 0 model calls — got ${replay.modelCalls}.`);
+      fail(
+        "replay-model-calls",
+        `Expected 0 model calls — got ${replay.modelCalls}.`,
+      );
     } else {
       pass("replay-model-calls");
     }
 
-    const replayVerdicts = replay.verdicts.map((entry) => entry.verdict).join(",");
+    const replayVerdicts = replay.verdicts
+      .map((entry) => entry.verdict)
+      .join(",");
     if (replayVerdicts !== "PASS,PASS,PASS") {
       fail(
         "replay-verdicts",
@@ -285,7 +290,10 @@ async function main(): Promise<void> {
   }
 
   if (!allSameVerdicts) {
-    fail("consecutive-verdicts", "Verdict sequences differ across consecutive runs.");
+    fail(
+      "consecutive-verdicts",
+      "Verdict sequences differ across consecutive runs.",
+    );
   } else {
     pass("consecutive-verdicts");
   }
