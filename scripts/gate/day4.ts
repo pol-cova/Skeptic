@@ -96,13 +96,26 @@ async function assertPassFailHaveEvidence(
 }
 
 async function killPort(port: string): Promise<void> {
+  const { execFile } = await import("node:child_process");
+  const { promisify } = await import("node:util");
+  const execFileAsync = promisify(execFile);
+
+  if (process.platform !== "win32") {
+    try {
+      await execFileAsync("fuser", ["-k", `${port}/tcp`]);
+    } catch {
+      // Port already free or fuser unavailable.
+    }
+  }
+
   try {
-    const { execFile } = await import("node:child_process");
-    const { promisify } = await import("node:util");
-    const execFileAsync = promisify(execFile);
     const { stdout } = await execFileAsync("lsof", ["-ti", `:${port}`]);
     for (const pid of stdout.trim().split("\n").filter(Boolean)) {
-      process.kill(Number(pid), "SIGKILL");
+      try {
+        process.kill(Number(pid), "SIGKILL");
+      } catch {
+        // Process already exited.
+      }
     }
   } catch {
     // Port already free.
@@ -154,6 +167,7 @@ async function main(): Promise<void> {
 
   await assertNoSecretsInBundle(broken.artifactRoot);
   await assertPassFailHaveEvidence(broken.artifactRoot, broken);
+  await killPort("3100");
 
   // --- Fixed demo ---
   process.env.DEMO_PERSIST_INVITATIONS = "true";
@@ -193,9 +207,10 @@ async function main(): Promise<void> {
   }
 
   await assertNoSecretsInBundle(fixed.artifactRoot);
+  await killPort("3100");
+  await killPort("3101");
 
   // --- Replay broken fixture on fixed app (zero model calls) ---
-  await killPort("3100");
   const replayApp = await startOrReuseApp({
     baseUrl: "http://127.0.0.1:3100",
     startCommand: "pnpm --filter demo-app exec next dev --port 3100",
@@ -246,6 +261,8 @@ async function main(): Promise<void> {
   }
 
   // --- Three consecutive broken runs ---
+  await killPort("3100");
+  await killPort("3101");
   process.env.DEMO_PERSIST_INVITATIONS = "false";
   const consecutive: Array<{
     readiness: string;
