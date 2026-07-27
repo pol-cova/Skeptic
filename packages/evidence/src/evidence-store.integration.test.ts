@@ -168,6 +168,11 @@ describe("EvidenceStore integration: full lifecycle", () => {
     expect(metadataJson.readiness).toBe("NOT_READY");
     expect(metadataJson.verdicts).toHaveLength(2);
 
+    await expect(access(join(runDir, "report.html"))).resolves.toBeUndefined();
+    await expect(access(join(runDir, "report.md"))).resolves.toBeUndefined();
+    const reportHtml = await readFile(join(runDir, "report.html"), "utf-8");
+    expect(reportHtml).toContain("Skeptic Run Report");
+
     // Assert: events.jsonl is parseable (each line is valid JSON)
     const eventsRaw = await readFile(join(runDir, "events.jsonl"), "utf-8");
     const eventLines = eventsRaw.trim().split("\n");
@@ -459,5 +464,45 @@ describe("EvidenceStore integration: full lifecycle", () => {
     expect(failResult.passed).toBe(false);
     expect(failResult.observed).toBeDefined();
     expect(failResult.observed!.length).toBeLessThanOrEqual(10);
+  });
+
+  it("assigns unique sequences under concurrent network event appends", async () => {
+    const store = new EvidenceStore({ basePath: tempDir });
+    const metadata = makeRunMetadata("concurrent-seq-run");
+    const init = await store.initialize(metadata, []);
+    expect(init.ok).toBe(true);
+
+    await Promise.all(
+      Array.from({ length: 20 }, (_, index) =>
+        store.appendEvent({
+          runId: metadata.runId,
+          timestamp: Date.now() + index,
+          actor: "harness",
+          type: "network.observed",
+          payload: {
+            method: "GET",
+            path: `/api/resource-${index}`,
+            status: 200,
+          },
+        }),
+      ),
+    );
+
+    const verdicts: CriterionVerdict[] = [
+      {
+        criterionIndex: 1,
+        sourceText: "User can log in",
+        verdict: "PASS",
+        explanation: "Login works",
+      },
+    ];
+
+    const finalResult = await store.finalize(verdicts);
+    expect(finalResult.ok).toBe(true);
+    expect(finalResult.readiness).toBe("READY");
+
+    const sequences = finalResult.bundle.events.map((event) => event.sequence);
+    const unique = new Set(sequences);
+    expect(unique.size).toBe(sequences.length);
   });
 });

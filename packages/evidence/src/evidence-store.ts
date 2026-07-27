@@ -12,6 +12,8 @@ import {
   type RunMetadata,
 } from "@skeptic/core";
 
+import { writeRunReports } from "@skeptic/report";
+
 import { ArtifactWriter } from "./artifact-writer.ts";
 import { BundleValidator } from "./bundle-validator.ts";
 import { EventWriter } from "./event-writer.ts";
@@ -67,6 +69,8 @@ export class EvidenceStore {
   private networkObservations: NetworkObservation[] = [];
   private artifactRefs: Map<number, string[]> = new Map();
   private criterionFailures: Set<number> = new Set();
+  /** Serializes concurrent appendEvent calls to preserve monotonic sequences. */
+  private appendChain: Promise<unknown> = Promise.resolve();
 
   constructor(options: EvidenceStoreOptions = {}) {
     this.basePath = options.basePath ?? process.cwd();
@@ -169,6 +173,17 @@ export class EvidenceStore {
    * and write failure escalation.
    */
   async appendEvent(event: Omit<RunEvent, "sequence">): Promise<AppendResult> {
+    const task = this.appendChain.then(() => this.#appendEventInternal(event));
+    this.appendChain = task.then(
+      () => undefined,
+      () => undefined,
+    );
+    return task;
+  }
+
+  async #appendEventInternal(
+    event: Omit<RunEvent, "sequence">,
+  ): Promise<AppendResult> {
     if (!this.eventWriter || !this.artifactWriter || !this.metadata) {
       throw new Error(
         "EvidenceStore has not been initialized. Call initialize() first.",
@@ -386,7 +401,10 @@ export class EvidenceStore {
     // 7. Write metadata.json (applies redaction internally)
     await this.artifactWriter.writeMetadata(bundle.metadata, this.secretSet);
 
-    // 8. Return result
+    // 8. Generate static HTML and Markdown reports
+    await writeRunReports(bundle, { artifactRoot: this.artifactRoot });
+
+    // 9. Return result
     if (validation.valid) {
       return { ok: true, bundle, readiness };
     }

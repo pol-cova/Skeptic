@@ -8,6 +8,7 @@ export default defineConfig({
       "packages/evidence/vitest.config.ts",
       "packages/playwright-harness/vitest.config.ts",
       "packages/report/vitest.config.ts",
+      "packages/skeptic/vitest.config.ts",
       "agent/vitest.config.ts",
       "scripts/vitest.config.ts",
     ],
