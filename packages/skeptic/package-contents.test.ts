@@ -1,13 +1,20 @@
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 
 const repoRoot = join(import.meta.dirname, "../..");
 const packageRoot = join(repoRoot, "packages/skeptic");
 const distRoot = join(packageRoot, "dist");
 
 describe("publishable package contents", () => {
+  beforeAll(() => {
+    execSync("pnpm run build", {
+      cwd: packageRoot,
+      stdio: "pipe",
+    });
+  });
+
   it("builds a single runtime bundle without tests or internal docs", () => {
     expect(existsSync(join(distRoot, "skeptic.mjs"))).toBe(true);
 
