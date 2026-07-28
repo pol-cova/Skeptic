@@ -12,7 +12,7 @@ This guide walks you from installation to a passing verification run against you
 ## Install Skeptic
 
 ```bash
-npm install -g @pol-cova/skeptic
+npm install -g @pol-cova/skeptic@0.2.0
 ```
 
 Verify the CLI:
@@ -29,13 +29,16 @@ From your application root (or a dedicated verification directory):
 skeptic init
 ```
 
-This creates three files:
+This creates verification project files:
 
-| File              | Purpose                                              |
-| ----------------- | ---------------------------------------------------- |
-| `proof.config.ts` | Where Skeptic finds your app, criteria, and scenario |
-| `acceptance.md`   | Numbered criteria in plain language                  |
-| `scenario.ts`     | Typed browser steps and assertions per criterion     |
+| File                  | Purpose                                          |
+| --------------------- | ------------------------------------------------ |
+| `proof.config.ts`     | App URL, criteria file, scenario module, limits  |
+| `acceptance.md`       | Numbered criteria in plain language              |
+| `scenario.ts`         | Typed browser steps and assertions per criterion |
+| `skeptic-config.d.ts` | Local TypeScript types (no npm package required) |
+| `tsconfig.json`       | Typecheck support for config and scenario        |
+| `.gitignore`          | Ignores `.proof/` run artifacts                  |
 
 If files already exist, use `skeptic init --force` to overwrite them.
 
@@ -55,9 +58,9 @@ Provider validation is only required for agent mode. Deterministic verification 
 Edit the scaffolded config to match your stack:
 
 ```typescript
-import { defineProofConfig } from "@skeptic/core";
+import type { ProofConfig } from "./skeptic-config.d.ts";
 
-export default defineProofConfig({
+export default {
   app: {
     baseUrl: "http://127.0.0.1:3000",
     startCommand: "npm run dev",
@@ -78,12 +81,14 @@ export default defineProofConfig({
   },
   prerequisites: {},
   limits: {
-    maxSteps: 25,
+    maxSteps: 20,
     maxDurationMs: 180_000,
     maxInferenceAttempts: 10,
   },
-});
+} satisfies ProofConfig;
 ```
+
+Monorepo contributors can use `defineProofConfig()` from `@skeptic/core` instead of `satisfies ProofConfig`.
 
 **App lifecycle:** On `skeptic verify`, Skeptic checks whether `baseUrl` + `readyPath` already responds. If not, it runs `startCommand` and waits up to 90 seconds for the ready endpoint. If your app is already running, Skeptic reuses it.
 
@@ -127,8 +132,10 @@ See [Acceptance criteria](acceptance-criteria.md).
 Export `buildScenario(context)` returning a `ReplayFixture` with steps per criterion:
 
 ```typescript
-import type { ScenarioBuildContext } from "@skeptic/core";
-import type { ReplayFixture } from "@skeptic/playwright-harness";
+import type {
+  ReplayFixture,
+  ScenarioBuildContext,
+} from "./skeptic-config.d.ts";
 
 export function buildScenario(ctx: ScenarioBuildContext): ReplayFixture {
   // return { version: 1, baseUrl, allowedOrigins, generatedAt, criteria: [...] }
@@ -154,10 +161,19 @@ export PROOF_TEST_PASSWORD=your-test-password
 
 Use dedicated test accounts in local or staging environments only.
 
+## Validate before verify
+
+Catch config/criteria/scenario mismatches without launching the browser:
+
+```bash
+skeptic validate
+skeptic validate --check-app   # optional: probe readyPath
+```
+
 ## Run verification
 
 ```bash
-skeptic verify --config proof.config.ts --deterministic
+skeptic verify --deterministic
 ```
 
 The CLI prints JSON summary:
@@ -187,23 +203,31 @@ The CLI prints JSON summary:
 ## Inspect results
 
 ```bash
-skeptic report --run verify-1712345678901 --open
+skeptic report --latest --open
 ```
 
-Open `.proof/runs/<run-id>/report.html` for per-criterion evidence: assertions, screenshots, and network observations.
+Open `.proof/runs/<run-id>/report.html` for per-criterion evidence: assertions, screenshots, traces, and network observations.
 
 When verification fails:
 
 ```bash
-skeptic fix-prompt --run verify-1712345678901
+skeptic fix-prompt --latest
 ```
 
 Read `.proof/runs/<run-id>/fix-prompt.md` and attach it to your coding agent. Skeptic records what failed and why; it does not patch your code.
 
+## Discover selectors
+
+```bash
+skeptic inspect --url http://127.0.0.1:3000/login
+```
+
+Returns accessible elements (`testId`, roles, names) to help author `scenario.ts`.
+
 ## Replay without re-running the agent
 
 ```bash
-skeptic replay --run verify-1712345678901
+skeptic replay --latest
 ```
 
 Replay executes the saved `replay.json` with zero model calls — useful for confirming fixes or debugging flaky selectors.
@@ -219,6 +243,7 @@ Replay executes the saved `replay.json` with zero model calls — useful for con
 
 | Symptom                           | Likely cause                        | Fix                                                     |
 | --------------------------------- | ----------------------------------- | ------------------------------------------------------- |
+| `skeptic validate` errors         | Criteria/scenario misalignment      | Fix indices, assertions, or duplicate `actionId`s       |
 | `Environment error` on verify     | Missing `PROOF_TEST_*` vars         | Export credentials                                      |
 | `App failed to start`             | Wrong `startCommand` or `readyPath` | Fix config; ensure `/health` (or your path) returns 200 |
 | `HARNESS_ERROR` / origin blocked  | Navigation outside `allowedOrigins` | Add origin to config                                    |

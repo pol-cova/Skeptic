@@ -87,13 +87,13 @@ skeptic verify --headed
 skeptic verify --compact-json
 ```
 
-| Option               | Default       | Description                                      |
-| -------------------- | ------------- | ------------------------------------------------ |
-| `--config <path>`    | auto-discover | Path to `proof.config.ts`                        |
-| `--deterministic`    | on            | Replay `scenario.ts` with zero model calls       |
-| `--no-deterministic` | —             | Enable Eve agent for exploratory verification    |
-| `--headed`           | off           | Run browser in headed mode                       |
-| `--compact-json`     | off           | Emit minimal verdict JSON (index + verdict only) |
+| Option               | Default       | Description                                                              |
+| -------------------- | ------------- | ------------------------------------------------------------------------ |
+| `--config <path>`    | auto-discover | Path to `proof.config.ts`                                                |
+| `--deterministic`    | on            | Replay `scenario.ts` with zero model calls                               |
+| `--no-deterministic` | —             | Enable agent verification (AI SDK tool loop; `scenario.ts` not replayed) |
+| `--headed`           | off           | Run browser in headed mode                                               |
+| `--compact-json`     | off           | Emit minimal verdict JSON (index + verdict only)                         |
 
 **Stdout:** JSON with `runId`, `readiness`, `exitCode`, `artifactRoot`, and `verdicts`. By default each verdict includes `explanation`, `assertionResults`, and `artifactRefs`. Optional `fixPromptPath` when the run is not `READY`.
 

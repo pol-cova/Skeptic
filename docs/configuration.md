@@ -28,7 +28,7 @@ export default defineProofConfig({
   },
   prerequisites: {},
   limits: {
-    maxSteps: 25,
+    maxSteps: 20,
     maxDurationMs: 180_000,
     maxInferenceAttempts: 10,
   },
@@ -108,7 +108,7 @@ Bounds agent-mode exploration. Ignored for pure deterministic replay unless shar
 
 | Field                  | Default | Description                                 |
 | ---------------------- | ------- | ------------------------------------------- |
-| `maxSteps`             | 25      | Maximum browser actions per criterion       |
+| `maxSteps`             | 20      | Maximum browser actions per criterion       |
 | `maxDurationMs`        | 180000  | Wall-clock cap per criterion (ms)           |
 | `maxInferenceAttempts` | 10      | Maximum model planning rounds per criterion |
 
