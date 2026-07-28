@@ -4,11 +4,12 @@ import type { ProofConfig } from "./config.schema.ts";
  * Minimal proof.config.ts for any web app Skeptic should verify.
  *
  * 1. Point `criteria.file` at numbered Markdown acceptance criteria.
- * 2. Implement `scenario.ts` exporting `buildScenario(context)`.
- * 3. Run `skeptic validate`, then `skeptic verify --deterministic`.
+ * 2. Implement `scenario.ts` exporting `buildScenario(context)` — a ReplayFixture
+ *    with typed browser steps (see docs/scenarios.md).
+ * 3. Run `skeptic validate`, set auth env vars, then `skeptic verify --deterministic`.
  *
  * For npm users without the monorepo, export a plain object (see `skeptic init` scaffold)
- * or install workspace packages. See docs/scenarios.md.
+ * or install workspace packages.
  */
 export default {
   app: {

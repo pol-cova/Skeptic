@@ -24,9 +24,11 @@ Creates `proof.config.ts`, `acceptance.md`, `scenario.ts`, `skeptic-config.d.ts`
 | Option | Description |
 | --- | --- |
 | `--force` | Overwrite existing scaffold files |
-| `--provider <id>` | Validate agent provider credentials |
+| `--provider <id>` | Validate agent provider credentials (`chatgpt`, `openrouter`, `cerebras`, `bedrock`, `google-ai`, `openai-compatible`) |
 
 **Exit codes:** `0` success, `2` skipped files or invalid provider, `3` error.
+
+Prints JSON with `created`, `skipped`, and `nextSteps`.
 
 ---
 
@@ -80,6 +82,7 @@ Run verification against a live application.
 ```bash
 skeptic verify
 skeptic verify --config proof.config.ts --deterministic
+skeptic verify --config proof.config.ts --no-deterministic
 skeptic verify --headed
 skeptic verify --compact-json
 ```
@@ -88,13 +91,24 @@ skeptic verify --compact-json
 | --- | --- | --- |
 | `--config <path>` | auto-discover | Path to `proof.config.ts` |
 | `--deterministic` | on | Replay `scenario.ts` with zero model calls |
-| `--no-deterministic` | — | Reserved for agent verification |
+| `--no-deterministic` | — | Enable Eve agent for exploratory verification |
 | `--headed` | off | Run browser in headed mode |
 | `--compact-json` | off | Emit minimal verdict JSON (index + verdict only) |
 
-**Stdout:** JSON with `runId`, `readiness`, `exitCode`, `artifactRoot`, and `verdicts`. By default each verdict includes `explanation`, `assertionResults`, and `artifactRefs`.
+**Stdout:** JSON with `runId`, `readiness`, `exitCode`, `artifactRoot`, and `verdicts`. By default each verdict includes `explanation`, `assertionResults`, and `artifactRefs`. Optional `fixPromptPath` when the run is not `READY`.
 
-**Errors:** Structured JSON on stdout (`{ ok: false, error: { category, message } }`) plus human-readable stderr.
+**Errors:** Structured JSON on stdout (`{ ok: false, error: { category, message } }`) plus human-readable stderr (`Configuration error`, `Environment error`, `Harness error`).
+
+**Exit codes:**
+
+| Code | Readiness |
+| ---: | --- |
+| 0 | `READY` |
+| 1 | `NOT_READY` |
+| 2 | `INCOMPLETE` |
+| 3 | `ERROR` |
+
+When exit code is non-zero and criteria failed, Skeptic writes `fix-prompt.md` under the run directory.
 
 ---
 
@@ -116,7 +130,9 @@ skeptic replay --headed
 | `--artifact-root <path>` | Path to a downloaded artifact directory |
 | `--headed` | Run browser in headed mode |
 
-Uses prerequisites and criteria from `metadata.json` when replaying.
+**Stdout:** JSON with `runId`, `readiness`, `exitCode`, `modelCalls` (always 0), and `verdicts`.
+
+Uses prerequisites and criteria from `metadata.json` when replaying. Use replay after fixing selectors or application bugs to confirm the saved flow still produces the expected verdicts.
 
 ---
 
@@ -137,6 +153,8 @@ skeptic report --artifact-root ./downloaded-run
 | `--artifact-root <path>` | Path to a downloaded artifact directory |
 | `--open` | Open HTML report in the default browser |
 
+**Stdout:** JSON with `htmlPath` and `markdownPath`.
+
 Reports link to `traces/trace.zip` when Playwright trace artifacts exist.
 
 ---
@@ -156,6 +174,8 @@ skeptic fix-prompt --run verify-1712345678901
 | `--latest` | Use the most recent run (default when `--run` omitted) |
 | `--artifact-root <path>` | Path to a downloaded artifact directory |
 
+Use when you need a structured handoff for a coding agent after a failed verification. The prompt summarizes failing criteria, evidence paths, and suggested investigation steps — it does not modify your repository.
+
 ---
 
 ## Run artifacts
@@ -164,26 +184,39 @@ Each verify run creates `.proof/runs/<run-id>/`:
 
 ```text
 .proof/runs/<run-id>/
-├── metadata.json
-├── events.jsonl
-├── replay.json
-├── generated/acceptance.spec.ts
-├── screenshots/
-├── traces/trace.zip
-├── network/observations.json
+├── metadata.json           # Run config, criteria, timestamps
+├── events.jsonl            # Typed harness and oracle events
+├── replay.json             # Full ReplayFixture for replay
+├── generated/
+│   └── acceptance.spec.ts  # Generated Playwright test
+├── screenshots/            # Per-step captures
+├── traces/trace.zip        # Playwright trace (when enabled)
+├── network/
+│   └── observations.json   # Request method, path, status
 ├── report.html
 ├── report.md
-└── fix-prompt.md
+└── fix-prompt.md           # Present when run is not READY
 ```
 
-## Exit codes (verify and replay)
+Treat `.proof/` as local test output. Do not commit it — it may contain screenshots with sensitive UI state. See [Responsible use](responsible-use.md).
 
-| Code | Readiness |
-| ---: | --- |
-| 0 | `READY` |
-| 1 | `NOT_READY` |
-| 2 | `INCOMPLETE` |
-| 3 | `ERROR` |
+## JSON output
+
+All commands emit structured JSON on stdout for scripting:
+
+```bash
+skeptic verify --config proof.config.ts | jq .readiness
+```
+
+Parse `exitCode` from JSON or use the process exit code — they match for `verify` and `replay`.
+
+## Global options
+
+```bash
+skeptic --version
+skeptic --help
+skeptic <command> --help
+```
 
 ## Related
 

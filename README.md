@@ -22,7 +22,7 @@ Skeptic replays your scenario against a live app, records screenshots and networ
 ```mermaid
 flowchart TD
   inputs["proof.config.ts + acceptance.md + scenario.ts"]
-  cli["CLI<br/>verify · replay · report · init · fix-prompt"]
+  cli["CLI<br/>validate · verify · inspect · replay · report · init · fix-prompt"]
   eve["Eve agent<br/>(optional)"]
   harness["Playwright harness"]
   evidence["Evidence store"]
@@ -39,7 +39,7 @@ flowchart TD
   oracle -->|verdicts| runs
   evidence --> runs
 
-  runs --- artifacts["events.jsonl · replay.json · generated/*.spec.ts · report.html · fix-prompt.md"]
+  runs --- artifacts["events.jsonl · replay.json · traces/trace.zip · generated/*.spec.ts · report.html · fix-prompt.md"]
 ```
 
 **Deterministic verification** (`skeptic verify --deterministic`, the default): loads `scenario.ts`, replays typed browser actions, evaluates assertions — zero model calls. Use for CI gates and fast feedback.
@@ -104,10 +104,12 @@ When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` wit
 
 ```bash
 skeptic init [--force] [--provider chatgpt]
-skeptic verify --config proof.config.ts [--deterministic | --no-deterministic]
-skeptic replay --run <run-id>
-skeptic report --run <run-id> [--open]
-skeptic fix-prompt --run <run-id>
+skeptic validate [--config proof.config.ts] [--check-app]
+skeptic verify [--config proof.config.ts] [--deterministic | --no-deterministic] [--headed]
+skeptic inspect [--url <url>] [--headed]
+skeptic replay [--latest | --run <run-id>] [--artifact-root <path>]
+skeptic report [--latest | --run <run-id>] [--open]
+skeptic fix-prompt [--latest | --run <run-id>]
 ```
 
 Artifacts are written under `.proof/runs/<run-id>/` (metadata, events, screenshots, replay bundle, generated Playwright spec, HTML/Markdown report).
