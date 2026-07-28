@@ -76,7 +76,7 @@ SKEPTIC_PROVIDER=openrouter OPENROUTER_API_KEY=... pnpm preflight:model
 SKEPTIC_PROVIDER=cerebras CEREBRAS_API_KEY=... pnpm preflight:model
 ```
 
-Bedrock remains the official hackathon demonstration provider. The generic
+Bedrock is supported for AWS-hosted model runs. The generic
 preflight prints provider and model identifiers but never credential values.
 
 ### Google AI (Gemini)
@@ -140,5 +140,5 @@ skeptic --help
 | Installable tarball fallback               | Pass                                                                               |
 | Structured Bedrock call                    | Blocked: no AWS authentication is configured on the development host               |
 
-The live Bedrock call is the only remaining exit gate for the official
-hackathon provider path in issue #3.
+The live Bedrock call is the only remaining exit gate for AWS-hosted
+Bedrock verification in issue #3.

@@ -52,8 +52,9 @@ export {
   type CriterionEvidenceInput,
 } from "./evidence-bridge.ts";
 
+export { executeScenarioCriterion } from "./scenario-verify.ts";
+
 export {
-  buildCriterion1Steps,
   buildCriterion2Steps,
   buildCriterion3Steps,
   buildDemoReplayFixture,

@@ -4,6 +4,8 @@ import { pathToFileURL } from "node:url";
 import { Command } from "commander";
 
 import { listInitProviders, runInitCommand } from "./init-command.ts";
+import { runFixPromptCommand } from "./fix-prompt-command.ts";
+import { scaffoldProject } from "./scaffold-init.ts";
 import { runReplayCommand } from "./replay-command.ts";
 import { runReportCommand } from "./report-command.ts";
 import { runVerify, VerifyError } from "./verify-runner.ts";
@@ -26,36 +28,50 @@ export async function runCli(argv: string[]): Promise<number> {
   program
     .command("init")
     .description(
-      "Select a model provider and validate required credentials without storing secrets",
+      "Scaffold proof.config.ts, scenario.ts, and acceptance.md in the current directory",
     )
-    .option("--provider <id>", `Provider id (${skepticProviderIds.join(", ")})`)
-    .action((options: { provider?: string }) => {
+    .option(
+      "--provider <id>",
+      `Optional: validate agent provider (${skepticProviderIds.join(", ")})`,
+    )
+    .option("--force", "Overwrite existing scaffold files", false)
+    .action(async (options: { provider?: string; force?: boolean }) => {
       try {
-        const result = runInitCommand(
-          options.provider
-            ? {
-                provider:
-                  options.provider as (typeof skepticProviderIds)[number],
-              }
-            : {},
-        );
+        const scaffold = await scaffoldProject({ force: options.force });
+
+        const providerResult = options.provider
+          ? runInitCommand({
+              provider: options.provider as (typeof skepticProviderIds)[number],
+            })
+          : null;
 
         console.log(
           JSON.stringify(
             {
-              provider: result.provider,
-              modelId: result.modelId,
-              credentialSource: result.credentialSource,
-              setup: result.setup,
-              validated: result.validated,
-              providers: listInitProviders(),
+              scaffold,
+              provider: providerResult,
+              providers: options.provider ? listInitProviders() : undefined,
+              nextSteps: [
+                "Set PROOF_TEST_USERNAME and PROOF_TEST_PASSWORD for your app",
+                "Adjust selectors in scenario.ts to match your UI",
+                "Run: skeptic verify --config proof.config.ts --deterministic",
+              ],
             },
             null,
             2,
           ),
         );
 
-        exitCode = result.validated ? 0 : 2;
+        if (providerResult && !providerResult.validated) {
+          exitCode = 2;
+        } else if (
+          scaffold.created.length === 0 &&
+          scaffold.skipped.length > 0
+        ) {
+          exitCode = 2;
+        } else {
+          exitCode = 0;
+        }
       } catch (error) {
         printError(
           "Init error",
@@ -82,22 +98,26 @@ export async function runCli(argv: string[]): Promise<number> {
           deterministic: options.deterministic,
         });
 
-        console.log(
-          JSON.stringify(
-            {
-              runId: result.runId,
-              readiness: result.readiness,
-              exitCode: result.exitCode,
-              verdicts: result.verdicts.map((entry) => ({
-                criterionIndex: entry.criterionIndex,
-                verdict: entry.verdict,
-              })),
-              artifactRoot: result.artifactRoot,
-            },
-            null,
-            2,
-          ),
-        );
+        const payload: Record<string, unknown> = {
+          runId: result.runId,
+          readiness: result.readiness,
+          exitCode: result.exitCode,
+          verdicts: result.verdicts.map((entry) => ({
+            criterionIndex: entry.criterionIndex,
+            verdict: entry.verdict,
+          })),
+          artifactRoot: result.artifactRoot,
+        };
+
+        if (result.fixPromptPath) {
+          payload.fixPromptPath = result.fixPromptPath;
+        }
+
+        console.log(JSON.stringify(payload, null, 2));
+
+        if (result.exitCode !== 0 && result.fixPromptPath) {
+          console.error(`Fix prompt: ${result.fixPromptPath}`);
+        }
 
         exitCode = result.exitCode;
       } catch (error) {
@@ -182,6 +202,37 @@ export async function runCli(argv: string[]): Promise<number> {
       } catch (error) {
         printError(
           "Report error",
+          error instanceof Error ? error.message : String(error),
+        );
+        exitCode = 3;
+      }
+    });
+
+  program
+    .command("fix-prompt")
+    .description(
+      "Generate or regenerate fix-prompt.md for a prior run (for coding agents)",
+    )
+    .requiredOption("--run <run-id>", "Run ID under .proof/runs/")
+    .action(async (options: { run: string }) => {
+      try {
+        const result = await runFixPromptCommand({ runId: options.run });
+
+        console.log(
+          JSON.stringify(
+            {
+              runId: result.runId,
+              fixPromptPath: result.fixPromptPath,
+            },
+            null,
+            2,
+          ),
+        );
+
+        exitCode = 0;
+      } catch (error) {
+        printError(
+          "Fix prompt error",
           error instanceof Error ? error.message : String(error),
         );
         exitCode = 3;

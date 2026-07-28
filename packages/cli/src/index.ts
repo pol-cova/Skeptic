@@ -24,3 +24,14 @@ export {
   type ReportCommandOptions,
   type ReportCommandResult,
 } from "./report-command.ts";
+export {
+  runFixPromptCommand,
+  FixPromptError,
+  type FixPromptCommandOptions,
+  type FixPromptCommandResult,
+} from "./fix-prompt-command.ts";
+export {
+  scaffoldProject,
+  type ScaffoldInitOptions,
+  type ScaffoldInitResult,
+} from "./scaffold-init.ts";

@@ -12,7 +12,7 @@ import {
   type RunMetadata,
 } from "@skeptic/core";
 
-import { writeRunReports } from "@skeptic/report";
+import { writeFixPrompt, writeRunReports } from "@skeptic/report";
 
 import { ArtifactWriter } from "./artifact-writer.ts";
 import { BundleValidator } from "./bundle-validator.ts";
@@ -404,9 +404,15 @@ export class EvidenceStore {
     // 8. Generate static HTML and Markdown reports
     await writeRunReports(bundle, { artifactRoot: this.artifactRoot });
 
-    // 9. Return result
+    // 9. Write fix prompt when verification found actionable failures
+    const fixPrompt = await writeFixPrompt(bundle, {
+      artifactRoot: this.artifactRoot,
+    });
+    const fixPromptPath = fixPrompt?.fixPromptPath;
+
+    // 10. Return result
     if (validation.valid) {
-      return { ok: true, bundle, readiness };
+      return { ok: true, bundle, readiness, fixPromptPath };
     }
 
     return {
@@ -417,6 +423,7 @@ export class EvidenceStore {
         ...validation.errors,
         ...validation.unresolvedRefs.map((r) => `Unresolved ref: ${r}`),
       ],
+      fixPromptPath,
     };
   }
 

@@ -4,7 +4,10 @@ import {
   formatProviderLog,
   resolveProviderOrThrow,
 } from "./lib/provider-setup.ts";
-import { verificationSession } from "./lib/verification-session.ts";
+import {
+  recordInferenceAttempt,
+  verificationSession,
+} from "./lib/verification-session.ts";
 
 const provider = resolveProviderOrThrow();
 
@@ -13,10 +16,7 @@ export default defineInstrumentation({
   recordOutputs: false,
   events: {
     "step.started"() {
-      verificationSession.update((current) => ({
-        ...current,
-        inferenceCount: current.inferenceCount + 1,
-      }));
+      recordInferenceAttempt();
 
       return {
         runtimeContext: {

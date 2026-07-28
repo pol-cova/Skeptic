@@ -9,12 +9,13 @@ export function buildLoginSteps(
   baseUrl: string,
   username: string,
   password: string,
+  loginPath = "/login",
 ): BrowserAction[] {
   return [
     {
       actionId: "replay-login-goto",
       type: "goto",
-      url: `${baseUrl}/login`,
+      url: `${baseUrl}${loginPath}`,
     },
     {
       actionId: "replay-login-fill-username",
@@ -234,6 +235,7 @@ export interface DemoReplayFixtureOptions {
   username: string;
   password: string;
   inviteEmail?: string;
+  loginPath?: string;
 }
 
 /**
@@ -247,6 +249,7 @@ export function buildDemoReplayFixture(
     options.baseUrl,
     options.username,
     options.password,
+    options.loginPath ?? "/login",
   );
 
   return {

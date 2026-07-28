@@ -16,4 +16,15 @@ export default defineProofConfig({
     usernameEnv: "PROOF_TEST_USERNAME",
     passwordEnv: "PROOF_TEST_PASSWORD",
   },
+  scenario: {
+    module: "./scenario.ts",
+  },
+  prerequisites: {
+    "3": [2],
+  },
+  limits: {
+    maxSteps: 25,
+    maxDurationMs: 180_000,
+    maxInferenceAttempts: 10,
+  },
 });

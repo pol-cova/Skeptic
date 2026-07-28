@@ -51,20 +51,27 @@ describe("proof config", () => {
         ...validConfig,
         app: {
           ...validConfig.app,
-          allowedOrigins: ["http://127.0.0.1:3100", "http://127.0.0.1:3200"],
+          allowedOrigins: [
+            "http://127.0.0.1:3100",
+            "http://127.0.0.1:3101",
+            "http://127.0.0.1:3102",
+            "http://127.0.0.1:3103",
+            "http://127.0.0.1:3104",
+            "http://127.0.0.1:3105",
+          ],
         },
       }),
-    ).toThrow(/exactly 1 allowed origin/u);
+    ).toThrow(/cannot exceed 5 entries/u);
 
     expect(() =>
       parseProofConfig({
         ...validConfig,
         criteria: {
           ...validConfig.criteria,
-          maxCriteria: 4,
+          maxCriteria: 11,
         },
       }),
-    ).toThrow(/P0 maximum/u);
+    ).toThrow(/cannot exceed 10/u);
 
     expect(() =>
       parseProofConfig({

@@ -28,7 +28,7 @@ When planning a step, structure your intent as an `AgentDecision`:
 - `decidedAt` — unix timestamp
 
 Every decision must validate against the schema before execution.
-Each criterion is bounded to ten steps and sixty seconds.
+Each criterion is bounded by the limits in `proof.config.ts` (default: 20 steps, 3 minutes, 10 inference attempts per criterion).
 Failed actions return changed page state so you can adapt once, then finish or stop safely.
 The oracle finalizes every PASS/FAIL; your proposed verdict is advisory only.
 

@@ -158,17 +158,6 @@ function renderMarkdownTimeline(events: readonly RunEvent[]): string[] {
   });
 }
 
-function renderDemoComparisonMarkdown(): string[] {
-  return [
-    `| Phase | C1 | C2 | C3 | Readiness | Exit |`,
-    `| --- | --- | --- | --- | --- | --- |`,
-    `| Broken | PASS | FAIL | UNVERIFIABLE | NOT_READY | 1 |`,
-    `| Fixed | PASS | PASS | PASS | READY | 0 |`,
-    ``,
-    `Enable the fixed demo with \`pnpm --filter demo-app dev:fixed\` or \`DEMO_PERSIST_INVITATIONS=true\`.`,
-  ];
-}
-
 export function renderMarkdownReport(bundle: PersistedRunBundle): string {
   const { metadata } = bundle;
   const verdicts = metadata.verdicts ?? [];
@@ -189,10 +178,6 @@ export function renderMarkdownReport(bundle: PersistedRunBundle): string {
       ? [`- **Finished:** ${formatTimestamp(metadata.finishedAt)}`]
       : []),
     `- **Artifact root:** \`${metadata.artifactRoot}\``,
-    ``,
-    `## Reference demo (broken vs fixed)`,
-    ``,
-    ...renderDemoComparisonMarkdown(),
     ``,
     `## Criteria`,
     ``,
@@ -322,41 +307,6 @@ function renderHtmlTimeline(events: readonly RunEvent[]): string {
 </table>`;
 }
 
-function renderHtmlDemoComparison(): string {
-  return `<table>
-  <caption>Reference demo expectations for broken vs fixed runs</caption>
-  <thead>
-    <tr>
-      <th scope="col">Phase</th>
-      <th scope="col">C1</th>
-      <th scope="col">C2</th>
-      <th scope="col">C3</th>
-      <th scope="col">Readiness</th>
-      <th scope="col">Exit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">Broken</th>
-      <td><span class="badge pass">PASS</span></td>
-      <td><span class="badge fail">FAIL</span></td>
-      <td><span class="badge unverifiable">UNVERIFIABLE</span></td>
-      <td>NOT_READY</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th scope="row">Fixed</th>
-      <td><span class="badge pass">PASS</span></td>
-      <td><span class="badge pass">PASS</span></td>
-      <td><span class="badge pass">PASS</span></td>
-      <td>READY</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-<p class="muted">Enable the fixed demo with <code>pnpm --filter demo-app dev:fixed</code> or <code>DEMO_PERSIST_INVITATIONS=true</code>.</p>`;
-}
-
 export function renderHtmlReport(bundle: PersistedRunBundle): string {
   const { metadata } = bundle;
   const verdicts = metadata.verdicts ?? [];
@@ -409,14 +359,11 @@ export function renderHtmlReport(bundle: PersistedRunBundle): string {
     </div>
     <nav aria-label="Report sections">
       <ul>
-        <li><a href="#demo-comparison">Reference demo comparison</a></li>
         <li><a href="#criteria">Criteria</a></li>
         <li><a href="#timeline">Timeline</a></li>
         <li><a href="#artifacts">Bundle artifacts</a></li>
       </ul>
     </nav>
-    <h2 id="demo-comparison">Reference demo (broken vs fixed)</h2>
-    ${renderHtmlDemoComparison()}
     <h2 id="criteria">Criteria</h2>
     ${verdicts.map((entry) => renderHtmlCriterion(entry)).join("\n")}
     <h2 id="timeline">Timeline</h2>

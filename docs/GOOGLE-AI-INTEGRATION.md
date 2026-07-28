@@ -328,7 +328,7 @@ pnpm preflight:google-ai
 | Provider               | Setup Complexity | Cost                | Performance | Notes                         |
 | ---------------------- | ---------------- | ------------------- | ----------- | ----------------------------- |
 | Codex (ChatGPT)        | Low              | Subscription        | High        | Requires `codex login`        |
-| Bedrock                | High             | Pay-per-use         | High        | Official for hackathon        |
+| Bedrock                | High             | Pay-per-use         | High        | AWS-hosted models             |
 | OpenRouter             | Low              | Pay-per-use         | Varies      | Multiple models               |
 | Cerebras               | Low              | Pay-per-use         | Very High   | Fastest inference             |
 | **Google AI (Native)** | **Low**          | **Free tier + Pay** | **High**    | **Recommended for new users** |

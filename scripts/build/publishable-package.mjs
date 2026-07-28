@@ -67,7 +67,16 @@ await esbuild.build({
 const bundled = readFileSync(bundlePath, "utf8");
 assertNoForbiddenContent(bundled);
 
-if (bundled.includes('from "@skeptic/')) {
+// Scaffold templates intentionally contain @skeptic import strings for generated files.
+const bundledWithoutScaffold = bundled.replace(
+  /(?:var|const)\s+SCAFFOLD_FILES\s*=\s*\{[\s\S]*?\n\};/,
+  "",
+);
+
+if (
+  bundledWithoutScaffold.includes('from "@skeptic/') ||
+  bundledWithoutScaffold.includes("from '@skeptic/")
+) {
   throw new Error("Publish bundle still contains unresolved @skeptic imports");
 }
 

@@ -38,7 +38,7 @@ jobs:
       - name: Build
         run: pnpm build
 
-  day4-gate:
+  demo-gate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,8 +58,8 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium --with-deps
 
-      - name: Day 4 golden gate
+      - name: Demo app integration gate
         env:
           PROOF_TEST_USERNAME: demo
           PROOF_TEST_PASSWORD: skeptic-demo
-        run: pnpm gate:day4
+        run: pnpm gate:demo
