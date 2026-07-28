@@ -45,7 +45,7 @@ Only deterministic assertions establish `PASS` or `FAIL`. See [ADR 0001](adr/000
 
 5. **[CLI reference](cli.md)** — Commands, JSON output, exit codes, and artifact layout.
 6. **[CI and workflows](ci-and-workflows.md)** — GitHub Actions, replay, reports, and fix prompts for agents.
-7. **[Agent mode](agent.md)** — Optional Eve agent when you need exploratory verification.
+7. **[Agent mode](agent.md)** — CLI `--no-deterministic` verification and optional Eve dev server.
 
 ### Reference
 
@@ -64,9 +64,10 @@ skeptic init
 export PROOF_TEST_USERNAME=...
 export PROOF_TEST_PASSWORD=...
 
-skeptic verify --config proof.config.ts --deterministic
-skeptic report --run <run-id> --open    # inspect evidence
-skeptic fix-prompt --run <run-id>       # hand off to a coding agent
+skeptic validate
+skeptic verify --deterministic
+skeptic report --latest --open
+skeptic fix-prompt --latest
 ```
 
-Deterministic verification makes zero model calls and is the recommended default for CI.
+Deterministic verification makes zero model calls and is the recommended default for CI. See the [changelog](../README.md#changelog) for release notes (current: **0.2.0**).

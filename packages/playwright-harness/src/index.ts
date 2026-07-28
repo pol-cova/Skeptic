@@ -55,6 +55,12 @@ export {
 export { executeScenarioCriterion } from "./scenario-verify.ts";
 
 export {
+  buildAgentSystemPrompt,
+  executeAgentCriterion,
+  type AgentCriterionOptions,
+} from "./agent-verify.ts";
+
+export {
   buildCriterion2Steps,
   buildCriterion3Steps,
   buildDemoReplayFixture,

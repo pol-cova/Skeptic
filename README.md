@@ -7,7 +7,7 @@
 
 Your coding agent says it works. Skeptic proves it.
 
-Skeptic is a config-driven verification framework for web applications. You declare acceptance criteria in Markdown, describe browser flows in a typed `scenario.ts`, and Skeptic executes them through Playwright — with an optional adaptive agent (Eve) when flows are uncertain. Every criterion receives a deterministic verdict backed by evidence artifacts and replayable tests.
+Skeptic is a config-driven verification framework for web applications. You declare acceptance criteria in Markdown, describe browser flows in a typed `scenario.ts` (or let the agent explore with `--no-deterministic`), and Skeptic executes verification through Playwright. Every criterion receives a **deterministic oracle verdict** backed by evidence artifacts and replayable tests.
 
 ## How it works
 
@@ -17,7 +17,7 @@ Skeptic is a config-driven verification framework for web applications. You decl
 | `acceptance.md`   | Numbered acceptance criteria in natural language                            |
 | `scenario.ts`     | `buildScenario(context)` → typed browser steps and assertions per criterion |
 
-Skeptic replays your scenario against a live app, records screenshots and network observations, and applies a deterministic oracle. Agent reasoning can guide exploration, but only typed assertions establish `PASS` or `FAIL`.
+Skeptic runs against a live app, records screenshots, network observations, and Playwright traces, then applies a **pure function oracle** over typed assertion results. Agent reasoning can propose actions and advisory verdicts, but only deterministic assertions and persisted artifacts can establish `PASS` or `FAIL`.
 
 ```mermaid
 flowchart TD
@@ -42,32 +42,61 @@ flowchart TD
   runs --- artifacts["events.jsonl · replay.json · traces/trace.zip · generated/*.spec.ts · report.html · fix-prompt.md"]
 ```
 
-**Deterministic verification** (`skeptic verify --deterministic`, the default): loads `scenario.ts`, replays typed browser actions, evaluates assertions — zero model calls. Use for CI gates and fast feedback.
+### Verification modes
 
-**Agent verification** (`skeptic verify --no-deterministic`): Eve interprets criteria and proposes actions within configurable step, duration, and inference limits; the harness validates every action before Playwright executes it.
+| Mode                        | Command                             | Behavior                                                                                                                                                                      |
+| --------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Deterministic** (default) | `skeptic verify --deterministic`    | Replays `scenario.ts` with zero model calls. Best for CI gates.                                                                                                               |
+| **Agent**                   | `skeptic verify --no-deterministic` | LLM-driven exploration via AI SDK tools (`inspect`, `browserAction`, `assertion`, `captureEvidence`, `finish`). Harness validates every action before Playwright executes it. |
 
-## Verdict contract
+## Deterministic oracle
 
-| Verdict         | Meaning              | Oracle rule                                      |
-| --------------- | -------------------- | ------------------------------------------------ |
-| `PASS`          | Criterion satisfied  | ≥1 passing deterministic assertion, none failing |
-| `FAIL`          | Criterion violated   | ≥1 failing assertion                             |
-| `UNVERIFIABLE`  | Prerequisite missing | Blocked flow; not necessarily a product bug      |
-| `HARNESS_ERROR` | Skeptic failed       | Config, origin guard, or harness fault           |
+The oracle (`packages/core/src/oracle.ts`) maps **typed assertion results** and **artifact linkage** to one of four verdicts. Model prose cannot override missing evidence.
 
-| Readiness    | Exit code | When                |
-| ------------ | --------: | ------------------- |
-| `READY`      |         0 | All criteria `PASS` |
-| `NOT_READY`  |         1 | Any `FAIL`          |
-| `INCOMPLETE` |         2 | Any `UNVERIFIABLE`  |
-| `ERROR`      |         3 | Any `HARNESS_ERROR` |
+### Evaluation order
 
-Full contract: [docs/adr/0001-public-contract.md](docs/adr/0001-public-contract.md).
+```text
+1. harnessFailure present     → HARNESS_ERROR
+2. prerequisiteFailure present → UNVERIFIABLE
+3. zero assertions recorded   → UNVERIFIABLE
+4. any assertion failed       → FAIL
+5. PASS constraints invalid   → UNVERIFIABLE  (model tried to PASS without proof)
+6. otherwise                  → PASS
+```
+
+### Verdict semantics
+
+| Verdict         | Meaning              | Oracle rule                                                                                                                                                                            |
+| --------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PASS`          | Criterion satisfied  | Every recorded assertion passed **and** `validatePassConstraints()` succeeds: ≥1 successful assertion **and** ≥1 persisted artifact ref (screenshot/trace path in the evidence store). |
+| `FAIL`          | Criterion violated   | ≥1 assertion with `passed: false`. Contradictory UI/network evidence disproves the criterion.                                                                                          |
+| `UNVERIFIABLE`  | Prerequisite missing | Upstream criterion did not `PASS`, no assertions were recorded, or the agent/model proposed `PASS`/`FAIL` without satisfying oracle constraints. Not necessarily a product bug.        |
+| `HARNESS_ERROR` | Skeptic failed       | Config, origin guard, provider, or harness fault. Never interpreted as a product verdict.                                                                                              |
+
+### PASS constraint gate
+
+`validatePassConstraints()` enforces that `PASS` requires **both**:
+
+- at least one successful deterministic assertion (`visible`, `text`, `count`, `url`, `response`, …)
+- at least one artifact reference persisted under `.proof/runs/<run-id>/` (typically a screenshot emitted on `assertion.checked`)
+
+If the agent calls `finish` with `proposedVerdict: "PASS"` but evidence is incomplete, the oracle **downgrades** to `UNVERIFIABLE` with an explicit rejection message.
+
+### Run readiness (aggregate)
+
+Readiness is derived from criterion verdicts with fixed precedence ([ADR 0001](docs/adr/0001-public-contract.md)):
+
+```text
+any HARNESS_ERROR → ERROR        (exit 3)
+else any FAIL     → NOT_READY    (exit 1)
+else any UNVERIFIABLE → INCOMPLETE (exit 2)
+else              → READY        (exit 0)
+```
 
 ## Install
 
 ```bash
-npm install -g @pol-cova/skeptic
+npm install -g @pol-cova/skeptic@0.2.0
 npx playwright install chromium
 ```
 
@@ -81,11 +110,35 @@ skeptic init
 export PROOF_TEST_USERNAME=your-test-user
 export PROOF_TEST_PASSWORD=your-test-password
 
-# Edit proof.config.ts, acceptance.md, and scenario.ts for your app
-skeptic verify --config proof.config.ts --deterministic
+skeptic validate
+skeptic verify --deterministic
+```
+
+Explore an unfamiliar UI with the agent, then codify flows in `scenario.ts` and switch back to deterministic mode for CI:
+
+```bash
+export SKEPTIC_PROVIDER=openrouter
+export OPENROUTER_API_KEY=...
+skeptic verify --no-deterministic
 ```
 
 When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` with evidence-backed remediation steps for your coding agent. Skeptic does not modify your code or create commits.
+
+## Changelog
+
+### 0.2.0
+
+- **Agent verification in CLI** — `skeptic verify --no-deterministic` runs an AI SDK tool loop per criterion (`inspect`, `browserAction`, `assertion`, `captureEvidence`, `finish`) with the same oracle and evidence pipeline as deterministic mode.
+- **Phase 1 tooling** — `skeptic validate` preflight; self-contained `skeptic init` TypeScript scaffold; trace links in reports; no demo-specific prerequisite defaults.
+- **Phase 2 tooling** — `skeptic inspect`; `--headed`, `--latest`, `--artifact-root`, `--compact-json`; config auto-discovery; rich verify JSON; self-contained replay with app startup from run metadata.
+
+### 0.1.1
+
+- Generic verification tool release: typed `scenario.ts`, deterministic replay, evidence store, HTML/Markdown reports, fix prompts.
+
+### 0.1.0
+
+- Initial npm publish of `@pol-cova/skeptic` with core CLI and demo-oriented workflows.
 
 ## Documentation
 
@@ -97,7 +150,7 @@ When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` wit
 | [Scenarios](docs/scenarios.md)                     | Browser actions, assertions, and `scenario.ts` |
 | [CLI reference](docs/cli.md)                       | Commands, exit codes, and artifacts            |
 | [CI and workflows](docs/ci-and-workflows.md)       | Pipelines, replay, and fix prompts             |
-| [Agent mode](docs/agent.md)                        | Optional Eve verification agent                |
+| [Agent mode](docs/agent.md)                        | Eve / `--no-deterministic` verification        |
 | [Responsible use](docs/responsible-use.md)         | Credentials, artifacts, and limits             |
 
 ## CLI overview
@@ -105,14 +158,14 @@ When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` wit
 ```bash
 skeptic init [--force] [--provider chatgpt]
 skeptic validate [--config proof.config.ts] [--check-app]
-skeptic verify [--config proof.config.ts] [--deterministic | --no-deterministic] [--headed]
+skeptic verify [--deterministic | --no-deterministic] [--headed]
 skeptic inspect [--url <url>] [--headed]
 skeptic replay [--latest | --run <run-id>] [--artifact-root <path>]
 skeptic report [--latest | --run <run-id>] [--open]
 skeptic fix-prompt [--latest | --run <run-id>]
 ```
 
-Artifacts are written under `.proof/runs/<run-id>/` (metadata, events, screenshots, replay bundle, generated Playwright spec, HTML/Markdown report).
+Artifacts are written under `.proof/runs/<run-id>/` (metadata, events, screenshots, traces, replay bundle, generated Playwright spec, HTML/Markdown report).
 
 ## Development
 
@@ -127,14 +180,14 @@ pnpm typecheck && pnpm test && pnpm lint && pnpm build
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
-| Path                          | Package                                              |
-| ----------------------------- | ---------------------------------------------------- |
-| `packages/core`               | Config schema, criteria parser, oracle, run plan     |
-| `packages/playwright-harness` | Typed browser actions, origin guard, scenario replay |
-| `packages/evidence`           | Event store, artifact layout                         |
-| `packages/report`             | HTML/Markdown report and fix-prompt generation       |
-| `packages/cli`                | `skeptic` binary                                     |
-| `agent/`                      | Eve verification agent                               |
+| Path                          | Package                                                 |
+| ----------------------------- | ------------------------------------------------------- |
+| `packages/core`               | Config schema, criteria parser, oracle, run plan        |
+| `packages/playwright-harness` | Typed browser actions, origin guard, scenario replay    |
+| `packages/evidence`           | Event store, artifact layout                            |
+| `packages/report`             | HTML/Markdown report and fix-prompt generation          |
+| `packages/cli`                | `skeptic` binary                                        |
+| `agent/`                      | Eve verification agent (interactive dev via `pnpm dev`) |
 
 ## License
 
