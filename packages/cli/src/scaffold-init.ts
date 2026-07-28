@@ -14,9 +14,76 @@ export interface ScaffoldInitResult {
 }
 
 const SCAFFOLD_FILES: Record<string, string> = {
-  "proof.config.ts": `import { defineProofConfig } from "@skeptic/core";
+  ".gitignore": `.proof/
+node_modules/
+.env
+.env.local
+`,
+  "tsconfig.json": `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": ["*.ts", "*.d.ts"]
+}
+`,
+  "skeptic-config.d.ts": `export interface ProofConfig {
+  app: {
+    baseUrl: string;
+    startCommand: string;
+    readyPath: string;
+    allowedOrigins: string[];
+  };
+  criteria: {
+    file: string;
+    maxCriteria: number;
+  };
+  auth?: {
+    loginPath: string;
+    usernameEnv: string;
+    passwordEnv: string;
+  };
+  scenario?: {
+    module: string;
+  };
+  prerequisites?: Record<string, number[]>;
+  limits?: {
+    maxSteps?: number;
+    maxDurationMs?: number;
+    maxInferenceAttempts?: number;
+  };
+}
 
-export default defineProofConfig({
+export interface ScenarioBuildContext {
+  baseUrl: string;
+  allowedOrigins: readonly string[];
+  username: string;
+  password: string;
+  runId: string;
+  loginPath: string;
+  variables?: Record<string, string>;
+}
+
+export interface ReplayFixture {
+  version: 1;
+  baseUrl: string;
+  allowedOrigins: string[];
+  generatedAt: number;
+  variables?: Record<string, string>;
+  criteria: Array<{
+    criterionIndex: number;
+    sourceText: string;
+    steps: Array<Record<string, unknown>>;
+  }>;
+}
+`,
+  "proof.config.ts": `import type { ProofConfig } from "./skeptic-config.d.ts";
+
+export default {
   app: {
     baseUrl: "http://127.0.0.1:3000",
     startCommand: "npm run dev",
@@ -37,19 +104,18 @@ export default defineProofConfig({
   },
   prerequisites: {},
   limits: {
-    maxSteps: 25,
+    maxSteps: 20,
     maxDurationMs: 180_000,
     maxInferenceAttempts: 10,
   },
-});
+} satisfies ProofConfig;
 `,
   "acceptance.md": `# Acceptance criteria
 
 1. A signed-in user can reach the main dashboard after submitting valid credentials.
 2. Invalid credentials show an error message and keep the user on the login page.
 `,
-  "scenario.ts": `import type { ScenarioBuildContext } from "@skeptic/core";
-import type { ReplayFixture } from "@skeptic/playwright-harness";
+  "scenario.ts": `import type { ReplayFixture, ScenarioBuildContext } from "./skeptic-config.d.ts";
 
 export function buildScenario(ctx: ScenarioBuildContext): ReplayFixture {
   const { baseUrl, allowedOrigins, username, password, loginPath } = ctx;

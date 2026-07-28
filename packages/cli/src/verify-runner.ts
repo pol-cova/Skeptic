@@ -111,7 +111,7 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
 
   const criteriaWithPrereqs = withPrerequisites(
     criteria,
-    resolvePrerequisiteMap(config, { 3: [2] }),
+    resolvePrerequisiteMap(config),
   );
 
   let auth: { username: string; password: string };

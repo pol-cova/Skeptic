@@ -1,11 +1,25 @@
 import { readFile } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 
-import { exitCodeFor, parseReplayFixture } from "@skeptic/core";
+import {
+  exitCodeFor,
+  parseReplayFixture,
+  startOrReuseApp,
+  stopApp,
+} from "@skeptic/core";
 import { replayFixture } from "@skeptic/playwright-harness";
 
+import {
+  loadRunBundle,
+  resolveRunLocation,
+  RunArtifactError,
+} from "./run-artifacts.ts";
+
 export interface ReplayCommandOptions {
-  runId: string;
+  runId?: string;
+  latest?: boolean;
+  artifactRoot?: string;
+  headless?: boolean;
   cwd?: string;
 }
 
@@ -15,6 +29,7 @@ export interface ReplayCommandResult {
   exitCode: 0 | 1 | 2 | 3;
   verdicts: Awaited<ReturnType<typeof replayFixture>>["verdicts"];
   modelCalls: number;
+  artifactRoot: string;
 }
 
 export class ReplayError extends Error {
@@ -28,8 +43,26 @@ export async function runReplayCommand(
   options: ReplayCommandOptions,
 ): Promise<ReplayCommandResult> {
   const cwd = options.cwd ?? process.cwd();
-  const artifactRoot = join(cwd, ".proof", "runs", options.runId);
-  const replayPath = join(artifactRoot, "replay.json");
+
+  let location;
+  try {
+    location = await resolveRunLocation({
+      runId: options.runId,
+      latest: options.latest,
+      artifactRoot: options.artifactRoot,
+      cwd,
+    });
+  } catch (error) {
+    throw new ReplayError(
+      error instanceof RunArtifactError
+        ? error.message
+        : error instanceof Error
+          ? error.message
+          : String(error),
+    );
+  }
+
+  const replayPath = join(location.artifactRoot, "replay.json");
 
   let raw: unknown;
   try {
@@ -41,20 +74,53 @@ export async function runReplayCommand(
   }
 
   const fixture = parseReplayFixture(raw);
-  const result = await replayFixture({ fixture });
 
-  return {
-    runId: options.runId,
-    readiness: result.readiness,
-    exitCode: exitCodeFor(result.readiness),
-    verdicts: result.verdicts,
-    modelCalls: result.modelCalls,
-  };
+  let criteria:
+    | Awaited<ReturnType<typeof loadRunBundle>>["metadata"]["criteria"]
+    | undefined;
+  let appProcess = null;
+
+  try {
+    const bundle = await loadRunBundle(location.artifactRoot);
+    criteria = bundle.metadata.criteria;
+
+    const app = await startOrReuseApp({
+      baseUrl: bundle.metadata.config.app.baseUrl,
+      startCommand: bundle.metadata.config.app.startCommand,
+      readyPath: bundle.metadata.config.app.readyPath,
+      timeoutMs: 90_000,
+      pollIntervalMs: 1_000,
+      reuseExisting: true,
+    });
+    appProcess = app.process;
+  } catch (error) {
+    if (error instanceof RunArtifactError) {
+      criteria = undefined;
+    } else {
+      throw new ReplayError(
+        error instanceof Error ? error.message : String(error),
+      );
+    }
+  }
+
+  try {
+    const result = await replayFixture({
+      fixture,
+      headless: options.headless ?? true,
+      criteria,
+    });
+
+    return {
+      runId: location.runId,
+      readiness: result.readiness,
+      exitCode: exitCodeFor(result.readiness),
+      verdicts: result.verdicts,
+      modelCalls: result.modelCalls,
+      artifactRoot: location.artifactRoot,
+    };
+  } finally {
+    await stopApp(appProcess);
+  }
 }
 
-export function resolveRunArtifactRoot(
-  runId: string,
-  cwd = process.cwd(),
-): string {
-  return resolve(cwd, ".proof", "runs", runId);
-}
+export { resolveRunArtifactRoot } from "./run-artifacts.ts";

@@ -11,9 +11,15 @@ export {
   type VerifyOptions,
   type VerifyResult,
 } from "./verify-runner.ts";
+export { runValidateCommand, ValidateError } from "./validate-command.ts";
+export { runInspectCommand, InspectError } from "./inspect-command.ts";
+export {
+  resolveRunArtifactRoot,
+  resolveLatestRunId,
+  loadRunBundle,
+} from "./run-artifacts.ts";
 export {
   runReplayCommand,
-  resolveRunArtifactRoot,
   ReplayError,
   type ReplayCommandOptions,
   type ReplayCommandResult,

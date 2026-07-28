@@ -58,12 +58,12 @@ jobs:
 
 Fail the job when Skeptic exits non-zero:
 
-| Exit | Readiness | CI interpretation |
-| ---: | --- | --- |
-| 0 | `READY` | Ship criteria met |
-| 1 | `NOT_READY` | Product regression — block merge |
-| 2 | `INCOMPLETE` | Missing prerequisites or blocked flows — investigate |
-| 3 | `ERROR` | Misconfiguration or harness failure — fix tooling first |
+| Exit | Readiness    | CI interpretation                                       |
+| ---: | ------------ | ------------------------------------------------------- |
+|    0 | `READY`      | Ship criteria met                                       |
+|    1 | `NOT_READY`  | Product regression — block merge                        |
+|    2 | `INCOMPLETE` | Missing prerequisites or blocked flows — investigate    |
+|    3 | `ERROR`      | Misconfiguration or harness failure — fix tooling first |
 
 Treat exit `2` differently from `1` in policy if you use prerequisites heavily: `INCOMPLETE` may mean incomplete test data, not a broken feature.
 

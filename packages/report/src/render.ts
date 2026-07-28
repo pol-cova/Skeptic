@@ -158,7 +158,10 @@ function renderMarkdownTimeline(events: readonly RunEvent[]): string[] {
   });
 }
 
-export function renderMarkdownReport(bundle: PersistedRunBundle): string {
+export function renderMarkdownReport(
+  bundle: PersistedRunBundle,
+  options: { tracePath?: string } = {},
+): string {
   const { metadata } = bundle;
   const verdicts = metadata.verdicts ?? [];
   const readiness =
@@ -193,6 +196,9 @@ export function renderMarkdownReport(bundle: PersistedRunBundle): string {
     `- [replay.json](replay.json)`,
     `- [generated/acceptance.spec.ts](generated/acceptance.spec.ts)`,
     `- [report.html](report.html)`,
+    ...(options.tracePath
+      ? [`- [${options.tracePath}](${options.tracePath})`]
+      : []),
   ];
 
   return lines.join("\n");
@@ -307,7 +313,10 @@ function renderHtmlTimeline(events: readonly RunEvent[]): string {
 </table>`;
 }
 
-export function renderHtmlReport(bundle: PersistedRunBundle): string {
+export function renderHtmlReport(
+  bundle: PersistedRunBundle,
+  options: { tracePath?: string } = {},
+): string {
   const { metadata } = bundle;
   const verdicts = metadata.verdicts ?? [];
   const readiness =
@@ -375,6 +384,7 @@ export function renderHtmlReport(bundle: PersistedRunBundle): string {
       <li><a href="replay.json">replay.json</a></li>
       <li><a href="generated/acceptance.spec.ts">generated/acceptance.spec.ts</a></li>
       <li><a href="report.md">report.md</a></li>
+      ${options.tracePath ? `<li><a href="${escapeHtml(options.tracePath)}">${escapeHtml(options.tracePath)}</a></li>` : ""}
     </ul>
   </main>
 </body>
@@ -383,6 +393,7 @@ export function renderHtmlReport(bundle: PersistedRunBundle): string {
 
 export interface WriteReportOptions {
   artifactRoot: string;
+  tracePath?: string;
 }
 
 export async function writeRunReports(
@@ -394,10 +405,15 @@ export async function writeRunReports(
 
   const htmlPath = join(options.artifactRoot, "report.html");
   const markdownPath = join(options.artifactRoot, "report.md");
+  const reportOptions = { tracePath: options.tracePath };
 
   await mkdir(options.artifactRoot, { recursive: true });
-  await writeFile(htmlPath, renderHtmlReport(bundle), "utf8");
-  await writeFile(markdownPath, renderMarkdownReport(bundle), "utf8");
+  await writeFile(htmlPath, renderHtmlReport(bundle, reportOptions), "utf8");
+  await writeFile(
+    markdownPath,
+    renderMarkdownReport(bundle, reportOptions),
+    "utf8",
+  );
 
   return { htmlPath, markdownPath };
 }
