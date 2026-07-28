@@ -1,33 +1,79 @@
 # Skeptic
 
-> Your coding agent says it works. Skeptic proves it.
+[![npm version](https://img.shields.io/npm/v/@pol-cova/skeptic.svg)](https://www.npmjs.com/package/@pol-cova/skeptic)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D24-brightgreen.svg)](https://nodejs.org/)
+[![CI](https://github.com/pol-cova/Skeptic/actions/workflows/ci.yml/badge.svg)](https://github.com/pol-cova/Skeptic/actions/workflows/ci.yml)
 
-Skeptic is an open-source verification agent for AI-built web applications. Give it a running app and acceptance criteria written in Markdown; it explores the product in a real browser, attempts to disprove each claim, and returns evidence-backed verdicts with replayable Playwright tests.
+Your coding agent says it works. Skeptic proves it.
 
-Each criterion is classified as `PASS`, `FAIL`, `UNVERIFIABLE`, or `HARNESS_ERROR`.
+Skeptic is a config-driven verification framework for web applications. You declare acceptance criteria in Markdown, describe browser flows in a typed `scenario.ts`, and Skeptic executes them through Playwright — optionally with an adaptive agent (Eve) when flows are uncertain. Every criterion receives a deterministic verdict backed by evidence artifacts and replayable tests.
 
-## Why an agent (not a skill or script)
+## What you configure
 
-Acceptance criteria are written in natural language and products change during development. Skeptic must interpret intent, choose browser actions under uncertainty, recover from blocked flows, and explain what it tried. A fixed Playwright script cannot adapt when labels move or prerequisites fail. A prompt-only skill cannot produce deterministic verdicts or replayable evidence on its own.
+| File              | Role                                                                      |
+| ----------------- | ------------------------------------------------------------------------- |
+| `proof.config.ts` | App URL, auth env vars, criteria file, scenario module, loop limits       |
+| `acceptance.md`   | Numbered acceptance criteria (natural language)                           |
+| `scenario.ts`     | `buildScenario(context)` → typed browser steps + assertions per criterion |
 
-Skeptic separates concerns deliberately:
+Skeptic is **not** a hardcoded demo runner. The reference invite app in `examples/demo-app/` is one implementation of `scenario.ts`. Any app with a login flow and test credentials can use the same contract.
 
-- **Agent (Eve):** interpret criteria, plan exploration, adapt when blocked, propose next actions
-- **Harness (Playwright):** validate actions, enforce origin and step limits, capture typed evidence
-- **Oracle (`@skeptic/core`):** map assertions to the four frozen verdicts — only deterministic evidence establishes `PASS` or `FAIL`
+## Architecture
 
-## Requirements
+![Skeptic architecture](docs/architecture.svg)
 
-- Node.js 24
-- pnpm 10.7
+```text
+proof.config.ts + acceptance.md + scenario.ts
+                    │
+                    ▼
+              ┌──────────┐
+              │   CLI    │  verify | replay | report | init | fix-prompt
+              └────┬─────┘
+                   │
+     ┌─────────────┴─────────────┐
+     │                           │
+     ▼                           ▼
+┌─────────┐              ┌───────────────┐
+│ Eve     │  (optional)  │ Playwright    │
+│ agent   │─────────────►│ harness       │
+└────┬────┘  typed actions└───────┬───────┘
+     │ finish (advisory)          │ assertions, screenshots, network
+     ▼                            ▼
+┌─────────┐              ┌───────────────┐
+│ Oracle  │◄── events ───│ Evidence store│
+└────┬────┘              └───────┬───────┘
+     │ verdicts                  │ finalize
+     ▼                           ▼
+        .proof/runs/<run-id>/
+        events.jsonl, replay.json, generated/*.spec.ts, report.html, fix-prompt.md
+```
+
+**Deterministic path** (`--deterministic`): loads `scenario.ts`, replays typed `BrowserAction` steps, evaluates assertions — zero model calls. Use for CI gates and fast feedback.
+
+**Agent path**: Eve interprets criteria, proposes actions within configurable step/duration/inference limits; harness validates every action before Playwright executes it.
+
+## Verdict contract
+
+| Verdict         | Meaning              | Oracle rule                                      |
+| --------------- | -------------------- | ------------------------------------------------ |
+| `PASS`          | Criterion satisfied  | ≥1 passing deterministic assertion, none failing |
+| `FAIL`          | Criterion violated   | ≥1 failing assertion                             |
+| `UNVERIFIABLE`  | Prerequisite missing | Blocked flow, not necessarily a product bug      |
+| `HARNESS_ERROR` | Skeptic failed       | Config, origin guard, or harness fault           |
+
+Aggregate readiness (exit code): `READY` (0) → all PASS; `NOT_READY` (1) → any FAIL; `INCOMPLETE` (2) → any UNVERIFIABLE; `ERROR` (3) → any HARNESS_ERROR.
+
+Full contract: [docs/adr/0001-public-contract.md](docs/adr/0001-public-contract.md).
 
 ## Install
 
 ```bash
 npm install -g @pol-cova/skeptic
+npx playwright install chromium
 ```
 
-Or from source for development:
+Development from source:
 
 ```bash
 git clone https://github.com/pol-cova/Skeptic.git
@@ -35,139 +81,84 @@ cd Skeptic
 pnpm install
 ```
 
-## Quick start
+Requires Node.js 24 and pnpm 10.7 for monorepo development.
 
-Run the reference demo app:
+## Bring your own app
+
+```bash
+skeptic init
+```
+
+This writes `proof.config.ts`, `scenario.ts`, and `acceptance.md` in the current directory. Then:
+
+1. Edit the config and scenario to match your app (selectors, URLs, criteria).
+2. Set credentials and run:
+
+```bash
+export PROOF_TEST_USERNAME=...
+export PROOF_TEST_PASSWORD=...
+skeptic verify --config proof.config.ts --deterministic
+```
+
+Or copy the template manually:
+
+```bash
+cp docs/proof.config.template.ts proof.config.ts
+```
+
+## Reference demo
+
+The invite demo exercises three criteria (login, invalid email, persistence):
 
 ```bash
 pnpm demo:dev
+export PROOF_TEST_USERNAME=demo
+export PROOF_TEST_PASSWORD=skeptic-demo
+
+pnpm skeptic verify --config examples/demo-app/proof.config.ts --deterministic
 ```
 
-Open `http://127.0.0.1:3100/login` and sign in with `demo` / `skeptic-demo`.
+Broken vs fixed behavior:
 
-Start the Eve agent:
-
-```bash
-pnpm dev
-```
-
-## Demo script (broken → fixed)
-
-1. **Broken run (default demo):** `pnpm demo:dev`, then run deterministic verify (CLI section below). Expect C1 `PASS`, C2 `FAIL`, C3 `UNVERIFIABLE`, readiness `NOT_READY`, exit `1`.
-2. **Inspect evidence:** open `.proof/runs/<run-id>/report.html` from disk — no server required.
-3. **Replay:** `skeptic replay --run <run-id>` reproduces the recorded flow with zero model calls.
-4. **Fixed run:** `pnpm --filter demo-app dev:fixed` or `DEMO_PERSIST_INVITATIONS=true`, then verify again. Expect all criteria `PASS`, readiness `READY`, exit `0`.
-
-## Architecture
-
-```text
-Markdown criteria
-      │
-      ▼
-┌─────────────┐     typed actions      ┌──────────────────┐
-│  Eve agent  │ ◄────────────────────► │ Playwright harness│
-└──────┬──────┘                        └────────┬─────────┘
-       │ finish (advisory)                       │ assertions, screenshots
-       ▼                                         ▼
-┌─────────────┐                        ┌──────────────────┐
-│   Oracle    │ ◄── evidence events ─│  Evidence store  │
-└──────┬──────┘                        └────────┬─────────┘
-       │ verdicts                               │ finalize
-       ▼                                         ▼
-              .proof/runs/<run-id>/
-              events.jsonl, metadata.json, replay.json,
-              generated/acceptance.spec.ts, report.html, report.md
-```
+| Phase                                   | C1   | C2   | C3           | Exit |
+| --------------------------------------- | ---- | ---- | ------------ | ---- |
+| Broken (default)                        | PASS | FAIL | UNVERIFIABLE | 1    |
+| Fixed (`DEMO_PERSIST_INVITATIONS=true`) | PASS | PASS | PASS         | 0    |
 
 ## CLI
 
-Deterministic verification (no model calls, no AWS credentials):
-
 ```bash
-export PROOF_TEST_USERNAME=demo
-export PROOF_TEST_PASSWORD=skeptic-demo
-pnpm demo:dev
-
-# In another terminal:
-node --experimental-strip-types packages/cli/src/bin.ts verify \
-  --config examples/demo-app/proof.config.ts \
-  --deterministic
+skeptic verify --config proof.config.ts [--deterministic] [--headless]
+skeptic replay --run <run-id>
+skeptic report --run <run-id> [--open]
+skeptic fix-prompt --run <run-id>
+skeptic init [--force] [--provider chatgpt]
 ```
 
-Replay a prior run from its artifact bundle:
-
-```bash
-node --experimental-strip-types packages/cli/src/bin.ts replay --run <run-id>
-```
-
-Regenerate or open the HTML report:
-
-```bash
-node --experimental-strip-types packages/cli/src/bin.ts report --run <run-id> --open
-```
-
-Exit codes follow the [public contract](docs/adr/0001-public-contract.md): `0` when all criteria pass, `1` on product `FAIL`, `2` on `UNVERIFIABLE`-only runs, `3` on config or harness errors.
-
-### Verdict semantics and stop rules
-
-| Verdict         | Meaning                                              | Stop rule                                      |
-| --------------- | ---------------------------------------------------- | ---------------------------------------------- |
-| `PASS`          | Deterministic assertions prove the criterion         | Criterion complete                             |
-| `FAIL`          | Deterministic assertions disprove the criterion      | Criterion complete                             |
-| `UNVERIFIABLE`  | Prerequisite missing — not necessarily a product bug | Criterion complete; run may continue           |
-| `HARNESS_ERROR` | Skeptic failed — not a product verdict               | Criterion complete; may escalate run readiness |
-
-Aggregate readiness precedence: any `HARNESS_ERROR` → `ERROR` (3); else any `FAIL` → `NOT_READY` (1); else any `UNVERIFIABLE` → `INCOMPLETE` (2); else `READY` (0).
-
-Broken vs fixed demo:
-
-| Phase  | C1   | C2   | C3           | Exit |
-| ------ | ---- | ---- | ------------ | ---- |
-| Broken | PASS | FAIL | UNVERIFIABLE | 1    |
-| Fixed  | PASS | PASS | PASS         | 0    |
-
-Enable persistence fix: `pnpm --filter demo-app dev:fixed` (port 3101) or `DEMO_PERSIST_INVITATIONS=true`.
-
-### Artifact layout
+### Artifacts
 
 ```text
 .proof/runs/<run-id>/
-├── metadata.json          # run config, verdicts, readiness
-├── events.jsonl           # ordered harness/oracle timeline
-├── replay.json            # replay fixture
+├── metadata.json
+├── events.jsonl
+├── replay.json
 ├── generated/acceptance.spec.ts
-├── screenshots/           # PNG captures keyed by event sequence
-├── traces/                # optional Playwright trace
+├── screenshots/
 ├── network/observations.json
-├── report.html            # self-contained static report
-└── report.md              # PR-friendly Markdown summary
+├── report.html
+├── report.md
+└── fix-prompt.md   # when exit != 0 (FAIL / UNVERIFIABLE)
 ```
 
-### Provider selection
+## Agent (Eve)
 
-| Provider     | Credential env / login         | Typical use               |
-| ------------ | ------------------------------ | ------------------------- |
-| `chatgpt`    | `codex login` (local store)    | Daily development         |
-| `google-ai`  | `GOOGLE_GENERATIVE_AI_API_KEY` | Free-tier development     |
-| `openrouter` | `OPENROUTER_API_KEY`           | BYOC                      |
-| `cerebras`   | `CEREBRAS_API_KEY`             | BYOC                      |
-| `bedrock`    | AWS profile / env              | Official demo golden runs |
+For exploratory verification when you do not have a complete `scenario.ts`:
 
-Credentials stay in environment variables or the provider's local login store — never commit them. Skeptic does not host a shared inference proxy. Kiro artifacts under `.kiro/` document the build process; **no runtime package imports them**.
+```bash
+pnpm dev   # starts Eve with browser tools
+```
 
-Deterministic verify (`--deterministic`) makes zero model calls and is the fastest path for gates and CI.
-
-## P0 boundaries and limitations
-
-Skeptic P0 intentionally does **not**:
-
-- Auto-repair code or open commits
-- Run arbitrary JavaScript inside the target application
-- Perform broad security scanning or penetration testing
-- Accept production credentials or test unauthorized systems
-- Proxy model inference through a hosted Skeptic service
-
-See [Responsible use](docs/responsible-use.md) for data exposure and authorization requirements.
+Provider credentials via environment or local login (`codex login` for ChatGPT). See [ADR 0002](docs/adr/0002-model-provider-strategy.md). Deterministic verify never calls a model.
 
 ## Development
 
@@ -176,39 +167,18 @@ pnpm typecheck
 pnpm test
 pnpm lint
 pnpm build
+pnpm gate:demo   # integration gate against examples/demo-app
 ```
 
-Repository layout:
-
-- `packages/` — core, CLI, Playwright harness, evidence, and report
-- `agent/` — Eve verification agent
-- `examples/demo-app/` — reference application
-- `.kiro/` — Kiro specs and steering (documentation only)
-
-Further reading:
-
-- [Hackathon submission assets](submission/README.md)
-- [Responsible use](docs/responsible-use.md)
-- [Day 0 preflight](docs/preflight.md)
-- [Public contract (ADR 0001)](docs/adr/0001-public-contract.md)
-- [Model providers (ADR 0002)](docs/adr/0002-model-provider-strategy.md)
-- [Demo app](examples/demo-app/README.md)
-
-## npm install
-
-```bash
-npm install -g @pol-cova/skeptic
-skeptic verify --config proof.config.ts --deterministic
-```
-
-For monorepo development, use the source install and `pnpm skeptic` entry point shown above.
+| Path                          | Package                                              |
+| ----------------------------- | ---------------------------------------------------- |
+| `packages/core`               | Config schema, criteria parser, oracle, run plan     |
+| `packages/playwright-harness` | Typed browser actions, origin guard, scenario replay |
+| `packages/evidence`           | Event store, artifact layout                         |
+| `packages/report`             | HTML/Markdown report generation                      |
+| `packages/cli`                | `skeptic` binary                                     |
+| `agent/`                      | Eve verification agent                               |
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
-
-## Community
-
-- [Contributing](CONTRIBUTING.md)
-- [Code of Conduct](CODE_OF_CONDUCT.md)
-- [Security policy](SECURITY.md)
+Apache-2.0 — see [LICENSE](LICENSE).

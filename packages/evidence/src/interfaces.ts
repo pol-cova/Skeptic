@@ -63,12 +63,18 @@ export type AppendResult =
   | { ok: false; error: "VALIDATION_ERROR" | "WRITE_ERROR"; message: string };
 
 export type FinalizeResult =
-  | { ok: true; bundle: PersistedRunBundle; readiness: Readiness }
+  | {
+      ok: true;
+      bundle: PersistedRunBundle;
+      readiness: Readiness;
+      fixPromptPath?: string;
+    }
   | {
       ok: false;
       bundle: PersistedRunBundle;
       readiness: "ERROR";
       validationErrors: string[];
+      fixPromptPath?: string;
     };
 
 export interface ValidationResult {

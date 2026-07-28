@@ -1,6 +1,6 @@
 # Security policy
 
-Skeptic is an early-stage hackathon project. Only the latest commit on `main`
+Skeptic is an open-source verification tool. Only the latest commit on `main`
 receives security fixes.
 
 ## Reporting a vulnerability

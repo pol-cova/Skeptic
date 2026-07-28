@@ -3,9 +3,9 @@ import { browserActionSchema, type BrowserAction } from "./schemas/browser.ts";
 import { finalizeCriterionVerdict, type OracleInput } from "./oracle.ts";
 import type { CriterionVerdict } from "./schemas/verdict.ts";
 
-export const MAX_STEPS_PER_CRITERION = 10;
-export const MAX_DURATION_MS_PER_CRITERION = 60_000;
-export const MAX_INFERENCE_ATTEMPTS_PER_CRITERION = 5;
+export const MAX_STEPS_PER_CRITERION = 20;
+export const MAX_DURATION_MS_PER_CRITERION = 180_000;
+export const MAX_INFERENCE_ATTEMPTS_PER_CRITERION = 10;
 
 export interface CriterionLoopLimits {
   maxSteps: number;

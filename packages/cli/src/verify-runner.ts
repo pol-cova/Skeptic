@@ -5,8 +5,11 @@ import {
   exitCodeFor,
   loadCriteriaFromFile,
   loadProofConfig,
+  loadScenarioModule,
   readinessFor,
   resolveAuthSecrets,
+  resolvePrerequisiteMap,
+  resolveScenarioModulePath,
   secretValuesFromAuth,
   startOrReuseApp,
   stopApp,
@@ -17,14 +20,11 @@ import {
 } from "@skeptic/core";
 import { EvidenceStore } from "@skeptic/evidence";
 import {
-  buildDemoReplayFixture,
   createHarnessEvidenceProviders,
+  executeScenarioCriterion,
   generatePlaywrightSpec,
   HarnessEvidenceBridge,
   PlaywrightHarness,
-  runCriterion1Loop,
-  runCriterion3Loop,
-  runDay1Gate,
 } from "@skeptic/playwright-harness";
 
 export interface VerifyOptions {
@@ -40,6 +40,7 @@ export interface VerifyResult {
   exitCode: 0 | 1 | 2 | 3;
   verdicts: CriterionVerdict[];
   artifactRoot: string;
+  fixPromptPath?: string;
 }
 
 export class VerifyError extends Error {
@@ -54,6 +55,31 @@ export class VerifyError extends Error {
 
 function resolveConfigDir(configPath: string, cwd: string): string {
   return dirname(resolve(cwd, configPath));
+}
+
+async function loadScenarioFixture(
+  config: ProofConfig,
+  configDir: string,
+  auth: { username: string; password: string },
+  runId: string,
+) {
+  const scenarioModulePath = await resolveScenarioModulePath(
+    configDir,
+    config.scenario?.module ?? "./scenario.ts",
+  );
+  const scenarioModule = await loadScenarioModule(scenarioModulePath);
+
+  return scenarioModule.buildScenario({
+    baseUrl: config.app.baseUrl,
+    allowedOrigins: config.app.allowedOrigins,
+    username: auth.username,
+    password: auth.password,
+    runId,
+    loginPath: config.auth?.loginPath ?? "/login",
+    variables: {
+      INVITE_EMAIL: `verify-${runId}@example.com`,
+    },
+  });
 }
 
 export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
@@ -83,7 +109,10 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
     );
   }
 
-  const criteriaWithPrereqs = withPrerequisites(criteria, { 3: [2] });
+  const criteriaWithPrereqs = withPrerequisites(
+    criteria,
+    resolvePrerequisiteMap(config, { 3: [2] }),
+  );
 
   let auth: { username: string; password: string };
   if (config.auth) {
@@ -121,7 +150,17 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
   }
 
   const runId = `verify-${Date.now()}`;
-  const inviteEmail = `verify-${runId}@example.com`;
+
+  let replayFixture;
+  try {
+    replayFixture = await loadScenarioFixture(config, configDir, auth, runId);
+  } catch (error) {
+    await stopApp(appProcess);
+    throw new VerifyError(
+      "config",
+      error instanceof Error ? error.message : String(error),
+    );
+  }
 
   const metadata: RunMetadata = {
     runId,
@@ -167,11 +206,12 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
       configPath: options.configPath,
       deterministic: options.deterministic ?? true,
       criteriaCount: criteriaWithPrereqs.length,
+      scenarioModule: config.scenario?.module ?? "./scenario.ts",
     },
   });
 
   let planResult;
-  const recordedVerdicts: CriterionVerdict[] = [];
+  const priorVerdicts = new Map<number, CriterionVerdict>();
 
   try {
     planResult = await executeRunPlan({
@@ -183,52 +223,14 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
         },
       },
       async executeCriterion(criterion) {
-        if (criterion.index === 1) {
-          const result = await runCriterion1Loop(harness, {
-            baseUrl: config.app.baseUrl,
-            username: auth.username,
-            password: auth.password,
-          });
-          const verdict = await bridge.recordCriterionResult({
-            observations: result.observations,
-            assertionResults: result.assertionResults,
-            verdict: result.verdict,
-          });
-          recordedVerdicts.push(verdict);
-          return { verdict };
-        }
-
-        if (criterion.index === 2) {
-          const result = await runDay1Gate(harness, {
-            baseUrl: config.app.baseUrl,
-            allowedOrigins: config.app.allowedOrigins,
-            username: auth.username,
-            password: auth.password,
-            inviteEmail,
-            headless: options.headless,
-            requirePersistedRow: true,
-          });
-          const verdict = await bridge.recordCriterionResult({
-            observations: result.observations,
-            assertionResults: result.assertionResults,
-            verdict: result.verdict,
-          });
-          recordedVerdicts.push(verdict);
-          return { verdict };
-        }
-
-        const result = await runCriterion3Loop(harness, {
-          baseUrl: config.app.baseUrl,
-          username: auth.username,
-          password: auth.password,
-          inviteEmail,
-        });
-        const verdict = await bridge.recordCriterionResult({
-          observations: result.observations,
-          assertionResults: result.assertionResults,
-          verdict: result.verdict,
-        });
-        recordedVerdicts.push(verdict);
+        const verdict = await executeScenarioCriterion(
+          harness,
+          bridge,
+          replayFixture,
+          criterion,
+          priorVerdicts,
+        );
+        priorVerdicts.set(criterion.index, verdict);
         return { verdict };
       },
     });
@@ -241,14 +243,6 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
       error instanceof Error ? error.message : String(error),
     );
   }
-
-  const replayFixture = buildDemoReplayFixture({
-    baseUrl: config.app.baseUrl,
-    allowedOrigins: config.app.allowedOrigins,
-    username: auth.username,
-    password: auth.password,
-    inviteEmail,
-  });
 
   const { mkdir, writeFile } = await import("node:fs/promises");
   await mkdir(join(artifactRoot, "generated"), { recursive: true });
@@ -264,7 +258,7 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
   );
 
   bridge.detach();
-  const finalized = await store.finalize(recordedVerdicts);
+  const finalized = await store.finalize(planResult.verdicts);
   const readiness = finalized.readiness;
   await harness.close();
   await stopApp(appProcess);
@@ -275,5 +269,6 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
     exitCode: exitCodeFor(readiness),
     verdicts: planResult.verdicts,
     artifactRoot,
+    fixPromptPath: finalized.fixPromptPath,
   };
 }

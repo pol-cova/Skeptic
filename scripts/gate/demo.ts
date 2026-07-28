@@ -1,6 +1,6 @@
 /**
- * Day 4 golden gate — proves MVP safety, bounded behavior, and repeatable demo flows.
- * Runs broken/fixed verify, replay, consecutive runs, and bundle integrity checks.
+ * Demo app integration gate — proves MVP safety, bounded behavior, and repeatable verify flows.
+ * Runs broken/fixed verify, replay, consecutive runs, and bundle integrity checks against examples/demo-app.
  */
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";

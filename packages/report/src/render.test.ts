@@ -106,13 +106,12 @@ const sampleBundle: PersistedRunBundle = {
 };
 
 describe("report renderer", () => {
-  it("renders markdown with readiness, timeline, and demo comparison", () => {
+  it("renders markdown with readiness and timeline", () => {
     const markdown = renderMarkdownReport(sampleBundle);
     expect(markdown).toContain("NOT_READY");
     expect(markdown).toContain("- **Exit code:** 1");
     expect(markdown).toContain("Criterion two");
     expect(markdown).toContain("screenshots/000002-2.png");
-    expect(markdown).toContain("Broken | PASS | FAIL | UNVERIFIABLE");
     expect(markdown).toContain("`run.started`");
   });
 

@@ -43,9 +43,9 @@ The existing `openai-compatible` configuration path remains supported for
 backward compatibility and cases where the OpenAI-compatible endpoint is
 preferred.
 
-The official hackathon demonstration and golden acceptance run use Bedrock.
+The demo app integration gate and reference example can use Bedrock.
 Provider portability improves the public NPM developer experience without
-changing the judged reference implementation.
+changing the reference example in `examples/demo-app/`.
 
 ## Security
 

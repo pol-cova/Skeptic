@@ -1,10 +1,15 @@
 import { defineState } from "eve/context";
+import { resolve } from "node:path";
 import {
   checkLoopLimits,
   createCriterionLoopState,
   DEFAULT_CRITERION_LOOP_LIMITS,
+  loadProofConfig,
+  resolveLoopLimits,
   type AssertionResult,
+  type CriterionLoopLimits,
   type CriterionLoopState,
+  type ProofConfig,
 } from "@skeptic/core";
 import { PlaywrightHarness } from "@skeptic/playwright-harness";
 
@@ -32,6 +37,17 @@ export interface VerificationSessionState {
   harnessError: string | null;
   launched: boolean;
   activeCriterion: ActiveCriterionState | null;
+  config: ProofConfig | null;
+  loopLimits: CriterionLoopLimits;
+}
+
+function resolveConfigPath(): string {
+  const configured = globalThis.process.env.PROOF_CONFIG;
+  if (configured && configured.length > 0) {
+    return resolve(globalThis.process.cwd(), configured);
+  }
+
+  return resolve(globalThis.process.cwd(), "proof.config.ts");
 }
 
 function initialState(): VerificationSessionState {
@@ -45,7 +61,7 @@ function initialState(): VerificationSessionState {
   }
 
   const baseUrl =
-    globalThis.process.env.PROOF_BASE_URL ?? "http://127.0.0.1:3100";
+    globalThis.process.env.PROOF_BASE_URL ?? "http://127.0.0.1:3000";
 
   return {
     harness: null,
@@ -57,6 +73,8 @@ function initialState(): VerificationSessionState {
     harnessError: null,
     launched: false,
     activeCriterion: null,
+    config: null,
+    loopLimits: DEFAULT_CRITERION_LOOP_LIMITS,
   };
 }
 
@@ -64,6 +82,39 @@ export const verificationSession = defineState(
   "skeptic.verification",
   initialState,
 );
+
+let configLoadPromise: Promise<ProofConfig | null> | null = null;
+
+export async function ensureSessionConfigLoaded(): Promise<ProofConfig | null> {
+  const current = verificationSession.get();
+  if (current.config) {
+    return current.config;
+  }
+
+  if (!configLoadPromise) {
+    configLoadPromise = (async () => {
+      try {
+        const config = await loadProofConfig(resolveConfigPath());
+        verificationSession.update((state) => ({
+          ...state,
+          config,
+          baseUrl: config.app.baseUrl,
+          allowedOrigins: [...config.app.allowedOrigins],
+          loopLimits: resolveLoopLimits(config),
+        }));
+        return config;
+      } catch {
+        return null;
+      }
+    })();
+  }
+
+  return configLoadPromise;
+}
+
+export function getSessionLoopLimits(): CriterionLoopLimits {
+  return verificationSession.get().loopLimits;
+}
 
 export function beginCriterionVerification(input: {
   criterionIndex: number;
@@ -78,12 +129,56 @@ export function beginCriterionVerification(input: {
       artifactRefs: [],
     },
     repairAttempts: 0,
+    inferenceCount: 0,
   }));
   return loop;
 }
 
 export function getActiveCriterionState(): ActiveCriterionState | null {
   return verificationSession.get().activeCriterion;
+}
+
+export function recordInferenceAttempt():
+  | {
+      ok: true;
+    }
+  | {
+      ok: false;
+      reason: "inference";
+    } {
+  const state = verificationSession.get();
+  const nextInference = state.inferenceCount + 1;
+
+  if (!state.activeCriterion) {
+    verificationSession.update((current) => ({
+      ...current,
+      inferenceCount: nextInference,
+    }));
+    return { ok: true };
+  }
+
+  const nextLoop = {
+    ...state.activeCriterion.loop,
+    inferenceCount: nextInference,
+  };
+  const limitStatus = checkLoopLimits(nextLoop, getSessionLoopLimits());
+
+  verificationSession.update((current) => ({
+    ...current,
+    inferenceCount: nextInference,
+    activeCriterion: current.activeCriterion
+      ? {
+          ...current.activeCriterion,
+          loop: nextLoop,
+        }
+      : null,
+  }));
+
+  if (limitStatus.exhausted && limitStatus.reason === "inference") {
+    return { ok: false, reason: "inference" };
+  }
+
+  return { ok: true };
 }
 
 export function recordVerificationStep():
@@ -102,8 +197,9 @@ export function recordVerificationStep():
   const nextLoop = {
     ...state.activeCriterion.loop,
     stepCount: state.activeCriterion.loop.stepCount + 1,
+    inferenceCount: state.inferenceCount,
   };
-  const limitStatus = checkLoopLimits(nextLoop, DEFAULT_CRITERION_LOOP_LIMITS);
+  const limitStatus = checkLoopLimits(nextLoop, getSessionLoopLimits());
 
   verificationSession.update((current) => ({
     ...current,
@@ -178,10 +274,12 @@ export function clearActiveCriterion(): void {
     ...current,
     activeCriterion: null,
     repairAttempts: 0,
+    inferenceCount: 0,
   }));
 }
 
 export async function ensureHarnessLaunched(): Promise<PlaywrightHarness> {
+  await ensureSessionConfigLoaded();
   const state = verificationSession.get();
 
   if (state.harnessError) {

@@ -74,6 +74,15 @@ export {
   type ParseCriteriaOptions,
   type ParseCriteriaResult,
 } from "./criteria.ts";
+export { resolveLoopLimits } from "./limits.ts";
+export {
+  loadScenarioModule,
+  resolvePrerequisiteMap,
+  resolveScenarioModulePath,
+  ScenarioLoadError,
+  type ScenarioBuildContext,
+  type ScenarioModule,
+} from "./scenario-loader.ts";
 export { loadProofConfig } from "./load-config.ts";
 export {
   resolveSkepticModel,
