@@ -30,7 +30,7 @@ function readCliVersion(): string {
     ) as { version?: string };
     return manifest.version ?? "0.0.0";
   } catch {
-    return "0.1.1";
+    return "0.2.0";
   }
 }
 

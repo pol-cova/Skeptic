@@ -176,9 +176,15 @@ importers:
       '@skeptic/evidence':
         specifier: workspace:*
         version: link:../evidence
+      ai:
+        specifier: 7.0.34
+        version: 7.0.34(zod@4.4.3)
       playwright:
         specifier: 1.61.1
         version: 1.61.1
+      zod:
+        specifier: 4.4.3
+        version: 4.4.3
 
   packages/report:
     dependencies:

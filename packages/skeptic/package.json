@@ -1,6 +1,6 @@
 {
   "name": "@pol-cova/skeptic",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Autonomous verification agent for AI-built web applications.",
   "license": "Apache-2.0",
   "type": "module",

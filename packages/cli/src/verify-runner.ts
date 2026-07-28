@@ -8,19 +8,23 @@ import {
   loadScenarioModule,
   readinessFor,
   resolveAuthSecrets,
+  resolveLoopLimits,
   resolvePrerequisiteMap,
   resolveScenarioModulePath,
+  resolveSkepticModel,
   secretValuesFromAuth,
   startOrReuseApp,
   stopApp,
   withPrerequisites,
   type CriterionVerdict,
   type ProofConfig,
+  type ReplayFixture,
   type RunMetadata,
 } from "@skeptic/core";
 import { EvidenceStore } from "@skeptic/evidence";
 import {
   createHarnessEvidenceProviders,
+  executeAgentCriterion,
   executeScenarioCriterion,
   generatePlaywrightSpec,
   HarnessEvidenceBridge,
@@ -86,6 +90,7 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
   const cwd = options.cwd ?? process.cwd();
   const configPath = resolve(cwd, options.configPath);
   const configDir = resolveConfigDir(configPath, cwd);
+  const deterministic = options.deterministic ?? true;
 
   let config: ProofConfig;
   try {
@@ -127,8 +132,21 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
   } else {
     throw new VerifyError(
       "config",
-      "Proof config requires auth credentials for deterministic verification.",
+      deterministic
+        ? "Proof config requires auth credentials for deterministic verification."
+        : "Proof config requires auth credentials for agent verification.",
     );
+  }
+
+  if (!deterministic) {
+    try {
+      resolveSkepticModel();
+    } catch (error) {
+      throw new VerifyError(
+        "environment",
+        error instanceof Error ? error.message : String(error),
+      );
+    }
   }
 
   let appProcess = null;
@@ -151,15 +169,17 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
 
   const runId = `verify-${Date.now()}`;
 
-  let replayFixture;
-  try {
-    replayFixture = await loadScenarioFixture(config, configDir, auth, runId);
-  } catch (error) {
-    await stopApp(appProcess);
-    throw new VerifyError(
-      "config",
-      error instanceof Error ? error.message : String(error),
-    );
+  let replayFixture: ReplayFixture | undefined;
+  if (deterministic) {
+    try {
+      replayFixture = await loadScenarioFixture(config, configDir, auth, runId);
+    } catch (error) {
+      await stopApp(appProcess);
+      throw new VerifyError(
+        "config",
+        error instanceof Error ? error.message : String(error),
+      );
+    }
   }
 
   const metadata: RunMetadata = {
@@ -204,11 +224,17 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
     type: "run.started",
     payload: {
       configPath: options.configPath,
-      deterministic: options.deterministic ?? true,
+      deterministic,
+      mode: deterministic ? "deterministic" : "agent",
       criteriaCount: criteriaWithPrereqs.length,
-      scenarioModule: config.scenario?.module ?? "./scenario.ts",
+      scenarioModule: deterministic
+        ? (config.scenario?.module ?? "./scenario.ts")
+        : undefined,
     },
   });
+
+  const loopLimits = resolveLoopLimits(config);
+  const resolvedModel = deterministic ? undefined : resolveSkepticModel();
 
   let planResult;
   const priorVerdicts = new Map<number, CriterionVerdict>();
@@ -223,13 +249,28 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
         },
       },
       async executeCriterion(criterion) {
-        const verdict = await executeScenarioCriterion(
-          harness,
-          bridge,
-          replayFixture,
-          criterion,
-          priorVerdicts,
-        );
+        const verdict = deterministic
+          ? await executeScenarioCriterion(
+              harness,
+              bridge,
+              replayFixture!,
+              criterion,
+              priorVerdicts,
+            )
+          : await executeAgentCriterion(
+              harness,
+              bridge,
+              criterion,
+              priorVerdicts,
+              {
+                model: resolvedModel!.model,
+                limits: loopLimits,
+                config,
+                auth,
+                runId,
+                store,
+              },
+            );
         priorVerdicts.set(criterion.index, verdict);
         return { verdict };
       },
@@ -246,16 +287,51 @@ export async function runVerify(options: VerifyOptions): Promise<VerifyResult> {
 
   const { mkdir, writeFile } = await import("node:fs/promises");
   await mkdir(join(artifactRoot, "generated"), { recursive: true });
-  await writeFile(
-    join(artifactRoot, "replay.json"),
-    JSON.stringify(replayFixture, null, 2),
-    "utf8",
-  );
-  await writeFile(
-    join(artifactRoot, "generated", "acceptance.spec.ts"),
-    generatePlaywrightSpec(replayFixture),
-    "utf8",
-  );
+
+  if (deterministic && replayFixture) {
+    await writeFile(
+      join(artifactRoot, "replay.json"),
+      JSON.stringify(replayFixture, null, 2),
+      "utf8",
+    );
+    await writeFile(
+      join(artifactRoot, "generated", "acceptance.spec.ts"),
+      generatePlaywrightSpec(replayFixture),
+      "utf8",
+    );
+  } else {
+    await writeFile(
+      join(artifactRoot, "replay.json"),
+      JSON.stringify(
+        {
+          version: 1,
+          mode: "agent",
+          baseUrl: config.app.baseUrl,
+          allowedOrigins: config.app.allowedOrigins,
+          criteria: criteriaWithPrereqs.map((criterion) => ({
+            criterionIndex: criterion.index,
+            sourceText: criterion.sourceText,
+          })),
+          generatedAt: Date.now(),
+        },
+        null,
+        2,
+      ),
+      "utf8",
+    );
+    await writeFile(
+      join(artifactRoot, "generated", "acceptance.spec.ts"),
+      [
+        "// Agent verification run — no deterministic replay fixture was recorded.",
+        "// Codify successful agent flows in scenario.ts, then rerun with --deterministic.",
+        "import { test } from '@playwright/test';",
+        "",
+        "test.skip('agent run — export scenario.ts from evidence before replay', () => {});",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+  }
 
   bridge.detach();
   const finalized = await store.finalize(planResult.verdicts);
