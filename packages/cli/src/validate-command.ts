@@ -32,8 +32,7 @@ export async function runValidateCommand(
   options: ValidateCommandOptions,
 ): Promise<ValidateCommandResult> {
   const cwd = options.cwd ?? process.cwd();
-  const configPath =
-    options.configPath ?? (await discoverProofConfigPath(cwd));
+  const configPath = options.configPath ?? (await discoverProofConfigPath(cwd));
 
   if (!configPath) {
     throw new ValidateError(

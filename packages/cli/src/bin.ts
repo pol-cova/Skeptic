@@ -15,10 +15,7 @@ import { runReportCommand } from "./report-command.ts";
 import { scaffoldProject } from "./scaffold-init.ts";
 import { runValidateCommand, ValidateError } from "./validate-command.ts";
 import { runVerify, VerifyError } from "./verify-runner.ts";
-import {
-  formatStructuredError,
-  formatVerifyPayload,
-} from "./verify-output.ts";
+import { formatStructuredError, formatVerifyPayload } from "./verify-output.ts";
 
 function readCliVersion(): string {
   try {
@@ -138,7 +135,9 @@ export async function runCli(argv: string[]): Promise<number> {
 
   program
     .command("validate")
-    .description("Validate proof.config.ts, acceptance.md, and scenario.ts without running the browser")
+    .description(
+      "Validate proof.config.ts, acceptance.md, and scenario.ts without running the browser",
+    )
     .option("--config <path>", "Path to proof.config.ts")
     .option("--check-app", "Probe app.readyPath over the network", false)
     .option("--no-check-auth", "Skip credential environment variable checks")
@@ -180,39 +179,43 @@ export async function runCli(argv: string[]): Promise<number> {
 
   program
     .command("inspect")
-    .description("Capture accessible elements from a page to help author scenario.ts selectors")
+    .description(
+      "Capture accessible elements from a page to help author scenario.ts selectors",
+    )
     .option("--config <path>", "Path to proof.config.ts")
     .option("--url <url>", "Page URL to inspect (defaults to loginPath)")
     .option("--headed", "Run browser in headed mode", false)
-    .action(async (options: { config?: string; url?: string; headed?: boolean }) => {
-      try {
-        const result = await runInspectCommand({
-          configPath: options.config,
-          url: options.url,
-          headless: !options.headed,
-        });
+    .action(
+      async (options: { config?: string; url?: string; headed?: boolean }) => {
+        try {
+          const result = await runInspectCommand({
+            configPath: options.config,
+            url: options.url,
+            headless: !options.headed,
+          });
 
-        console.log(JSON.stringify(result, null, 2));
-        exitCode = 0;
-      } catch (error) {
-        if (error instanceof InspectError) {
-          console.log(
-            JSON.stringify(
-              formatStructuredError(error.category, error.message),
-              null,
-              2,
-            ),
-          );
-          printError(`${error.category} error`, error.message);
-        } else {
-          printError(
-            "Inspect error",
-            error instanceof Error ? error.message : String(error),
-          );
+          console.log(JSON.stringify(result, null, 2));
+          exitCode = 0;
+        } catch (error) {
+          if (error instanceof InspectError) {
+            console.log(
+              JSON.stringify(
+                formatStructuredError(error.category, error.message),
+                null,
+                2,
+              ),
+            );
+            printError(`${error.category} error`, error.message);
+          } else {
+            printError(
+              "Inspect error",
+              error instanceof Error ? error.message : String(error),
+            );
+          }
+          exitCode = 3;
         }
-        exitCode = 3;
-      }
-    });
+      },
+    );
 
   program
     .command("verify")
@@ -284,7 +287,10 @@ export async function runCli(argv: string[]): Promise<number> {
     .description("Replay a prior run without model calls")
     .option("--run <run-id>", "Run ID under .proof/runs/")
     .option("--latest", "Replay the most recent verification run")
-    .option("--artifact-root <path>", "Path to a downloaded run artifact directory")
+    .option(
+      "--artifact-root <path>",
+      "Path to a downloaded run artifact directory",
+    )
     .option("--headed", "Run browser in headed mode", false)
     .action(
       async (options: {
@@ -334,7 +340,10 @@ export async function runCli(argv: string[]): Promise<number> {
     .description("Regenerate HTML/Markdown reports for a prior run")
     .option("--run <run-id>", "Run ID under .proof/runs/")
     .option("--latest", "Report the most recent verification run")
-    .option("--artifact-root <path>", "Path to a downloaded run artifact directory")
+    .option(
+      "--artifact-root <path>",
+      "Path to a downloaded run artifact directory",
+    )
     .option("--open", "Open the HTML report in a browser")
     .action(
       async (options: {
@@ -368,7 +377,10 @@ export async function runCli(argv: string[]): Promise<number> {
     )
     .option("--run <run-id>", "Run ID under .proof/runs/")
     .option("--latest", "Use the most recent verification run")
-    .option("--artifact-root <path>", "Path to a downloaded run artifact directory")
+    .option(
+      "--artifact-root <path>",
+      "Path to a downloaded run artifact directory",
+    )
     .action(
       async (options: {
         run?: string;

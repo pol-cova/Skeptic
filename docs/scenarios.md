@@ -20,7 +20,9 @@ export function buildScenario(ctx: ScenarioBuildContext): ReplayFixture {
       {
         criterionIndex: 1,
         sourceText: "…criterion text from acceptance.md…",
-        steps: [/* BrowserAction[] */],
+        steps: [
+          /* BrowserAction[] */
+        ],
       },
     ],
   };
@@ -29,15 +31,15 @@ export function buildScenario(ctx: ScenarioBuildContext): ReplayFixture {
 
 ### `ScenarioBuildContext`
 
-| Field | Description |
-| --- | --- |
-| `baseUrl` | From `proof.config.ts` |
-| `allowedOrigins` | From `proof.config.ts` |
-| `username` | Resolved from `auth.usernameEnv` |
-| `password` | Resolved from `auth.passwordEnv` |
-| `loginPath` | From `auth.loginPath` |
-| `runId` | Unique id for this verification run |
-| `variables` | Optional run-scoped values (e.g. generated test emails) |
+| Field            | Description                                             |
+| ---------------- | ------------------------------------------------------- |
+| `baseUrl`        | From `proof.config.ts`                                  |
+| `allowedOrigins` | From `proof.config.ts`                                  |
+| `username`       | Resolved from `auth.usernameEnv`                        |
+| `password`       | Resolved from `auth.passwordEnv`                        |
+| `loginPath`      | From `auth.loginPath`                                   |
+| `runId`          | Unique id for this verification run                     |
+| `variables`      | Optional run-scoped values (e.g. generated test emails) |
 
 Use `runId` or `variables` for unique test data (emails, slugs) to avoid collisions across runs.
 
@@ -124,14 +126,14 @@ Run a deterministic assertion (see below). Assertions drive the oracle verdict.
 
 At least one locator field is required:
 
-| Field | Resolves via |
-| --- | --- |
-| `testId` | `[data-testid="…"]` |
-| `role` | ARIA role (+ optional `name`) |
-| `name` | Accessible name |
-| `label` | Associated label text |
-| `placeholder` | Placeholder attribute |
-| `text` | Visible text content |
+| Field         | Resolves via                  |
+| ------------- | ----------------------------- |
+| `testId`      | `[data-testid="…"]`           |
+| `role`        | ARIA role (+ optional `name`) |
+| `name`        | Accessible name               |
+| `label`       | Associated label text         |
+| `placeholder` | Placeholder attribute         |
+| `text`        | Visible text content          |
 
 **Recommendation:** use `data-testid` for flows under verification — stable across copy and styling changes.
 
@@ -141,14 +143,14 @@ At least one locator field is required:
 
 ## Assertions
 
-| Type | Fields | Checks |
-| --- | --- | --- |
-| `visible` | `target` | Element is visible |
-| `hidden` | `target` | Element is not visible |
-| `text` | `target`, `expected` | Element text equals expected string |
-| `count` | `target`, `expected` | Number of matching elements |
-| `url` | `expected` | Current page URL |
-| `response` | `method`, `path`, `status` | Matching network request observed |
+| Type       | Fields                     | Checks                              |
+| ---------- | -------------------------- | ----------------------------------- |
+| `visible`  | `target`                   | Element is visible                  |
+| `hidden`   | `target`                   | Element is not visible              |
+| `text`     | `target`, `expected`       | Element text equals expected string |
+| `count`    | `target`, `expected`       | Number of matching elements         |
+| `url`      | `expected`                 | Current page URL                    |
+| `response` | `method`, `path`, `status` | Matching network request observed   |
 
 Example — API-backed criterion:
 
@@ -222,10 +224,10 @@ The harness rejects navigation and actions outside `allowedOrigins`. If a step n
 
 ## Agent vs deterministic mode
 
-| Mode | Who produces steps |
-| --- | --- |
-| `--deterministic` (default) | Your `scenario.ts` only |
-| `--no-deterministic` | Eve agent proposes actions; harness validates types before execution |
+| Mode                        | Who produces steps                                                   |
+| --------------------------- | -------------------------------------------------------------------- |
+| `--deterministic` (default) | Your `scenario.ts` only                                              |
+| `--no-deterministic`        | Eve agent proposes actions; harness validates types before execution |
 
 Deterministic mode never calls an LLM. Prefer scripting flows in `scenario.ts` for CI reliability.
 

@@ -31,11 +31,11 @@ skeptic init
 
 This creates three files:
 
-| File | Purpose |
-| --- | --- |
+| File              | Purpose                                              |
+| ----------------- | ---------------------------------------------------- |
 | `proof.config.ts` | Where Skeptic finds your app, criteria, and scenario |
-| `acceptance.md` | Numbered criteria in plain language |
-| `scenario.ts` | Typed browser steps and assertions per criterion |
+| `acceptance.md`   | Numbered criteria in plain language                  |
+| `scenario.ts`     | Typed browser steps and assertions per criterion     |
 
 If files already exist, use `skeptic init --force` to overwrite them.
 
@@ -177,12 +177,12 @@ The CLI prints JSON summary:
 
 ### Exit codes
 
-| Code | Readiness | Meaning |
-| ---: | --- | --- |
-| 0 | `READY` | All criteria passed |
-| 1 | `NOT_READY` | At least one criterion failed |
-| 2 | `INCOMPLETE` | At least one criterion unverifiable |
-| 3 | `ERROR` | Harness or configuration error |
+| Code | Readiness    | Meaning                             |
+| ---: | ------------ | ----------------------------------- |
+|    0 | `READY`      | All criteria passed                 |
+|    1 | `NOT_READY`  | At least one criterion failed       |
+|    2 | `INCOMPLETE` | At least one criterion unverifiable |
+|    3 | `ERROR`      | Harness or configuration error      |
 
 ## Inspect results
 
@@ -217,13 +217,13 @@ Replay executes the saved `replay.json` with zero model calls — useful for con
 
 ## Troubleshooting
 
-| Symptom | Likely cause | Fix |
-| --- | --- | --- |
-| `Environment error` on verify | Missing `PROOF_TEST_*` vars | Export credentials |
-| `App failed to start` | Wrong `startCommand` or `readyPath` | Fix config; ensure `/health` (or your path) returns 200 |
-| `HARNESS_ERROR` / origin blocked | Navigation outside `allowedOrigins` | Add origin to config |
-| `UNVERIFIABLE` on criterion N | Prerequisite criterion did not pass | Fix earlier criteria or set `prerequisites` |
-| Assertion timeout | Wrong `testId` or selector | Align `scenario.ts` with your DOM |
-| `Configuration error` on scenario | Invalid module path | Check `scenario.module` relative to config directory |
+| Symptom                           | Likely cause                        | Fix                                                     |
+| --------------------------------- | ----------------------------------- | ------------------------------------------------------- |
+| `Environment error` on verify     | Missing `PROOF_TEST_*` vars         | Export credentials                                      |
+| `App failed to start`             | Wrong `startCommand` or `readyPath` | Fix config; ensure `/health` (or your path) returns 200 |
+| `HARNESS_ERROR` / origin blocked  | Navigation outside `allowedOrigins` | Add origin to config                                    |
+| `UNVERIFIABLE` on criterion N     | Prerequisite criterion did not pass | Fix earlier criteria or set `prerequisites`             |
+| Assertion timeout                 | Wrong `testId` or selector          | Align `scenario.ts` with your DOM                       |
+| `Configuration error` on scenario | Invalid module path                 | Check `scenario.module` relative to config directory    |
 
 For contributor toolchain checks, see [Preflight](preflight.md).

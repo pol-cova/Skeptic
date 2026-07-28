@@ -29,13 +29,13 @@ When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` wit
 
 ## Commands
 
-| Command | Description |
-| --- | --- |
-| `skeptic init` | Scaffold `proof.config.ts`, `scenario.ts`, `acceptance.md` |
-| `skeptic verify` | Run verification against your config |
-| `skeptic replay --run <id>` | Replay a prior run from artifacts |
-| `skeptic report --run <id>` | Regenerate HTML/Markdown report |
-| `skeptic fix-prompt --run <id>` | Generate fix instructions for a failed run |
+| Command                         | Description                                                |
+| ------------------------------- | ---------------------------------------------------------- |
+| `skeptic init`                  | Scaffold `proof.config.ts`, `scenario.ts`, `acceptance.md` |
+| `skeptic verify`                | Run verification against your config                       |
+| `skeptic replay --run <id>`     | Replay a prior run from artifacts                          |
+| `skeptic report --run <id>`     | Regenerate HTML/Markdown report                            |
+| `skeptic fix-prompt --run <id>` | Generate fix instructions for a failed run                 |
 
 Exit codes: `0` READY · `1` NOT_READY · `2` INCOMPLETE · `3` ERROR.
 

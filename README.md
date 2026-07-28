@@ -11,11 +11,11 @@ Skeptic is a config-driven verification framework for web applications. You decl
 
 ## How it works
 
-| File | Role |
-| --- | --- |
-| `proof.config.ts` | App URL, auth env vars, criteria file, scenario module, loop limits |
-| `acceptance.md` | Numbered acceptance criteria in natural language |
-| `scenario.ts` | `buildScenario(context)` → typed browser steps and assertions per criterion |
+| File              | Role                                                                        |
+| ----------------- | --------------------------------------------------------------------------- |
+| `proof.config.ts` | App URL, auth env vars, criteria file, scenario module, loop limits         |
+| `acceptance.md`   | Numbered acceptance criteria in natural language                            |
+| `scenario.ts`     | `buildScenario(context)` → typed browser steps and assertions per criterion |
 
 Skeptic replays your scenario against a live app, records screenshots and network observations, and applies a deterministic oracle. Agent reasoning can guide exploration, but only typed assertions establish `PASS` or `FAIL`.
 
@@ -48,19 +48,19 @@ flowchart TD
 
 ## Verdict contract
 
-| Verdict | Meaning | Oracle rule |
-| --- | --- | --- |
-| `PASS` | Criterion satisfied | ≥1 passing deterministic assertion, none failing |
-| `FAIL` | Criterion violated | ≥1 failing assertion |
-| `UNVERIFIABLE` | Prerequisite missing | Blocked flow; not necessarily a product bug |
-| `HARNESS_ERROR` | Skeptic failed | Config, origin guard, or harness fault |
+| Verdict         | Meaning              | Oracle rule                                      |
+| --------------- | -------------------- | ------------------------------------------------ |
+| `PASS`          | Criterion satisfied  | ≥1 passing deterministic assertion, none failing |
+| `FAIL`          | Criterion violated   | ≥1 failing assertion                             |
+| `UNVERIFIABLE`  | Prerequisite missing | Blocked flow; not necessarily a product bug      |
+| `HARNESS_ERROR` | Skeptic failed       | Config, origin guard, or harness fault           |
 
-| Readiness | Exit code | When |
-| --- | ---: | --- |
-| `READY` | 0 | All criteria `PASS` |
-| `NOT_READY` | 1 | Any `FAIL` |
-| `INCOMPLETE` | 2 | Any `UNVERIFIABLE` |
-| `ERROR` | 3 | Any `HARNESS_ERROR` |
+| Readiness    | Exit code | When                |
+| ------------ | --------: | ------------------- |
+| `READY`      |         0 | All criteria `PASS` |
+| `NOT_READY`  |         1 | Any `FAIL`          |
+| `INCOMPLETE` |         2 | Any `UNVERIFIABLE`  |
+| `ERROR`      |         3 | Any `HARNESS_ERROR` |
 
 Full contract: [docs/adr/0001-public-contract.md](docs/adr/0001-public-contract.md).
 
@@ -89,16 +89,16 @@ When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` wit
 
 ## Documentation
 
-| Guide | Description |
-| --- | --- |
-| [Getting started](docs/getting-started.md) | End-to-end setup for your application |
-| [Configuration](docs/configuration.md) | `proof.config.ts` reference |
-| [Acceptance criteria](docs/acceptance-criteria.md) | Writing `acceptance.md` |
-| [Scenarios](docs/scenarios.md) | Browser actions, assertions, and `scenario.ts` |
-| [CLI reference](docs/cli.md) | Commands, exit codes, and artifacts |
-| [CI and workflows](docs/ci-and-workflows.md) | Pipelines, replay, and fix prompts |
-| [Agent mode](docs/agent.md) | Optional Eve verification agent |
-| [Responsible use](docs/responsible-use.md) | Credentials, artifacts, and limits |
+| Guide                                              | Description                                    |
+| -------------------------------------------------- | ---------------------------------------------- |
+| [Getting started](docs/getting-started.md)         | End-to-end setup for your application          |
+| [Configuration](docs/configuration.md)             | `proof.config.ts` reference                    |
+| [Acceptance criteria](docs/acceptance-criteria.md) | Writing `acceptance.md`                        |
+| [Scenarios](docs/scenarios.md)                     | Browser actions, assertions, and `scenario.ts` |
+| [CLI reference](docs/cli.md)                       | Commands, exit codes, and artifacts            |
+| [CI and workflows](docs/ci-and-workflows.md)       | Pipelines, replay, and fix prompts             |
+| [Agent mode](docs/agent.md)                        | Optional Eve verification agent                |
+| [Responsible use](docs/responsible-use.md)         | Credentials, artifacts, and limits             |
 
 ## CLI overview
 
@@ -127,14 +127,14 @@ pnpm typecheck && pnpm test && pnpm lint && pnpm build
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
-| Path | Package |
-| --- | --- |
-| `packages/core` | Config schema, criteria parser, oracle, run plan |
+| Path                          | Package                                              |
+| ----------------------------- | ---------------------------------------------------- |
+| `packages/core`               | Config schema, criteria parser, oracle, run plan     |
 | `packages/playwright-harness` | Typed browser actions, origin guard, scenario replay |
-| `packages/evidence` | Event store, artifact layout |
-| `packages/report` | HTML/Markdown report and fix-prompt generation |
-| `packages/cli` | `skeptic` binary |
-| `agent/` | Eve verification agent |
+| `packages/evidence`           | Event store, artifact layout                         |
+| `packages/report`             | HTML/Markdown report and fix-prompt generation       |
+| `packages/cli`                | `skeptic` binary                                     |
+| `agent/`                      | Eve verification agent                               |
 
 ## License
 

@@ -53,7 +53,10 @@ export async function resolveRunLocation(
   options: ResolveRunLocationOptions,
 ): Promise<ResolvedRunLocation> {
   if (options.artifactRoot) {
-    const artifactRoot = resolve(options.cwd ?? process.cwd(), options.artifactRoot);
+    const artifactRoot = resolve(
+      options.cwd ?? process.cwd(),
+      options.artifactRoot,
+    );
     const runId = options.runId ?? artifactRoot.split("/").pop() ?? "unknown";
     return { runId, artifactRoot };
   }

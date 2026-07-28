@@ -3,16 +3,16 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import {
-  parseCriteriaMarkdown,
-  withPrerequisites,
-} from "./criteria.ts";
-import {
-  resolvePrerequisiteMap,
-} from "./scenario-loader.ts";
+import { parseCriteriaMarkdown, withPrerequisites } from "./criteria.ts";
+import { resolvePrerequisiteMap } from "./scenario-loader.ts";
 import { validateProofProject } from "./validate-project.ts";
 
-const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
+const repoRoot = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "..",
+  "..",
+);
 const demoConfigPath = join(
   repoRoot,
   "examples",
@@ -31,7 +31,9 @@ describe("validateProofProject", () => {
 
     expect(result.ok).toBe(true);
     expect(result.criteriaCount).toBe(3);
-    expect(result.issues.filter((issue) => issue.level === "error")).toEqual([]);
+    expect(result.issues.filter((issue) => issue.level === "error")).toEqual(
+      [],
+    );
   });
 
   it("uses config prerequisites instead of demo defaults", () => {
@@ -44,9 +46,9 @@ describe("validateProofProject", () => {
       criteria,
       resolvePrerequisiteMap({}),
     );
-    expect(withoutConfig.every((entry) => entry.prerequisites.length === 0)).toBe(
-      true,
-    );
+    expect(
+      withoutConfig.every((entry) => entry.prerequisites.length === 0),
+    ).toBe(true);
 
     const withConfig = withPrerequisites(
       criteria,

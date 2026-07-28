@@ -21,9 +21,9 @@ skeptic init --provider chatgpt
 
 Creates `proof.config.ts`, `acceptance.md`, `scenario.ts`, `skeptic-config.d.ts`, `tsconfig.json`, and `.gitignore` (including `.proof/`).
 
-| Option | Description |
-| --- | --- |
-| `--force` | Overwrite existing scaffold files |
+| Option            | Description                                                                                                            |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `--force`         | Overwrite existing scaffold files                                                                                      |
 | `--provider <id>` | Validate agent provider credentials (`chatgpt`, `openrouter`, `cerebras`, `bedrock`, `google-ai`, `openai-compatible`) |
 
 **Exit codes:** `0` success, `2` skipped files or invalid provider, `3` error.
@@ -43,11 +43,11 @@ skeptic validate --check-app
 skeptic validate --no-check-auth
 ```
 
-| Option | Description |
-| --- | --- |
+| Option            | Description                                                                         |
+| ----------------- | ----------------------------------------------------------------------------------- |
 | `--config <path>` | Path to `proof.config.ts` (auto-discovers `proof.config.ts` or `skeptic.config.ts`) |
-| `--check-app` | Probe `app.readyPath` over the network |
-| `--no-check-auth` | Skip credential environment variable checks |
+| `--check-app`     | Probe `app.readyPath` over the network                                              |
+| `--no-check-auth` | Skip credential environment variable checks                                         |
 
 **Exit codes:** `0` valid, `2` validation issues, `3` error.
 
@@ -65,11 +65,11 @@ skeptic inspect --url http://127.0.0.1:3000/login
 skeptic inspect --headed
 ```
 
-| Option | Description |
-| --- | --- |
+| Option            | Description                                              |
+| ----------------- | -------------------------------------------------------- |
 | `--config <path>` | Path to `proof.config.ts` (auto-discovered when omitted) |
-| `--url <url>` | Page to inspect (defaults to `baseUrl` + `loginPath`) |
-| `--headed` | Run browser in headed mode |
+| `--url <url>`     | Page to inspect (defaults to `baseUrl` + `loginPath`)    |
+| `--headed`        | Run browser in headed mode                               |
 
 Starts or reuses the app from config, navigates to the URL, and returns a JSON page observation (roles, `testId`, names, values).
 
@@ -87,13 +87,13 @@ skeptic verify --headed
 skeptic verify --compact-json
 ```
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `--config <path>` | auto-discover | Path to `proof.config.ts` |
-| `--deterministic` | on | Replay `scenario.ts` with zero model calls |
-| `--no-deterministic` | — | Enable Eve agent for exploratory verification |
-| `--headed` | off | Run browser in headed mode |
-| `--compact-json` | off | Emit minimal verdict JSON (index + verdict only) |
+| Option               | Default       | Description                                      |
+| -------------------- | ------------- | ------------------------------------------------ |
+| `--config <path>`    | auto-discover | Path to `proof.config.ts`                        |
+| `--deterministic`    | on            | Replay `scenario.ts` with zero model calls       |
+| `--no-deterministic` | —             | Enable Eve agent for exploratory verification    |
+| `--headed`           | off           | Run browser in headed mode                       |
+| `--compact-json`     | off           | Emit minimal verdict JSON (index + verdict only) |
 
 **Stdout:** JSON with `runId`, `readiness`, `exitCode`, `artifactRoot`, and `verdicts`. By default each verdict includes `explanation`, `assertionResults`, and `artifactRefs`. Optional `fixPromptPath` when the run is not `READY`.
 
@@ -101,12 +101,12 @@ skeptic verify --compact-json
 
 **Exit codes:**
 
-| Code | Readiness |
-| ---: | --- |
-| 0 | `READY` |
-| 1 | `NOT_READY` |
-| 2 | `INCOMPLETE` |
-| 3 | `ERROR` |
+| Code | Readiness    |
+| ---: | ------------ |
+|    0 | `READY`      |
+|    1 | `NOT_READY`  |
+|    2 | `INCOMPLETE` |
+|    3 | `ERROR`      |
 
 When exit code is non-zero and criteria failed, Skeptic writes `fix-prompt.md` under the run directory.
 
@@ -123,12 +123,12 @@ skeptic replay --artifact-root ./downloaded-run
 skeptic replay --headed
 ```
 
-| Option | Description |
-| --- | --- |
-| `--run <run-id>` | Run ID under `.proof/runs/` |
-| `--latest` | Replay the most recent run (default when `--run` omitted) |
-| `--artifact-root <path>` | Path to a downloaded artifact directory |
-| `--headed` | Run browser in headed mode |
+| Option                   | Description                                               |
+| ------------------------ | --------------------------------------------------------- |
+| `--run <run-id>`         | Run ID under `.proof/runs/`                               |
+| `--latest`               | Replay the most recent run (default when `--run` omitted) |
+| `--artifact-root <path>` | Path to a downloaded artifact directory                   |
+| `--headed`               | Run browser in headed mode                                |
 
 **Stdout:** JSON with `runId`, `readiness`, `exitCode`, `modelCalls` (always 0), and `verdicts`.
 
@@ -146,12 +146,12 @@ skeptic report --run verify-1712345678901
 skeptic report --artifact-root ./downloaded-run
 ```
 
-| Option | Description |
-| --- | --- |
-| `--run <run-id>` | Run ID under `.proof/runs/` |
-| `--latest` | Report the most recent run (default when `--run` omitted) |
-| `--artifact-root <path>` | Path to a downloaded artifact directory |
-| `--open` | Open HTML report in the default browser |
+| Option                   | Description                                               |
+| ------------------------ | --------------------------------------------------------- |
+| `--run <run-id>`         | Run ID under `.proof/runs/`                               |
+| `--latest`               | Report the most recent run (default when `--run` omitted) |
+| `--artifact-root <path>` | Path to a downloaded artifact directory                   |
+| `--open`                 | Open HTML report in the default browser                   |
 
 **Stdout:** JSON with `htmlPath` and `markdownPath`.
 
@@ -168,11 +168,11 @@ skeptic fix-prompt --latest
 skeptic fix-prompt --run verify-1712345678901
 ```
 
-| Option | Description |
-| --- | --- |
-| `--run <run-id>` | Run ID under `.proof/runs/` |
-| `--latest` | Use the most recent run (default when `--run` omitted) |
-| `--artifact-root <path>` | Path to a downloaded artifact directory |
+| Option                   | Description                                            |
+| ------------------------ | ------------------------------------------------------ |
+| `--run <run-id>`         | Run ID under `.proof/runs/`                            |
+| `--latest`               | Use the most recent run (default when `--run` omitted) |
+| `--artifact-root <path>` | Path to a downloaded artifact directory                |
 
 Use when you need a structured handoff for a coding agent after a failed verification. The prompt summarizes failing criteria, evidence paths, and suggested investigation steps — it does not modify your repository.
 

@@ -55,12 +55,12 @@ If a prerequisite is `FAIL` or `UNVERIFIABLE`, dependent criteria become `UNVERI
 
 ## Verdict mapping
 
-| Outcome in browser | Typical verdict |
-| --- | --- |
-| All assertions for the criterion pass | `PASS` |
-| Any assertion fails | `FAIL` |
-| Prerequisite missing or blocked flow | `UNVERIFIABLE` |
-| Config, origin, or harness fault | `HARNESS_ERROR` |
+| Outcome in browser                    | Typical verdict |
+| ------------------------------------- | --------------- |
+| All assertions for the criterion pass | `PASS`          |
+| Any assertion fails                   | `FAIL`          |
+| Prerequisite missing or blocked flow  | `UNVERIFIABLE`  |
+| Config, origin, or harness fault      | `HARNESS_ERROR` |
 
 Only deterministic assertions from the Playwright harness produce `PASS` or `FAIL`. See [ADR 0001](adr/0001-public-contract.md).
 

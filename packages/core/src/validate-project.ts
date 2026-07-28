@@ -3,10 +3,7 @@ import { dirname, join, resolve } from "node:path";
 
 import { checkReadiness } from "./app-lifecycle.ts";
 import { loadProofConfig } from "./load-config.ts";
-import {
-  loadCriteriaFromFile,
-  withPrerequisites,
-} from "./criteria.ts";
+import { loadCriteriaFromFile, withPrerequisites } from "./criteria.ts";
 import {
   loadScenarioModule,
   resolvePrerequisiteMap,
@@ -51,7 +48,10 @@ function resolveConfigDir(configPath: string, cwd: string): string {
 function collectActionIds(
   fixture: ReplayFixture,
 ): Map<string, { criterionIndex: number; count: number }[]> {
-  const actionIds = new Map<string, { criterionIndex: number; count: number }[]>();
+  const actionIds = new Map<
+    string,
+    { criterionIndex: number; count: number }[]
+  >();
 
   for (const criterion of fixture.criteria) {
     const seenInCriterion = new Map<string, number>();
@@ -116,7 +116,9 @@ function validateScenarioAlignment(
   }
 
   for (const entry of fixture.criteria) {
-    if (!criteria.some((criterion) => criterion.index === entry.criterionIndex)) {
+    if (
+      !criteria.some((criterion) => criterion.index === entry.criterionIndex)
+    ) {
       issues.push({
         level: "warning",
         code: "scenario.orphan-criterion",

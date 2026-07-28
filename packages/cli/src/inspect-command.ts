@@ -24,10 +24,7 @@ export interface InspectCommandResult {
 export class InspectError extends Error {
   readonly category: "config" | "environment" | "harness";
 
-  constructor(
-    category: "config" | "environment" | "harness",
-    message: string,
-  ) {
+  constructor(category: "config" | "environment" | "harness", message: string) {
     super(message);
     this.name = "InspectError";
     this.category = category;
@@ -38,8 +35,7 @@ export async function runInspectCommand(
   options: InspectCommandOptions,
 ): Promise<InspectCommandResult> {
   const cwd = options.cwd ?? process.cwd();
-  const configPath =
-    options.configPath ?? (await discoverProofConfigPath(cwd));
+  const configPath = options.configPath ?? (await discoverProofConfigPath(cwd));
 
   if (!configPath) {
     throw new InspectError(
@@ -59,8 +55,7 @@ export async function runInspectCommand(
   }
 
   const targetUrl =
-    options.url ??
-    `${config.app.baseUrl}${config.auth?.loginPath ?? "/"}`;
+    options.url ?? `${config.app.baseUrl}${config.auth?.loginPath ?? "/"}`;
 
   let appProcess = null;
   try {

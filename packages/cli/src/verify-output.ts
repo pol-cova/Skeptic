@@ -5,7 +5,9 @@ export interface VerifyOutputOptions {
   verbose?: boolean;
 }
 
-function summarizeAssertion(result: NonNullable<CriterionVerdict["assertionResults"]>[number]) {
+function summarizeAssertion(
+  result: NonNullable<CriterionVerdict["assertionResults"]>[number],
+) {
   return {
     type: result.assertion.type,
     passed: result.passed,
@@ -32,7 +34,9 @@ export function formatVerifyPayload(
           explanation: entry.explanation,
           sourceText: entry.sourceText,
           prerequisiteFailure: entry.prerequisiteFailure,
-          assertionResults: (entry.assertionResults ?? []).map(summarizeAssertion),
+          assertionResults: (entry.assertionResults ?? []).map(
+            summarizeAssertion,
+          ),
           artifactRefs: entry.artifactRefs,
         }))
       : result.verdicts.map((entry) => ({
