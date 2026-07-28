@@ -84,6 +84,9 @@ importers:
       '@skeptic/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@skeptic/playwright-harness':
+        specifier: workspace:*
+        version: link:../../packages/playwright-harness
       next:
         specifier: 15.5.12
         version: 15.5.12(@playwright/test@1.61.1)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
