@@ -156,7 +156,7 @@ export async function replayFixture(
     fixture.criteria.map((entry) => ({
       index: entry.criterionIndex,
       sourceText: entry.sourceText,
-      prerequisites: entry.criterionIndex === 3 ? [2] : [],
+      prerequisites: [],
     }));
 
   const harness = new PlaywrightHarness({

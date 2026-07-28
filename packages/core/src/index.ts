@@ -76,6 +76,13 @@ export {
 } from "./criteria.ts";
 export { resolveLoopLimits } from "./limits.ts";
 export {
+  discoverProofConfigPath,
+  validateProofProject,
+  type ValidateProjectOptions,
+  type ValidateProjectResult,
+  type ValidationIssue,
+} from "./validate-project.ts";
+export {
   loadScenarioModule,
   resolvePrerequisiteMap,
   resolveScenarioModulePath,

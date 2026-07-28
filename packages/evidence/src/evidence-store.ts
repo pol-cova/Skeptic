@@ -402,7 +402,10 @@ export class EvidenceStore {
     await this.artifactWriter.writeMetadata(bundle.metadata, this.secretSet);
 
     // 8. Generate static HTML and Markdown reports
-    await writeRunReports(bundle, { artifactRoot: this.artifactRoot });
+    await writeRunReports(bundle, {
+      artifactRoot: this.artifactRoot,
+      tracePath: traceRef,
+    });
 
     // 9. Write fix prompt when verification found actionable failures
     const fixPrompt = await writeFixPrompt(bundle, {
