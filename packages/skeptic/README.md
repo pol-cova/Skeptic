@@ -21,31 +21,32 @@ skeptic init
 export PROOF_TEST_USERNAME=your-user
 export PROOF_TEST_PASSWORD=your-pass
 
+# Edit proof.config.ts, acceptance.md, and scenario.ts for your app
 skeptic verify --config proof.config.ts --deterministic
 ```
 
-When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` with remediation steps for your coding agent (no auto-repair or git commits).
-
-## Configuration
-
-Run `skeptic init` to scaffold `proof.config.ts`, `scenario.ts`, and `acceptance.md`, or copy the [template](https://github.com/pol-cova/Skeptic/blob/main/docs/proof.config.template.ts). Implement `buildScenario()` with typed browser steps and assertions. Point `criteria.file` at numbered Markdown acceptance criteria.
-
-Deterministic mode replays your scenario with zero model calls — suitable for CI.
+When verification fails, Skeptic writes `.proof/runs/<run-id>/fix-prompt.md` with remediation steps for your coding agent. Skeptic does not auto-repair code or create commits.
 
 ## Commands
 
-| Command                         | Description                                          |
-| ------------------------------- | ---------------------------------------------------- |
-| `skeptic init`                  | Scaffold proof.config.ts, scenario.ts, acceptance.md |
-| `skeptic verify`                | Run verification against `proof.config.ts`           |
-| `skeptic replay --run <id>`     | Replay a prior run from artifacts                    |
-| `skeptic report --run <id>`     | Regenerate HTML/Markdown report                      |
-| `skeptic fix-prompt --run <id>` | Generate fix instructions for a failed run           |
+| Command | Description |
+| --- | --- |
+| `skeptic init` | Scaffold `proof.config.ts`, `scenario.ts`, `acceptance.md` |
+| `skeptic verify` | Run verification against your config |
+| `skeptic replay --run <id>` | Replay a prior run from artifacts |
+| `skeptic report --run <id>` | Regenerate HTML/Markdown report |
+| `skeptic fix-prompt --run <id>` | Generate fix instructions for a failed run |
 
-Use `skeptic init --provider chatgpt` to validate agent provider credentials.
+Exit codes: `0` READY · `1` NOT_READY · `2` INCOMPLETE · `3` ERROR.
 
-Exit codes: `0` READY, `1` NOT_READY, `2` INCOMPLETE, `3` ERROR.
+Use `skeptic init --provider chatgpt` to validate agent provider credentials for optional agent mode.
 
 ## Documentation
 
-Full docs: [github.com/pol-cova/Skeptic](https://github.com/pol-cova/Skeptic)
+Full guides: [github.com/pol-cova/Skeptic/tree/main/docs](https://github.com/pol-cova/Skeptic/tree/main/docs)
+
+- [Getting started](https://github.com/pol-cova/Skeptic/blob/main/docs/getting-started.md)
+- [Configuration](https://github.com/pol-cova/Skeptic/blob/main/docs/configuration.md)
+- [Scenarios](https://github.com/pol-cova/Skeptic/blob/main/docs/scenarios.md)
+- [CLI reference](https://github.com/pol-cova/Skeptic/blob/main/docs/cli.md)
+- [CI and workflows](https://github.com/pol-cova/Skeptic/blob/main/docs/ci-and-workflows.md)

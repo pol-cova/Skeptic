@@ -22,7 +22,7 @@ Treat artifact directories like test output that may contain sensitive data. Do 
 
 ## Model access
 
-Skeptic can use LLM providers for agent-driven exploration. The default demo path supports **deterministic verification** (`skeptic verify --deterministic`) that makes **zero model calls** and requires no AWS or Bedrock credentials.
+Skeptic can use LLM providers for agent-driven exploration. **Deterministic verification** (`skeptic verify --deterministic`, the default) makes **zero model calls** and requires no model provider credentials.
 
 When using model-backed verification:
 
