@@ -5,7 +5,7 @@ import { defineProofConfig } from "@skeptic/core";
  *
  * 1. Point `criteria.file` at numbered Markdown acceptance criteria.
  * 2. Implement `scenario.ts` exporting `buildScenario(context)` — a ReplayFixture
- *    with typed browser steps (see examples/demo-app/scenario.ts).
+ *    with typed browser steps (see docs/scenarios.md).
  * 3. Set auth env vars and run: skeptic verify --config proof.config.ts --deterministic
  */
 export default defineProofConfig({

@@ -1,35 +1,33 @@
-# Demo app
+# Reference example app
 
-Reference Next.js app for the invite-teammate verification demo.
+Internal Next.js application used for Skeptic integration tests and contributor development. It is **not** required to use Skeptic in your own project — run `skeptic init` against your application instead.
 
-## Run
+See [Getting started](../../docs/getting-started.md) for the user workflow.
+
+## Run (contributors)
 
 ```bash
 pnpm --filter demo-app dev
 ```
 
-Sign in at `http://127.0.0.1:3100/login` with `demo` / `skeptic-demo`.
+Default URL: `http://127.0.0.1:3100/login`
 
-Override credentials with `PROOF_TEST_USERNAME` and `PROOF_TEST_PASSWORD`.
+Set test credentials via `PROOF_TEST_USERNAME` and `PROOF_TEST_PASSWORD`.
 
-## Modes
-
-Default behavior seeds a persistence bug: a valid invite shows a success toast, but the pending list is empty after refresh.
-
-Enable the prepared fix:
+## Verify (from repo root)
 
 ```bash
-pnpm --filter demo-app dev:fixed
+export PROOF_TEST_USERNAME=...
+export PROOF_TEST_PASSWORD=...
+pnpm skeptic verify --config examples/demo-app/proof.config.ts --deterministic
 ```
 
-Or copy `fix/.env.fixed` to `.env.local`.
+Acceptance criteria: [acceptance.md](./acceptance.md)
 
-## Reset
+## Reset state
 
 ```bash
 pnpm --filter demo-app reset
 ```
 
-The app must be running on port 3100.
-
-Acceptance criteria: [acceptance.md](./acceptance.md)
+Requires the app running on port 3100.
