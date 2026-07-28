@@ -19,30 +19,27 @@ Skeptic is a config-driven verification framework for web applications. You decl
 
 Skeptic replays your scenario against a live app, records screenshots and network observations, and applies a deterministic oracle. Agent reasoning can guide exploration, but only typed assertions establish `PASS` or `FAIL`.
 
-```text
-proof.config.ts + acceptance.md + scenario.ts
-                    │
-                    ▼
-              ┌──────────┐
-              │   CLI    │  verify | replay | report | init | fix-prompt
-              └────┬─────┘
-                   │
-     ┌─────────────┴─────────────┐
-     │                           │
-     ▼                           ▼
-┌─────────┐              ┌───────────────┐
-│ Eve     │  (optional)  │ Playwright    │
-│ agent   │─────────────►│ harness       │
-└────┬────┘              └───────┬───────┘
-     │                            │ assertions, screenshots, network
-     ▼                            ▼
-┌─────────┐              ┌───────────────┐
-│ Oracle  │◄── events ───│ Evidence store│
-└────┬────┘              └───────┬───────┘
-     │ verdicts                  │
-     ▼                           ▼
-        .proof/runs/<run-id>/
-        events.jsonl, replay.json, generated/*.spec.ts, report.html, fix-prompt.md
+```mermaid
+flowchart TD
+  inputs["proof.config.ts + acceptance.md + scenario.ts"]
+  cli["CLI<br/>verify · replay · report · init · fix-prompt"]
+  eve["Eve agent<br/>(optional)"]
+  harness["Playwright harness"]
+  evidence["Evidence store"]
+  oracle["Oracle"]
+  runs[".proof/runs/&lt;run-id&gt;/"]
+
+  inputs --> cli
+  cli --> eve
+  cli --> harness
+  eve -->|typed actions| harness
+  harness -->|assertions · screenshots · network| evidence
+  evidence -->|events| oracle
+  eve -->|finish| oracle
+  oracle -->|verdicts| runs
+  evidence --> runs
+
+  runs --- artifacts["events.jsonl · replay.json · generated/*.spec.ts · report.html · fix-prompt.md"]
 ```
 
 **Deterministic verification** (`skeptic verify --deterministic`, the default): loads `scenario.ts`, replays typed browser actions, evaluates assertions — zero model calls. Use for CI gates and fast feedback.

@@ -2,6 +2,36 @@
 
 Skeptic verifies web applications against acceptance criteria you define. It runs typed browser flows through Playwright, records evidence, and returns deterministic verdicts suitable for CI and coding-agent workflows.
 
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph in["Input"]
+    cfg[proof.config.ts]
+    acc[acceptance.md]
+    scn[scenario.ts]
+  end
+
+  subgraph run["Verification run"]
+    CLI --> PW[Playwright harness]
+    CLI -.->|optional| EVE[Eve agent]
+    EVE --> PW
+    PW --> ES[Evidence store]
+    ES --> OR[Oracle]
+    EVE --> OR
+  end
+
+  subgraph out["Output"]
+    ART[".proof/runs/&lt;run-id&gt;/"]
+  end
+
+  cfg & acc & scn --> CLI
+  OR --> ART
+  ES --> ART
+```
+
+Only deterministic assertions establish `PASS` or `FAIL`. See [ADR 0001](adr/0001-public-contract.md).
+
 ## Guides
 
 ### Setup and daily use
